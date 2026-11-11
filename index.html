@@ -303,58 +303,55 @@
 
     <!-- ==========================================================
          CHAPTER 4: WORDS FROM THE HEART
-         (Sealed Wax Envelope with Typewriter Text Animation)
+         (Personal Heartfelt Letter to Ranjeetha Sri)
          ========================================================== -->
     <section class="chapter chapter--4" id="chapter4" aria-label="Chapter 4: Words From The Heart">
-      <div class="chapter-backdrop" aria-hidden="true">
-        <div class="rose-petals-falling" id="letterPetals"></div>
-      </div>
-
-      <div class="chapter-inner chapter-inner--center">
+      <div class="chapter-inner chapter-inner--center letter-section-inner">
         <header class="chapter-badge">
           <span class="chapter-name">Words From The Heart</span>
         </header>
 
-        <!-- Wax Sealed Envelope Container -->
-        <div class="envelope-area" id="envelopeArea">
-          <div class="envelope-card" id="envelopeCard" role="button" tabindex="0" aria-label="Open your birthday letter">
-            <div class="envelope-flap" id="envelopeFlap">
-              <div class="envelope-seal" id="envelopeSeal">
-                <span class="seal-heart-icon">♥</span>
-              </div>
+        <!-- Full-Width Warm Ivory Personal Letter Card (Natural reading layout, zero scrollbars) -->
+        <article class="personal-letter-card" id="personalLetterCard" aria-label="Personal Birthday Letter to Ranjeetha Sri">
+          <!-- Elegant Top Wax Stamp Accent -->
+          <div class="letter-stationery-top" aria-hidden="true">
+            <span class="letter-wax-stamp">♥</span>
+            <span class="letter-stationery-line"></span>
+          </div>
+
+          <!-- Letter Content -->
+          <div class="letter-content-body">
+            <h2 class="personal-letter-salutation" id="letterSalutation">Hey Gundu,</h2>
+
+            <div class="personal-letter-paragraphs" id="letterParagraphs">
+              <p>I wanted to write something special for you today. I may not always know the perfect words to say, but I genuinely hope you know how special you are.</p>
+              
+              <p>Having you in my life is something I am truly grateful for. Your presence brings an effortless warmth, and your smile has a way of making even ordinary days feel lighter and brighter.</p>
+              
+              <p>On your birthday, more than anything, I just want to see you happy. I hope this new year brings you peace of mind, good health, genuine smiles, and everything your heart quietly hopes for. May you always stay the kind, wonderful person you are.</p>
+              
+              <p>Always remember that you are deeply appreciated, cared for, and celebrated&mdash;today and every single day.</p>
             </div>
-            <div class="envelope-front">
-              <p class="envelope-recipient" id="envelopeRecipient">For Ranjeetha Sri (Gundu ❤️)</p>
-              <p class="envelope-hint" id="envelopeHint">Tap the wax seal to open</p>
+
+            <!-- Heartfelt Closing & Sign-off -->
+            <div class="personal-letter-signoff">
+              <p class="personal-letter-closing">Happy Birthday,</p>
+              <p class="personal-letter-signature">Gundu ❤️</p>
             </div>
           </div>
 
-          <!-- Unfolded Letter (Appears when opened) -->
-          <article class="letter-parchment" id="letterParchment" hidden aria-label="Birthday Letter">
-            <div class="parchment-inner">
-              <div class="parchment-seal-watermark" aria-hidden="true">♥</div>
-              <h3 class="letter-salutation" id="letterSalutation">Dearest Gundu ❤️,</h3>
-              
-              <div class="letter-typewriter" id="letterBody">
-                <!-- Dynamically typed via birthday.config.js -->
-              </div>
+          <!-- Bottom Stationery Accent -->
+          <div class="letter-stationery-bottom" aria-hidden="true">
+            <span class="letter-corner-dot"></span>
+            <span class="letter-heart-mark">♥</span>
+            <span class="letter-corner-dot"></span>
+          </div>
+        </article>
 
-              <blockquote class="letter-quote" id="letterQuote">
-                &ldquo;Here's to days filled with sunshine, nights full of stars, and a heart full of joy.&rdquo;
-              </blockquote>
-
-              <div class="letter-signoff">
-                <p class="letter-closing" id="letterClosing">With all my heart and warmest birthday wishes,</p>
-                <p class="letter-signature" id="letterSignature">Always Celebrating You, Gundu ❤️</p>
-              </div>
-            </div>
-          </article>
-        </div>
-
-        <!-- Navigation Action -->
-        <div class="chapter-actions chapter-actions--centered">
-          <button class="chapter-cta-btn" id="ch4NextBtn" type="button" aria-label="Continue">
-            <span>Continue &rarr;</span>
+        <!-- Navigation Action: I've Read It – Continue → -->
+        <div class="chapter-actions chapter-actions--centered letter-action-wrap">
+          <button class="chapter-cta-btn chapter-cta-btn--letter" id="ch4NextBtn" type="button" aria-label="I've Read It – Continue">
+            <span>I've Read It &ndash; Continue &rarr;</span>
           </button>
         </div>
       </div>

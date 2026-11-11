@@ -193,17 +193,15 @@ export const BIRTHDAY_CONFIG = {
   // CHAPTER 4: WORDS FROM THE HEART (Interactive Letter)
   // -------------------------------------------------------------
   letter: {
-    sealText: "♥",
-    envelopeRecipient: "For Ranjeetha Sri (Gundu ❤️)",
-    salutation: "Dearest Gundu ❤️,",
+    salutation: "Hey Gundu,",
     paragraphs: [
-      "Every single year adds another layer of beauty, kindness, and quiet grace to who you are. Looking through every chapter of your journey—from the sweetness of childhood days to the radiant person you are today—is a gentle reminder of just how precious you are.",
-      "You have a heart that brings warmth to everyone who knows you, and a presence that makes ordinary days feel brighter. On your birthday, I wish you moments of pure happiness, silent dreams fulfilled, and a future that blooms with peace, success, and love.",
-      "Thank you for simply being you, my dearest Gundu. May life always return to you all the kindness, laughter, and light that you so effortlessly give to the world. You deserve the best of everything today and always."
+      "I wanted to write something special for you today. I may not always know the perfect words to say, but I genuinely hope you know how special you are.",
+      "Having you in my life is something I am truly grateful for. Your presence brings an effortless warmth, and your smile has a way of making even ordinary days feel lighter and brighter.",
+      "On your birthday, more than anything, I just want to see you happy. I hope this new year brings you peace of mind, good health, genuine smiles, and everything your heart quietly hopes for. May you always stay the kind, wonderful person you are.",
+      "Always remember that you are deeply appreciated, cared for, and celebrated—today and every single day."
     ],
-    highlightQuote: "“May your days be filled with sunshine, your nights with stars, and your heart with endless joy.”",
-    closing: "With all my heart and warmest birthday wishes,",
-    signature: "Always Celebrating You, Gundu ❤️"
+    closing: "Happy Birthday,",
+    signature: "Gundu ❤️"
   },
 
   // -------------------------------------------------------------

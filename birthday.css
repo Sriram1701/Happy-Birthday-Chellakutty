@@ -1363,161 +1363,168 @@ body.film-body{
 }
 
 /* ============================================================
-   CHAPTER 4: WORDS FROM THE HEART (Interactive Letter)
+   CHAPTER 4: WORDS FROM THE HEART (Personal Heartfelt Letter)
    ============================================================ */
-.chapter--4{
-  background: radial-gradient(120% 120% at 50% 15%, #240718 0%, #15040e 55%, #0b0207 100%);
+.chapter--4 {
+  background: radial-gradient(120% 120% at 50% 15%, #1f0615 0%, #13040e 55%, #0a0207 100%);
+  display: flex !important;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: clamp(60px, 8vh, 90px) 16px clamp(70px, 9vh, 100px);
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 100vh;
+  min-height: 100dvh;
+  position: relative;
+  overflow: visible;
 }
 
-.envelope-area{
+.letter-section-inner {
+  width: 100%;
+  max-width: 680px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 0 auto;
+}
+
+/* Warm Ivory / Pure White Personal Letter Card */
+.personal-letter-card {
+  width: 100%;
+  max-width: 640px;
+  background: radial-gradient(120% 120% at 50% 0%, #ffffff 0%, #fffdfa 55%, #faf4ed 100%);
+  border: 1px solid rgba(230, 205, 190, 0.7);
+  border-radius: 18px;
+  padding: clamp(28px, 6vw, 46px) clamp(20px, 5.5vw, 42px);
+  box-sizing: border-box;
+  box-shadow: 0 25px 70px rgba(0, 0, 0, 0.45), 0 0 35px rgba(216, 30, 87, 0.12);
   position: relative;
-  width: min(92vw, 680px);
-  min-height: min(65vh, 480px);
+  text-align: left;
+  overflow: visible; /* Zero internal scrollbar */
+  margin: 16px auto 0;
+}
+
+/* Elegant Stationery Top Accent */
+.letter-stationery-top {
   display: flex;
   align-items: center;
   justify-content: center;
-}
-
-/* Closed Envelope State */
-.envelope-card{
-  width: min(84vw, 440px);
-  aspect-ratio: 16 / 11;
-  background: radial-gradient(circle at 50% 40%, #fffcfa, #faeedf 75%, #ebd9c3 100%);
-  border-radius: 8px;
-  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.65), 0 5px 15px rgba(0, 0, 0, 0.3);
+  gap: 12px;
+  margin-bottom: clamp(16px, 3.5vw, 24px);
   position: relative;
-  cursor: pointer;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-  padding: 24px;
-  text-align: center;
-  border: 1px solid rgba(255, 255, 255, 0.8);
-  transition: transform 0.4s var(--ease-spring), box-shadow 0.4s ease;
 }
 
-.envelope-card:hover{
-  transform: translateY(-8px) scale(1.02);
-  box-shadow: 0 30px 70px rgba(216, 30, 87, 0.35), 0 8px 25px rgba(0, 0, 0, 0.4);
-}
-
-.envelope-flap{
-  position: absolute;
-  top: 0; left: 0; right: 0;
-  height: 55%;
-  background: linear-gradient(180deg, #f7ebd9 0%, #faefe2 100%);
-  clip-path: polygon(0 0, 100% 0, 50% 100%);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  display: flex;
-  justify-content: center;
-  align-items: flex-end;
-  padding-bottom: 8px;
-}
-
-.envelope-seal{
-  width: 44px; height: 44px;
+.letter-wax-stamp {
+  width: 38px;
+  height: 38px;
   border-radius: 50%;
   background: radial-gradient(circle at 35% 35%, #e62e5c, #a80f3a);
   color: #fff;
-  display: flex; align-items: center; justify-content: center;
-  box-shadow: 0 6px 18px rgba(168, 15, 58, 0.55), inset 0 2px 4px rgba(255, 255, 255, 0.4);
-  border: 2px solid rgba(255, 255, 255, 0.6);
-  transform: translateY(18px);
-  animation: sealPulse 2.5s infinite;
-}
-
-@keyframes sealPulse{
-  0%, 100%{ transform: translateY(18px) scale(1); }
-  50%{ transform: translateY(18px) scale(1.1); box-shadow: 0 8px 24px rgba(216, 30, 87, 0.8); }
-}
-
-.seal-heart-icon{ font-size: 18px; }
-
-.envelope-recipient{
-  font-family: "Fraunces", Georgia, serif;
-  font-weight: 700;
-  font-size: clamp(20px, 3.2vw, 26px);
-  color: #401524;
-  margin-bottom: 4px;
-}
-
-.envelope-hint{
-  font-family: "Montserrat", sans-serif;
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: #a8425d;
-}
-
-/* Opened Letter Parchment */
-.letter-parchment{
-  width: 100%;
-  max-width: 660px;
-  background: radial-gradient(120% 120% at 50% 10%, #fffcf8 0%, #fdf5ec 55%, #f7e6d4 100%);
-  border-radius: 12px;
-  padding: 44px 40px;
-  color: #38101e;
-  box-shadow: 0 25px 70px rgba(0, 0, 0, 0.55), 0 0 35px rgba(216, 30, 87, 0.2);
-  border: 1px solid rgba(255, 255, 255, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  box-shadow: 0 4px 14px rgba(168, 15, 58, 0.45), inset 0 2px 3px rgba(255, 255, 255, 0.4);
+  border: 2px solid rgba(255, 255, 255, 0.7);
   position: relative;
-  text-align: left;
-  animation: parchmentOpen 0.8s var(--ease-spring);
+  z-index: 1;
 }
 
-@keyframes parchmentOpen{
-  from{ opacity: 0; transform: translateY(30px) scale(0.92); }
-  to{ opacity: 1; transform: translateY(0) scale(1); }
-}
-
-.parchment-seal-watermark{
+.letter-stationery-line {
   position: absolute;
-  top: 24px; right: 28px;
-  font-size: 32px;
-  color: rgba(216, 30, 87, 0.12);
-  user-select: none;
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent 0%, rgba(216, 30, 87, 0.2) 25%, rgba(216, 30, 87, 0.2) 75%, transparent 100%);
+  z-index: 0;
+  pointer-events: none;
 }
 
-.letter-salutation{
+/* Salutation */
+.personal-letter-salutation {
   font-family: "Fraunces", Georgia, serif;
+  font-size: clamp(1.8rem, 4.5vw, 2.35rem);
   font-weight: 700;
-  font-size: clamp(22px, 3.5vw, 30px);
-  color: #380d1b;
-  margin-bottom: 20px;
+  color: #35101d;
+  margin: 0 0 clamp(16px, 3vw, 22px) 0;
+  letter-spacing: 0.02em;
 }
 
-.letter-typewriter p{
-  font-size: clamp(16px, 2.1vw, 19px);
-  line-height: 1.7;
-  color: #4d202e;
-  margin-bottom: 16px;
+/* Paragraphs */
+.personal-letter-paragraphs p {
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-size: clamp(1.15rem, 3.2vw, 1.32rem);
+  line-height: 1.82;
+  color: #3f1825;
+  margin: 0 0 clamp(16px, 3vw, 20px) 0;
+  font-weight: 500;
+  letter-spacing: 0.012em;
 }
 
-.letter-quote{
+.personal-letter-paragraphs p:last-child {
+  margin-bottom: 0;
+}
+
+/* Sign-off */
+.personal-letter-signoff {
+  margin-top: clamp(22px, 4vw, 32px);
+  padding-top: clamp(14px, 2.5vw, 18px);
+  border-top: 1px solid rgba(216, 30, 87, 0.16);
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.personal-letter-closing {
   font-family: "Cormorant Garamond", Georgia, serif;
   font-style: italic;
-  font-weight: 600;
-  font-size: clamp(17px, 2.4vw, 21px);
-  color: #8c1a3e;
-  padding: 10px 18px;
-  border-left: 3px solid var(--gold-2);
-  background: rgba(255, 240, 225, 0.55);
-  border-radius: 4px;
-  margin: 22px 0;
+  font-size: clamp(1.1rem, 2.8vw, 1.25rem);
+  color: #7a3246;
+  margin: 0;
 }
 
-.letter-signoff{
-  margin-top: 24px;
-  border-top: 1px solid rgba(216, 30, 87, 0.15);
-  padding-top: 16px;
-}
-
-.letter-closing{ font-style: italic; font-size: 16px; color: #7a3a4c; }
-.letter-signature{
+.personal-letter-signature {
   font-family: "Great Vibes", cursive;
-  font-size: 32px;
+  font-size: clamp(2.1rem, 5.5vw, 2.9rem);
   color: #b01a45;
-  margin-top: 4px;
+  margin: 2px 0 0 0;
+  line-height: 1.15;
+}
+
+/* Stationery Bottom Accent */
+.letter-stationery-bottom {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-top: clamp(16px, 3vw, 24px);
+  color: rgba(216, 30, 87, 0.35);
+  font-size: 13px;
+}
+
+.letter-corner-dot {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: rgba(216, 30, 87, 0.25);
+}
+
+.letter-action-wrap {
+  margin-top: clamp(24px, 4.5vh, 36px);
+  width: 100%;
+}
+
+.chapter-cta-btn--letter {
+  padding: 15px 36px;
+  box-shadow: 0 12px 32px rgba(216, 30, 87, 0.5), 0 0 20px rgba(255, 180, 200, 0.35);
+}
+
+/* Subsequent chapters hidden until letter is read */
+.chapters-locked-after-letter #chapter5,
+.chapters-locked-after-letter #chapter6 {
+  display: none !important;
 }
 
 /* ============================================================
@@ -1967,13 +1974,10 @@ body.film-body{
   .lightbox__close-btn{ top: -46px; right: 4px; width: 42px; height: 42px; }
 
   /* Chapter 4 Letter */
-  .envelope-card{ width: min(92vw, 400px); }
-  .letter-parchment{
-    padding: 24px 18px;
-    max-height: 68vh;
-    overflow-y: auto;
-    -webkit-overflow-scrolling: touch;
-    width: min(94vw, 500px);
+  .personal-letter-card{
+    width: 100%;
+    padding: 26px 18px;
+    margin: 12px auto 0;
   }
 
   /* Chapter 5 Wishes */

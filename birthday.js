@@ -1146,65 +1146,55 @@ const ch3NextBtn = $('ch3NextBtn');
 if (ch3NextBtn) ch3NextBtn.addEventListener('click', () => scrollToChapter(4));
 
 /* ============================================================
-   CHAPTER 4: WORDS FROM THE HEART (Interactive Letter)
+   CHAPTER 4: WORDS FROM THE HEART (Personal Heartfelt Letter)
    ============================================================ */
-let envelopeOpened = false;
+let isLetterRead = false;
+let wasMusicPlayingBeforeLetter = false;
+
+// Lock subsequent chapters on load so she reads the letter first
+document.body.classList.add('chapters-locked-after-letter');
 
 function initChapter4(){
-  const recipient = $('envelopeRecipient');
-  if (recipient) recipient.textContent = BIRTHDAY_CONFIG.letter.envelopeRecipient || `For ${BIRTHDAY_CONFIG.recipientName} (${BIRTHDAY_CONFIG.nickname})`;
-
   const salutation = $('letterSalutation');
-  if (salutation) salutation.textContent = BIRTHDAY_CONFIG.letter.salutation;
-
-  const quote = $('letterQuote');
-  if (quote) quote.textContent = BIRTHDAY_CONFIG.letter.highlightQuote;
-
-  const closing = $('letterClosing');
-  if (closing) closing.textContent = BIRTHDAY_CONFIG.letter.closing;
-
-  const signature = $('letterSignature');
-  if (signature) signature.textContent = BIRTHDAY_CONFIG.letter.signature;
-
-  const body = $('letterBody');
-  if (body){
-    body.innerHTML = BIRTHDAY_CONFIG.letter.paragraphs.map(p => `<p>${p}</p>`).join('');
+  if (salutation && BIRTHDAY_CONFIG.letter.salutation){
+    salutation.textContent = BIRTHDAY_CONFIG.letter.salutation;
   }
-}
 
-function openEnvelope(){
-  if (envelopeOpened) return;
-  envelopeOpened = true;
-
-  const card = $('envelopeCard');
-  const parchment = $('letterParchment');
-
-  gsap.to('#envelopeSeal', { scale: 1.25, opacity: 0, duration: 0.4 });
-  gsap.to('#envelopeFlap', { rotateX: 180, transformOrigin: 'top center', duration: 0.6, ease: 'power2.inOut' });
-
-  setTimeout(() => {
-    if (card) card.hidden = true;
-    if (parchment){
-      parchment.hidden = false;
-      gsap.fromTo(parchment, { opacity: 0, y: 30, scale: 0.94 }, { opacity: 1, y: 0, scale: 1, duration: 0.8, ease: 'back.out(1.2)' });
-    }
-  }, 450);
-}
-
-const envelopeCard = $('envelopeCard');
-if (envelopeCard){
-  envelopeCard.addEventListener('click', openEnvelope);
-  envelopeCard.addEventListener('keydown', (e) => {
-    if (e.key === 'Enter' || e.key === ' '){ e.preventDefault(); openEnvelope(); }
-  });
+  const paragraphsWrap = $('letterParagraphs');
+  if (paragraphsWrap && BIRTHDAY_CONFIG.letter.paragraphs){
+    paragraphsWrap.innerHTML = BIRTHDAY_CONFIG.letter.paragraphs
+      .map(p => `<p>${p}</p>`)
+      .join('');
+  }
 }
 
 function enterChapter4(){
   initChapter4();
+  // Silent reading experience: pause YouTube music while she reads the letter
+  if (!isLetterRead && isMusicPlaying){
+    wasMusicPlayingBeforeLetter = true;
+    pauseMusic();
+  }
 }
 
 const ch4NextBtn = $('ch4NextBtn');
-if (ch4NextBtn) ch4NextBtn.addEventListener('click', () => scrollToChapter(5));
+if (ch4NextBtn){
+  ch4NextBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    isLetterRead = true;
+    document.body.classList.remove('chapters-locked-after-letter');
+    initChapter5();
+    
+    // Resume music if it was playing before entering the silent letter reading
+    if (wasMusicPlayingBeforeLetter){
+      tryPlayMusic();
+    }
+    
+    setTimeout(() => {
+      scrollToChapter(5);
+    }, 60);
+  });
+}
 
 /* ============================================================
    CHAPTER 5: WISHES BEYOND WORDS (Celestial Wishes)
@@ -1273,6 +1263,7 @@ const continuousScrollObserver = new IntersectionObserver((entries) => {
     if (entry.isIntersecting){
       const id = entry.target.id;
       if (id === 'chapter2') enterChapter2();
+      if (id === 'chapter4') enterChapter4();
       if (id === 'chapter5') enterChapter5();
       if (id === 'chapter6') enterChapter6();
     }
