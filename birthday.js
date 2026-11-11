@@ -1104,6 +1104,24 @@ window.addEventListener('keydown', (e) => {
   if (e.key === 'ArrowRight') nextMemory();
 });
 
+// Mobile touch swipe gestures for lightbox navigation
+let lbTouchStartX = 0;
+let lbTouchStartY = 0;
+if (lightbox){
+  lightbox.addEventListener('touchstart', (e) => {
+    lbTouchStartX = e.changedTouches[0].screenX;
+    lbTouchStartY = e.changedTouches[0].screenY;
+  }, { passive: true });
+  lightbox.addEventListener('touchend', (e) => {
+    const diffX = e.changedTouches[0].screenX - lbTouchStartX;
+    const diffY = e.changedTouches[0].screenY - lbTouchStartY;
+    if (Math.abs(diffX) > 40 && Math.abs(diffX) > Math.abs(diffY)){
+      if (diffX < 0) nextMemory();
+      else prevMemory();
+    }
+  }, { passive: true });
+}
+
 const ch3PrevBtn = $('ch3PrevBtn');
 if (ch3PrevBtn) ch3PrevBtn.addEventListener('click', () => switchChapter(2));
 
