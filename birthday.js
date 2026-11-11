@@ -680,14 +680,12 @@ function buildFilm(m){
   const t = gsap.timeline({
     paused: true,
     onComplete: () => {
-      // Climax of Chapter 1: Reveal Chapter 2 prompt
+      // Climax of Chapter 1: Reveal Continue prompt
       const ch1Continue = $('ch1ContinueWrap');
       if (ch1Continue) {
         ch1Continue.hidden = false;
         ch1Continue.style.opacity = '1';
       }
-      // Auto-advance to Chapter 2 after showing the wish
-      if (activeChapter === 1) switchChapter(2);
     },
   });
 
@@ -756,9 +754,6 @@ function buildFilm(m){
        ch1Continue.hidden = false;
        gsap.fromTo(ch1Continue, { opacity: 0, y: 15 }, { opacity: 1, y: 0, duration: 0.6, ease: 'power2.out' });
      }
-     setTimeout(() => {
-       if (activeChapter === 1) switchChapter(2);
-     }, 2000);
    }, wishT0 + 1.2);
 
   return t;
@@ -895,71 +890,17 @@ const CHAPTER_TITLES = [
   'Chapter VI • The Grand Finale',
 ];
 
-function switchChapter(targetNum){
+function scrollToChapter(targetNum){
   if (targetNum < 1 || targetNum > 6) return;
   const targetEl = $(`chapter${targetNum}`);
-  if (!targetEl) return;
-
-  const prevNum = activeChapter;
-  activeChapter = targetNum;
-
-  // Update Tracker UI
-  const trackerTitle = $('chapterTrackerTitle');
-  if (trackerTitle && CHAPTER_TITLES[activeChapter - 1]){
-    trackerTitle.textContent = CHAPTER_TITLES[activeChapter - 1];
-  }
-
-  document.querySelectorAll('.chapter-dot').forEach((dot) => {
-    const num = parseInt(dot.getAttribute('data-chapter'), 10);
-    const isActive = num === activeChapter;
-    dot.classList.toggle('is-active', isActive);
-    dot.setAttribute('aria-selected', isActive ? 'true' : 'false');
-  });
-
-  // Hide all other chapters immediately to guarantee NO OVERLAY or pink field can block
-  document.querySelectorAll('.chapter').forEach((ch) => {
-    if (ch !== targetEl){
-      ch.classList.remove('is-active');
-      ch.style.display = 'none';
-      ch.style.opacity = '0';
-      ch.style.visibility = 'hidden';
-      ch.style.pointerEvents = 'none';
-    }
-  });
-
-  if (prevNum === 6 && targetNum !== 6) treeStop();
-
-  targetEl.style.display = (targetNum === 1 || targetNum === 6) ? 'block' : 'flex';
-  targetEl.style.visibility = 'visible';
-  targetEl.style.pointerEvents = 'auto';
-  targetEl.classList.add('is-active');
-
-  gsap.fromTo(targetEl, { opacity: 0 }, { opacity: 1, duration: 0.45, ease: 'power2.out' });
-
-  // Trigger chapter-specific logic
-  if (activeChapter === 1){
-    resetChapter1();
-  } else if (activeChapter === 2){
-    enterChapter2();
-  } else if (activeChapter === 3){
-    enterChapter3();
-  } else if (activeChapter === 4){
-    enterChapter4();
-  } else if (activeChapter === 5){
-    enterChapter5();
-  } else if (activeChapter === 6){
-    enterChapter6();
+  if (targetEl){
+    targetEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
 }
 
-// Bind Chapter Dots
-document.querySelectorAll('.chapter-dot').forEach((dot) => {
-  dot.addEventListener('click', (e) => {
-    e.preventDefault();
-    const num = parseInt(dot.getAttribute('data-chapter'), 10);
-    switchChapter(num);
-  });
-});
+function switchChapter(targetNum){
+  scrollToChapter(targetNum);
+}
 
 /* ============================================================
    CHAPTER 2: A BEAUTIFUL BEGINNING
@@ -982,7 +923,7 @@ const heroSkipBtn = $('heroSkipBtn');
 if (heroSkipBtn){
   heroSkipBtn.addEventListener('click', (e) => {
     e.stopPropagation();
-    switchChapter(2);
+    scrollToChapter(2);
   });
 }
 
@@ -990,31 +931,12 @@ const ch1NextBtn = $('ch1NextBtn');
 if (ch1NextBtn){
   ch1NextBtn.addEventListener('click', (e) => {
     e.stopPropagation();
-    switchChapter(2);
+    scrollToChapter(2);
   });
 }
-
-if (field){
-  field.addEventListener('click', () => {
-    if (activeChapter === 1 && played){
-      switchChapter(2);
-    }
-  });
-}
-
-if (camera){
-  camera.addEventListener('click', () => {
-    if (activeChapter === 1 && played){
-      switchChapter(2);
-    }
-  });
-}
-
-const ch2PrevBtn = $('ch2PrevBtn');
-if (ch2PrevBtn) ch2PrevBtn.addEventListener('click', () => switchChapter(1));
 
 const ch2NextBtn = $('ch2NextBtn');
-if (ch2NextBtn) ch2NextBtn.addEventListener('click', () => switchChapter(3));
+if (ch2NextBtn) ch2NextBtn.addEventListener('click', () => scrollToChapter(3));
 
 /* ============================================================
    CHAPTER 3: LITTLE MOMENTS, BIG MEMORIES (Polaroids + Lightbox)
@@ -1165,11 +1087,8 @@ if (lightbox){
   }, { passive: true });
 }
 
-const ch3PrevBtn = $('ch3PrevBtn');
-if (ch3PrevBtn) ch3PrevBtn.addEventListener('click', () => switchChapter(2));
-
 const ch3NextBtn = $('ch3NextBtn');
-if (ch3NextBtn) ch3NextBtn.addEventListener('click', () => switchChapter(4));
+if (ch3NextBtn) ch3NextBtn.addEventListener('click', () => scrollToChapter(4));
 
 /* ============================================================
    CHAPTER 4: WORDS FROM THE HEART (Interactive Letter)
@@ -1229,11 +1148,8 @@ function enterChapter4(){
   initChapter4();
 }
 
-const ch4PrevBtn = $('ch4PrevBtn');
-if (ch4PrevBtn) ch4PrevBtn.addEventListener('click', () => switchChapter(3));
-
 const ch4NextBtn = $('ch4NextBtn');
-if (ch4NextBtn) ch4NextBtn.addEventListener('click', () => switchChapter(5));
+if (ch4NextBtn) ch4NextBtn.addEventListener('click', () => scrollToChapter(5));
 
 /* ============================================================
    CHAPTER 5: WISHES BEYOND WORDS (Celestial Wishes)
@@ -1264,16 +1180,16 @@ function enterChapter5(){
   );
 }
 
-const ch5PrevBtn = $('ch5PrevBtn');
-if (ch5PrevBtn) ch5PrevBtn.addEventListener('click', () => switchChapter(4));
-
 const ch5NextBtn = $('ch5NextBtn');
-if (ch5NextBtn) ch5NextBtn.addEventListener('click', () => switchChapter(6));
+if (ch5NextBtn) ch5NextBtn.addEventListener('click', () => scrollToChapter(6));
 
 /* ============================================================
    CHAPTER 6: THE GRAND FINALE (Heart Blossom Tree)
    ============================================================ */
+let finaleStarted = false;
 function enterChapter6(){
+  if (finaleStarted) return;
+  finaleStarted = true;
   resize();
   treeStart();
 
@@ -1288,12 +1204,30 @@ function enterChapter6(){
 const replayAllBtn = $('replayAllBtn');
 if (replayAllBtn){
   replayAllBtn.addEventListener('click', () => {
-    switchChapter(1);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   });
 }
 
-const ch6PrevBtn = $('ch6PrevBtn');
-if (ch6PrevBtn) ch6PrevBtn.addEventListener('click', () => switchChapter(5));
+// Initialize all sections for seamless continuous vertical scrolling
+initChapter3();
+initChapter4();
+initChapter5();
+
+const continuousScrollObserver = new IntersectionObserver((entries) => {
+  entries.forEach((entry) => {
+    if (entry.isIntersecting){
+      const id = entry.target.id;
+      if (id === 'chapter2') enterChapter2();
+      if (id === 'chapter5') enterChapter5();
+      if (id === 'chapter6') enterChapter6();
+    }
+  });
+}, { threshold: 0.12 });
+
+['chapter2', 'chapter3', 'chapter4', 'chapter5', 'chapter6'].forEach((id) => {
+  const el = $(id);
+  if (el) continuousScrollObserver.observe(el);
+});
 
 /* ============================================================
    CONFETTI & CELEBRATION LOVE BURST

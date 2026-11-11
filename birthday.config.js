@@ -32,7 +32,8 @@ export const BIRTHDAY_CONFIG = {
       stage: "Childhood Memories",
       stageKey: "childhood",
       title: "Where It All Began",
-      caption: "An innocent smile and a tender beginning, cradled in loving hands and surrounded by blessings."
+      caption: "An innocent smile and a tender beginning, cradled in loving hands and surrounded by blessings.",
+      objectPosition: "center 20%"
     },
 
     // --- Stage 2: School Days ---
@@ -42,7 +43,8 @@ export const BIRTHDAY_CONFIG = {
       stage: "School Days",
       stageKey: "school",
       title: "School Days & Bright Dreams",
-      caption: "Ribbons in braided hair, school uniform, and eyes full of wonder, innocence, and determination."
+      caption: "Ribbons in braided hair, school uniform, and eyes full of wonder, innocence, and determination.",
+      objectPosition: "center 25%"
     },
 
     // --- Stage 3: Growing Up ---
@@ -52,7 +54,8 @@ export const BIRTHDAY_CONFIG = {
       stage: "Growing Up",
       stageKey: "growing",
       title: "Stepping into Youth",
-      caption: "Gentle days of growing up, learning life's lessons, and stepping forward with quiet grace."
+      caption: "Gentle days of growing up, learning life's lessons, and stepping forward with quiet grace.",
+      objectPosition: "center 5%"
     },
 
     // --- Stage 4: Beautiful Moments ---
@@ -62,7 +65,8 @@ export const BIRTHDAY_CONFIG = {
       stage: "Beautiful Moments",
       stageKey: "moments",
       title: "Traditional Elegance",
-      caption: "Draped in festive silk and golden jewelry, radiating timeless charm, poise, and tradition."
+      caption: "Draped in festive silk and golden jewelry, radiating timeless charm, poise, and tradition.",
+      objectPosition: "center 8%"
     },
     {
       id: 5,
@@ -70,7 +74,8 @@ export const BIRTHDAY_CONFIG = {
       stage: "Beautiful Moments",
       stageKey: "moments",
       title: "Sunlit Serenity",
-      caption: "Standing beneath the trees in natural sunlight, glowing with effortless grace and tranquility."
+      caption: "Standing beneath the trees in natural sunlight, glowing with effortless grace and tranquility.",
+      objectPosition: "center 22%"
     },
     {
       id: 6,
@@ -78,7 +83,8 @@ export const BIRTHDAY_CONFIG = {
       stage: "Beautiful Moments",
       stageKey: "moments",
       title: "Playful Glimpses",
-      caption: "A candid spark of mischief and a sweet, spontaneous smile that brightens any day."
+      caption: "A candid spark of mischief and a sweet, spontaneous smile that brightens any day.",
+      objectPosition: "center 20%"
     },
     {
       id: 7,
@@ -86,7 +92,8 @@ export const BIRTHDAY_CONFIG = {
       stage: "Beautiful Moments",
       stageKey: "moments",
       title: "Poise & Harmony",
-      caption: "Carrying gentle composure and effortless charm in the softest shade of sky blue."
+      caption: "Carrying gentle composure and effortless charm in the softest shade of sky blue.",
+      objectPosition: "center 10%"
     },
     {
       id: 8,
@@ -94,7 +101,8 @@ export const BIRTHDAY_CONFIG = {
       stage: "Beautiful Moments",
       stageKey: "moments",
       title: "Laughter in Four Frames",
-      caption: "Countless expressions of pure joy, lighthearted fun, and contagious smiles."
+      caption: "Countless expressions of pure joy, lighthearted fun, and contagious smiles.",
+      objectPosition: "center center"
     },
     {
       id: 9,
@@ -102,7 +110,8 @@ export const BIRTHDAY_CONFIG = {
       stage: "Beautiful Moments",
       stageKey: "moments",
       title: "Festive Crimson Glow",
-      caption: "Vibrant in red, celebrating life's special occasions with radiance and warmth."
+      caption: "Vibrant in red, celebrating life's special occasions with radiance and warmth.",
+      objectPosition: "center 8%"
     },
     {
       id: 10,
@@ -110,7 +119,8 @@ export const BIRTHDAY_CONFIG = {
       stage: "Beautiful Moments",
       stageKey: "moments",
       title: "Pastel Grace",
-      caption: "Soft elegance and gentle beauty, reflecting a serene and kind-hearted personality."
+      caption: "Soft elegance and gentle beauty, reflecting a serene and kind-hearted personality.",
+      objectPosition: "center 12%"
     },
     {
       id: 11,
@@ -118,7 +128,8 @@ export const BIRTHDAY_CONFIG = {
       stage: "Beautiful Moments",
       stageKey: "moments",
       title: "Golden Hour Glow",
-      caption: "Flowers in hair, draped in evening colors, catching the golden rays of the setting sun."
+      caption: "Flowers in hair, draped in evening colors, catching the golden rays of the setting sun.",
+      objectPosition: "center 30%"
     },
     {
       id: 12,
@@ -126,7 +137,8 @@ export const BIRTHDAY_CONFIG = {
       stage: "Beautiful Moments",
       stageKey: "moments",
       title: "Poetic Grace",
-      caption: "A quiet, thoughtful moment of beauty, moving through the journey with natural poise."
+      caption: "A quiet, thoughtful moment of beauty, moving through the journey with natural poise.",
+      objectPosition: "center 30%"
     },
     {
       id: 13,
@@ -134,7 +146,8 @@ export const BIRTHDAY_CONFIG = {
       stage: "Beautiful Moments",
       stageKey: "moments",
       title: "Bright as Sunshine",
-      caption: "A radiant, confident smile and sparkling eyes that bring warmth to everyone around."
+      caption: "A radiant, confident smile and sparkling eyes that bring warmth to everyone around.",
+      objectPosition: "center center"
     },
     {
       id: 14,
@@ -142,7 +155,8 @@ export const BIRTHDAY_CONFIG = {
       stage: "Beautiful Moments",
       stageKey: "moments",
       title: "Joy & Celebration",
-      caption: "Surrounded by festive warmth and flower garlands, making memories to treasure forever."
+      caption: "Surrounded by festive warmth and flower garlands, making memories to treasure forever.",
+      objectPosition: "center 25%"
     },
 
     // --- Stage 5: Recent Memories ---
@@ -152,7 +166,8 @@ export const BIRTHDAY_CONFIG = {
       stage: "Recent Memories",
       stageKey: "recent",
       title: "A Radiant Smile",
-      caption: "Dressed in embroidered white, glowing with mature confidence, serenity, and joy."
+      caption: "Dressed in embroidered white, glowing with mature confidence, serenity, and joy.",
+      objectPosition: "center 18%"
     },
     {
       id: 16,
@@ -160,7 +175,8 @@ export const BIRTHDAY_CONFIG = {
       stage: "Recent Memories",
       stageKey: "recent",
       title: "Candid Reflection",
-      caption: "A sweet, pensive look that reflects a kind heart full of dreams, wisdom, and gratitude."
+      caption: "A sweet, pensive look that reflects a kind heart full of dreams, wisdom, and gratitude.",
+      objectPosition: "center 15%"
     },
     {
       id: 17,
@@ -168,7 +184,8 @@ export const BIRTHDAY_CONFIG = {
       stage: "Recent Memories",
       stageKey: "recent",
       title: "The Journey Continues",
-      caption: "Ready for another wonderful year ahead, shining brighter and more beautiful than ever."
+      caption: "Ready for another wonderful year ahead, shining brighter and more beautiful than ever.",
+      objectPosition: "center 15%"
     }
   ],
 

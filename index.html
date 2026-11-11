@@ -209,9 +209,8 @@
           
           <!-- Next Chapter Prompt at end of Chapter 1 -->
           <div class="ch1-continue-wrap" id="ch1ContinueWrap" hidden>
-            <button class="chapter-cta-btn" id="ch1NextBtn" type="button">
-              <span>Open A Beautiful Beginning</span>
-              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg>
+            <button class="chapter-cta-btn" id="ch1NextBtn" type="button" aria-label="Continue">
+              <span>Continue &rarr;</span>
             </button>
           </div>
         </div>
@@ -288,15 +287,10 @@
           </div>
         </div>
 
-        <!-- Chapter Navigation Actions -->
-        <div class="chapter-actions">
-          <button class="chapter-nav-btn chapter-nav-btn--prev" id="ch2PrevBtn" type="button">
-            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"></polyline></svg>
-            <span>Back</span>
-          </button>
-          <button class="chapter-nav-btn chapter-nav-btn--next chapter-nav-btn--primary" id="ch2NextBtn" type="button">
-            <span>Explore Memories</span>
-            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg>
+        <!-- Navigation Action -->
+        <div class="chapter-actions chapter-actions--centered">
+          <button class="chapter-cta-btn" id="ch2NextBtn" type="button" aria-label="Continue">
+            <span>Continue &rarr;</span>
           </button>
         </div>
       </div>
@@ -336,15 +330,10 @@
           <!-- Populated dynamically via birthday.config.js -->
         </div>
 
-        <!-- Chapter Navigation Actions -->
+        <!-- Navigation Action -->
         <div class="chapter-actions chapter-actions--centered">
-          <button class="chapter-nav-btn chapter-nav-btn--prev" id="ch3PrevBtn" type="button">
-            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"></polyline></svg>
-            <span>Back</span>
-          </button>
-          <button class="chapter-nav-btn chapter-nav-btn--next chapter-nav-btn--primary" id="ch3NextBtn" type="button">
-            <span>Continue to Letter</span>
-            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg>
+          <button class="chapter-cta-btn" id="ch3NextBtn" type="button" aria-label="Continue">
+            <span>Continue &rarr;</span>
           </button>
         </div>
       </div>
@@ -400,15 +389,10 @@
           </article>
         </div>
 
-        <!-- Chapter Navigation Actions -->
-        <div class="chapter-actions">
-          <button class="chapter-nav-btn chapter-nav-btn--prev" id="ch4PrevBtn" type="button">
-            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"></polyline></svg>
-            <span>Back</span>
-          </button>
-          <button class="chapter-nav-btn chapter-nav-btn--next chapter-nav-btn--primary" id="ch4NextBtn" type="button">
-            <span>Continue to Wishes</span>
-            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg>
+        <!-- Navigation Action -->
+        <div class="chapter-actions chapter-actions--centered">
+          <button class="chapter-cta-btn" id="ch4NextBtn" type="button" aria-label="Continue">
+            <span>Continue &rarr;</span>
           </button>
         </div>
       </div>
@@ -444,15 +428,10 @@
           <!-- Populated dynamically via birthday.config.js -->
         </div>
 
-        <!-- Chapter Navigation Actions -->
-        <div class="chapter-actions">
-          <button class="chapter-nav-btn chapter-nav-btn--prev" id="ch5PrevBtn" type="button">
-            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"></polyline></svg>
-            <span>Back</span>
-          </button>
-          <button class="chapter-nav-btn chapter-nav-btn--next chapter-nav-btn--primary" id="ch5NextBtn" type="button">
-            <span>The Grand Finale</span>
-            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg>
+        <!-- Navigation Action -->
+        <div class="chapter-actions chapter-actions--centered">
+          <button class="chapter-cta-btn" id="ch5NextBtn" type="button" aria-label="Continue">
+            <span>Continue &rarr;</span>
           </button>
         </div>
       </div>
@@ -475,26 +454,18 @@
       </div>
 
       <!-- Finale Controls & Celebration Toolbar -->
-      <div class="finale-bar" id="finaleBar" hidden>
+      <div class="finale-bar" id="finaleBar">
         <button class="celebrate-btn" id="celebrateBtn" type="button" aria-label="Send birthday love and confetti">
           <span class="celebrate-btn__icon">♥</span>
           <span>Send Birthday Love &amp; Confetti</span>
         </button>
         <span class="celebrate-count" id="celebrateCount">0 wishes sent ♥</span>
 
-        <button class="replay-all-btn" id="replayAllBtn" type="button" aria-label="Replay Entire Experience">
+        <button class="replay-all-btn" id="replayAllBtn" type="button" aria-label="Replay Experience">
           <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
             <path d="M12 5V2L7 6l5 4V7a5 5 0 1 1-5 5H5a7 7 0 1 0 7-7z" />
           </svg>
-          <span>Replay Entire Film</span>
-        </button>
-      </div>
-
-      <!-- Chapter Navigation (Back to Chapter 5) -->
-      <div class="finale-nav" id="finaleNav" hidden>
-        <button class="chapter-nav-btn chapter-nav-btn--prev" id="ch6PrevBtn" type="button">
-          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"></polyline></svg>
-          <span>Back to Wishes</span>
+          <span>Replay Experience</span>
         </button>
       </div>
     </section>

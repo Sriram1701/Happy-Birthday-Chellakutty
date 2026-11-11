@@ -282,46 +282,69 @@ body.film-body{
 }
 
 /* ============================================================
-   FILM STAGE & CHAPTERS ARCHITECTURE
+   CONTINUOUS VERTICAL SCROLLING FILM STAGE
    ============================================================ */
 .film-stage{
   position: relative;
-  width: 100vw;
-  height: 100vh;
-  height: 100dvh;
-  overflow: hidden;
+  width: 100%;
+  min-height: 100vh;
+  overflow-x: hidden;
+  overflow-y: visible;
 }
 
 .chapter{
-  position: absolute;
-  inset: 0;
+  position: relative;
   width: 100%;
-  height: 100%;
-  opacity: 0;
-  pointer-events: none;
-  visibility: hidden;
-  overflow: hidden;
-  display: flex;
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: flex !important;
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  opacity: 1 !important;
+  pointer-events: auto !important;
+  visibility: visible !important;
   background: var(--burgundy-deep);
+  padding: 80px 20px 90px;
+  box-sizing: border-box;
+  overflow: hidden;
 }
 
-.chapter.is-active{
-  opacity: 1;
-  pointer-events: auto;
-  visibility: visible;
-  z-index: 2;
+.chapter--1{
+  height: 100vh;
+  height: 100dvh;
+  padding: 0;
+  display: block !important;
 }
 
-/* Chapter 3 (Photo Gallery) requires scrolling when needed */
+.chapter--2{
+  background: radial-gradient(120% 120% at 50% 20%, #200717 0%, #13040e 55%, #0a0208 100%);
+}
+
 .chapter--3{
-  overflow-y: auto;
-  -webkit-overflow-scrolling: touch;
-  justify-content: flex-start;
-  padding-top: 80px;
-  padding-bottom: 90px;
+  background: radial-gradient(120% 120% at 50% 10%, #1e0616 0%, #140410 50%, #0a0207 100%);
+  padding-top: 85px;
+  padding-bottom: 95px;
+}
+
+.chapter--4{
+  background: radial-gradient(120% 120% at 50% 15%, #24081b 0%, #160411 50%, #0a0208 100%);
+}
+
+.chapter--5{
+  background: radial-gradient(120% 120% at 50% 10%, #150310 0%, #0c0209 50%, #050104 100%);
+  padding-top: 85px;
+  padding-bottom: 95px;
+}
+
+.chapter--6{
+  background: #12060c;
+  height: 100vh;
+  height: 100dvh;
+  padding: 0;
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
 }
 
 /* Chapter inner layout */
