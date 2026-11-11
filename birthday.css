@@ -238,28 +238,21 @@ body.film-body{
 }
 .music-widget__mute-btn:hover{ opacity: 1; color: #fff; }
 
-/* YouTube Official Player Floating Card */
+/* YouTube Player hidden offscreen so audio plays seamlessly without video box */
 .music-widget__player-card{
-  margin-top: 10px;
-  width: 220px;
-  background: rgba(22, 5, 15, 0.88);
-  border: 1px solid rgba(255, 180, 205, 0.28);
-  border-radius: 14px;
-  padding: 6px;
-  box-shadow: 0 10px 32px rgba(0, 0, 0, 0.55), 0 0 20px rgba(216, 30, 87, 0.2);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  transition: all 0.3s ease;
-  overflow: hidden;
+  position: fixed;
+  left: -9999px;
+  top: -9999px;
+  width: 200px;
+  height: 112px;
+  opacity: 0;
+  pointer-events: none;
+  visibility: hidden;
 }
 
 .yt-embed-box{
-  position: relative;
   width: 100%;
-  aspect-ratio: 16 / 9;
-  border-radius: 9px;
-  overflow: hidden;
-  background: #000;
+  height: 100%;
 }
 
 .yt-embed-box iframe,
@@ -1675,7 +1668,6 @@ body.film-body{
 
   /* Music Widget Mobile */
   .music-widget__info{ display: none; }
-  .music-widget__player-card{ width: 170px; margin-top: 6px; }
   .chapter-dot{ width: 24px; height: 24px; font-size: 10.5px; }
 
   /* Chapter 6 Grand Finale */
