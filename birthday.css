@@ -1340,22 +1340,11 @@ body.film-body{
   display: block;
   transition: transform 0.6s var(--ease-out);
 }
-.polaroid-card:hover .polaroid-photo img{ transform: scale(1.06); }
+.polaroid-card:hover .polaroid-photo img{ transform: scale(1.05); }
 
-.polaroid-overlay{
-  position: absolute; inset: 0;
-  background: rgba(45, 14, 25, 0.35);
-  display: flex; align-items: center; justify-content: center;
-  opacity: 0; transition: opacity 0.35s ease;
-}
-.polaroid-card:hover .polaroid-overlay{ opacity: 1; }
-
+.polaroid-overlay,
 .polaroid-zoom-badge{
-  display: inline-flex; align-items: center; gap: 6px;
-  padding: 6px 14px; background: rgba(255, 255, 255, 0.94);
-  color: #7a1232; border-radius: 999px;
-  font-family: "Montserrat", sans-serif; font-size: 11px; font-weight: 600;
-  letter-spacing: 0.08em; text-transform: uppercase;
+  display: none !important;
 }
 
 .polaroid-caption{ padding: 14px 4px 4px; text-align: center; }
