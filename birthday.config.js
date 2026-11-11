@@ -231,8 +231,13 @@ export const BIRTHDAY_CONFIG = {
   // BACKGROUND MUSIC SETTINGS
   // -------------------------------------------------------------
   music: {
-    src: "./music/song.mp3",
-    defaultVolume: 0.75,
+    // Selected Birthday Song: https://youtu.be/hNXs3ny2adA
+    youtubeUrl: "https://youtu.be/hNXs3ny2adA",
+    youtubeVideoId: "hNXs3ny2adA",
+    startTime: 15, // Skip initial 15 seconds, start at 00:15
+    title: "Birthday Song",
+    artist: "Special Melody",
+    defaultVolume: 85, // 0 - 100
     loop: true
   }
 };

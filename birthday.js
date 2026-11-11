@@ -1349,9 +1349,9 @@ const bgAudio      = $('bgAudio');
 
 let isMusicPlaying = false;
 let isMusicMuted   = false;
-let webAudioCtx    = null;
-let webAudioActive = false;
-let ambientTimer   = null;
+let ytPlayer       = null;
+let ytReady        = false;
+let ytStartedOnce  = false;
 
 function setMusicUIState(playing){
   isMusicPlaying = playing;
@@ -1361,80 +1361,89 @@ function setMusicUIState(playing){
     iconPause.hidden = !playing;
   }
   if (musicSub){
-    musicSub.textContent = playing ? 'Playing' : 'Click to Play';
+    musicSub.textContent = playing ? 'Playing (00:15)' : 'Click to Play';
   }
 }
 
-function startAmbientSynth(){
-  if (webAudioActive) return;
-  try {
-    const AudioContext = window.AudioContext || window.webkitAudioContext;
-    if (!AudioContext) return;
-    if (!webAudioCtx) webAudioCtx = new AudioContext();
-    if (webAudioCtx.state === 'suspended') webAudioCtx.resume();
+function initYouTubePlayer(){
+  const videoId   = BIRTHDAY_CONFIG.music.youtubeVideoId || 'hNXs3ny2adA';
+  const startTime = BIRTHDAY_CONFIG.music.startTime || 15;
 
-    webAudioActive = true;
-    const chords = [
-      [261.63, 329.63, 392.00, 493.88], // Cmaj7
-      [220.00, 261.63, 329.63, 392.00], // Am7
-      [174.61, 220.00, 261.63, 329.63], // Fmaj7
-      [196.00, 246.94, 293.66, 392.00], // G7
-    ];
-    let chordIdx = 0;
-
-    function playNextChord(){
-      if (!webAudioActive || !webAudioCtx) return;
-      const notes = chords[chordIdx % chords.length];
-      chordIdx++;
-
-      notes.forEach((freq, idx) => {
-        const osc = webAudioCtx.createOscillator();
-        const gain = webAudioCtx.createGain();
-        osc.type = 'sine';
-        osc.frequency.setValueAtTime(freq * (Math.random() < 0.3 ? 2 : 1), webAudioCtx.currentTime);
-
-        const now = webAudioCtx.currentTime + idx * 0.18;
-        gain.gain.setValueAtTime(0, now);
-        gain.gain.linearRampToValueAtTime(isMusicMuted ? 0 : 0.045, now + 0.12);
-        gain.gain.exponentialRampToValueAtTime(0.0001, now + 3.2);
-
-        osc.connect(gain);
-        gain.connect(webAudioCtx.destination);
-
-        osc.start(now);
-        osc.stop(now + 3.4);
+  window.onYouTubeIframeAPIReady = function(){
+    try {
+      ytPlayer = new YT.Player('ytPlayer', {
+        height: '100%',
+        width: '100%',
+        videoId: videoId,
+        playerVars: {
+          autoplay: 0,
+          start: startTime,
+          controls: 1,
+          enablejsapi: 1,
+          playsinline: 1,
+          rel: 0,
+          modestbranding: 1,
+          origin: window.location.origin
+        },
+        events: {
+          onReady: (event) => {
+            ytReady = true;
+            const vol = BIRTHDAY_CONFIG.music.defaultVolume || 85;
+            event.target.setVolume(vol);
+            if (musicLabel) musicLabel.textContent = BIRTHDAY_CONFIG.music.title || 'Birthday Song';
+          },
+          onStateChange: (event) => {
+            // YT.PlayerState.PLAYING = 1, PAUSED = 2, ENDED = 0
+            if (event.data === 1){
+              setMusicUIState(true);
+            } else if (event.data === 2 || event.data === 0){
+              setMusicUIState(false);
+            }
+          },
+          onError: () => {
+            tryFallbackAudio();
+          }
+        }
       });
+    } catch (_) {}
+  };
 
-      ambientTimer = setTimeout(playNextChord, 3600);
-    }
-
-    playNextChord();
-  } catch (_) {}
-}
-
-function stopAmbientSynth(){
-  webAudioActive = false;
-  if (ambientTimer){ clearTimeout(ambientTimer); ambientTimer = null; }
+  if (window.YT && window.YT.Player){
+    window.onYouTubeIframeAPIReady();
+  }
 }
 
 function tryPlayMusic(){
+  if (ytPlayer && ytReady){
+    try {
+      if (!ytStartedOnce){
+        ytStartedOnce = true;
+        const startTime = BIRTHDAY_CONFIG.music.startTime || 15;
+        ytPlayer.seekTo(startTime, true);
+      }
+      ytPlayer.playVideo();
+      setMusicUIState(true);
+      return;
+    } catch (_) {}
+  }
+  tryFallbackAudio();
+}
+
+function tryFallbackAudio(){
   if (bgAudio && bgAudio.src){
-    bgAudio.volume = isMusicMuted ? 0 : (BIRTHDAY_CONFIG.music.defaultVolume || 0.75);
+    bgAudio.volume = isMusicMuted ? 0 : 0.75;
     const p = bgAudio.play();
     if (p !== undefined){
-      p.then(() => {
-        setMusicUIState(true);
-        if (musicLabel) musicLabel.textContent = 'Birthday Song';
-      }).catch(() => {
-        setMusicUIState(false);
-      });
+      p.then(() => setMusicUIState(true)).catch(() => setMusicUIState(false));
     }
   }
 }
 
 function pauseMusic(){
+  if (ytPlayer && ytReady){
+    try { ytPlayer.pauseVideo(); } catch (_) {}
+  }
   if (bgAudio) bgAudio.pause();
-  stopAmbientSynth();
   setMusicUIState(false);
 }
 
@@ -1445,6 +1454,12 @@ function toggleMusic(){
 
 function toggleMute(){
   isMusicMuted = !isMusicMuted;
+  if (ytPlayer && ytReady){
+    try {
+      if (isMusicMuted) ytPlayer.mute();
+      else ytPlayer.unMute();
+    } catch (_) {}
+  }
   if (bgAudio) bgAudio.volume = isMusicMuted ? 0 : 0.75;
   if (iconVolHigh && iconVolMuted){
     iconVolHigh.hidden = isMusicMuted;
@@ -1462,6 +1477,8 @@ const unlockAudioOnGesture = () => {
 };
 window.addEventListener('pointerdown', unlockAudioOnGesture, { passive: true });
 window.addEventListener('keydown', unlockAudioOnGesture, { passive: true });
+
+initYouTubePlayer();
 
 /* ============================================================
    SIZING & BOOTSTRAP
