@@ -51,10 +51,17 @@ body.film-body{
 }
 
 /* ============================================================
-   CHAPTER PROGRESS BAR (Hidden per user preference)
+   CHAPTER PROGRESS BAR & NUMBERING (Completely Removed)
    ============================================================ */
-.film-header{
+.film-header,
+.chapter-tracker,
+.chapter-dots,
+.chapter-dot,
+.chapter-roman{
   display: none !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+  opacity: 0 !important;
 }
 
 .chapter-tracker{
