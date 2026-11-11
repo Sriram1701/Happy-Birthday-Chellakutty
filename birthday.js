@@ -538,14 +538,14 @@ function refreshRig(){
   H = window.innerHeight;
 
   const tR = target.getBoundingClientRect();
-  const tcx = tR.left + tR.width / 2;
-  const tcy = tR.top + tR.height / 2;
+  const tcx = (tR && tR.width > 0) ? (tR.left + tR.width / 2) : (W / 2);
+  const tcy = (tR && tR.height > 0) ? (tR.top + tR.height / 2) : (H * 0.33);
 
   // Temporarily reset transform so measurements are never skewed by prior rotation
   gsap.set(archery, { rotation: 0, scale: 1 });
 
-  const wArchery = archery.offsetWidth || 168;
-  svgScale = wArchery / 460;
+  const wArchery = archery.offsetWidth || 140;
+  svgScale = Math.max(wArchery / 460, 0.2);
   const gripLX = wArchery * 0.50;
   const gripLY = 241 * svgScale;
 
@@ -840,7 +840,10 @@ archery.addEventListener('keydown', (e) => {
 
 function enterChapter1(){
   gsap.set(hero, { autoAlpha: 1 });
-  refreshRig(); setDraw(0);
+  gsap.set([flood, bloom], { autoAlpha: 0 });
+  gsap.set(field, { autoAlpha: 0 });
+  refreshRig();
+  setDraw(0);
   gsap.set([eyebrow, hint], { opacity: 0, y: 14 });
   gsap.set(target, { opacity: 0, y: 10, scaleX: 0.9, scaleY: 0.9 });
   gsap.set(archery, { opacity: 0, scale: 0.85 });
@@ -857,6 +860,7 @@ function enterChapter1(){
 
 function resetChapter1(){
   if (filmTL){ filmTL.pause(0); }
+  gsap.set(hero, { autoAlpha: 1 });
   gsap.set([flood, bloom], { autoAlpha: 0 });
   gsap.set(field, { autoAlpha: 0 });
   gsap.set(arrow, { opacity: 1, scaleY: 1 });
@@ -883,14 +887,16 @@ function switchChapter(targetNum){
   if (targetNum === activeChapter || targetNum < 1 || targetNum > 6) return;
   const currentEl = $(`chapter${activeChapter}`);
   const targetEl  = $(`chapter${targetNum}`);
-  if (!currentEl || !targetEl) return;
+  if (!targetEl) return;
 
   const prevNum = activeChapter;
   activeChapter = targetNum;
 
   // Update Tracker UI
   const trackerTitle = $('chapterTrackerTitle');
-  if (trackerTitle) trackerTitle.textContent = CHAPTER_TITLES[activeChapter - 1];
+  if (trackerTitle && CHAPTER_TITLES[activeChapter - 1]){
+    trackerTitle.textContent = CHAPTER_TITLES[activeChapter - 1];
+  }
 
   document.querySelectorAll('.chapter-dot').forEach((dot) => {
     const num = parseInt(dot.getAttribute('data-chapter'), 10);
@@ -900,18 +906,22 @@ function switchChapter(targetNum){
   });
 
   // Cross-fade chapters smoothly with GSAP
-  gsap.to(currentEl, {
-    opacity: 0,
-    duration: 0.5,
-    ease: 'power2.inOut',
-    onComplete: () => {
-      currentEl.classList.remove('is-active');
-      if (prevNum === 6) treeStop();
-    },
-  });
+  if (currentEl && currentEl !== targetEl){
+    gsap.to(currentEl, {
+      opacity: 0,
+      duration: 0.35,
+      ease: 'power2.inOut',
+      onComplete: () => {
+        currentEl.classList.remove('is-active');
+        currentEl.style.display = 'none';
+        if (prevNum === 6) treeStop();
+      },
+    });
+  }
 
+  targetEl.style.display = (targetNum === 1 || targetNum === 6) ? 'block' : 'flex';
   targetEl.classList.add('is-active');
-  gsap.fromTo(targetEl, { opacity: 0 }, { opacity: 1, duration: 0.65, delay: 0.15, ease: 'power2.out' });
+  gsap.fromTo(targetEl, { opacity: 0 }, { opacity: 1, duration: 0.5, delay: 0.05, ease: 'power2.out' });
 
   // Trigger chapter-specific logic
   if (activeChapter === 1){
@@ -1458,8 +1468,8 @@ window.addEventListener('keydown', unlockAudioOnGesture, { passive: true });
    ============================================================ */
 function resize(){
   dpr = Math.min(window.devicePixelRatio || 1, 2);
-  W = canvas.clientWidth || window.innerWidth;
-  H = canvas.clientHeight || window.innerHeight;
+  W = window.innerWidth;
+  H = window.innerHeight;
   canvas.width = Math.round(W * dpr);
   canvas.height = Math.round(H * dpr);
   ctx.setTransform(dpr, 0, 0, dpr, 0, 0);

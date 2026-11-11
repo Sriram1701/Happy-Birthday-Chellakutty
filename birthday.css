@@ -261,7 +261,6 @@ body.film-body{
   opacity: 0;
   pointer-events: none;
   visibility: hidden;
-  transition: opacity 0.75s var(--ease-out), visibility 0.75s ease;
   overflow: hidden;
   display: flex;
   flex-direction: column;

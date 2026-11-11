@@ -17,8 +17,91 @@
 </head>
 <body class="film-body">
 
-  <!-- Background Audio (Persistent in background) -->
-  <audio id="bgAudio" src="./music/song.mp3" preload="auto" loop></audio>
+  <!-- ============================================================
+       PERSISTENT CINEMATIC CHAPTER PROGRESS BAR
+       ============================================================ -->
+  <header class="film-header" id="filmHeader" aria-label="Movie Navigation">
+    <div class="chapter-tracker" id="chapterTracker">
+      <div class="chapter-tracker__title" id="chapterTrackerTitle">Chapter I • The Invitation</div>
+      <div class="chapter-dots" id="chapterDots" role="tablist" aria-label="Chapters">
+        <button class="chapter-dot is-active" data-chapter="1" role="tab" aria-selected="true" title="Chapter 1: The Invitation">
+          <span class="dot-num">I</span>
+          <span class="dot-label">The Invitation</span>
+        </button>
+        <button class="chapter-dot" data-chapter="2" role="tab" aria-selected="false" title="Chapter 2: A Beautiful Beginning">
+          <span class="dot-num">II</span>
+          <span class="dot-label">A Beginning</span>
+        </button>
+        <button class="chapter-dot" data-chapter="3" role="tab" aria-selected="false" title="Chapter 3: Little Moments">
+          <span class="dot-num">III</span>
+          <span class="dot-label">Memories</span>
+        </button>
+        <button class="chapter-dot" data-chapter="4" role="tab" aria-selected="false" title="Chapter 4: Words From The Heart">
+          <span class="dot-num">IV</span>
+          <span class="dot-label">The Letter</span>
+        </button>
+        <button class="chapter-dot" data-chapter="5" role="tab" aria-selected="false" title="Chapter 5: Wishes Beyond Words">
+          <span class="dot-num">V</span>
+          <span class="dot-label">Wishes</span>
+        </button>
+        <button class="chapter-dot" data-chapter="6" role="tab" aria-selected="false" title="Chapter 6: The Grand Finale">
+          <span class="dot-num">VI</span>
+          <span class="dot-label">The Finale</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ============================================================
+       BACKGROUND MUSIC CONTROLLER (Persistent Across All Chapters)
+       ============================================================ -->
+  <aside class="music-widget" id="musicWidget" aria-label="Background Music Controller">
+    <div class="music-widget__pill">
+      <button class="music-widget__btn music-widget__play-btn" id="musicPlayBtn" type="button" aria-label="Play background music" title="Toggle background music">
+        <span class="music-icon music-icon--play" id="iconPlay">
+          <svg viewBox="0 0 24 24" width="15" height="15" fill="currentColor">
+            <polygon points="6 4 20 12 6 20 6 4"></polygon>
+          </svg>
+        </span>
+        <span class="music-icon music-icon--pause" id="iconPause" hidden>
+          <svg viewBox="0 0 24 24" width="15" height="15" fill="currentColor">
+            <rect x="6" y="5" width="4" height="14" rx="1"></rect>
+            <rect x="14" y="5" width="4" height="14" rx="1"></rect>
+          </svg>
+        </span>
+        <div class="music-equalizer" id="musicEqualizer" aria-hidden="true">
+          <span class="eq-bar eq-bar-1"></span>
+          <span class="eq-bar eq-bar-2"></span>
+          <span class="eq-bar eq-bar-3"></span>
+        </div>
+      </button>
+
+      <div class="music-widget__info" id="musicInfoWrap">
+        <span class="music-widget__label" id="musicLabel">Birthday Melody</span>
+        <span class="music-widget__sub" id="musicSub">Click to Play</span>
+      </div>
+
+      <button class="music-widget__btn music-widget__mute-btn" id="musicMuteBtn" type="button" aria-label="Mute or Unmute" title="Mute/Unmute audio">
+        <span class="vol-icon" id="iconVolHigh">
+          <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" fill="currentColor"></polygon>
+            <path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+            <path d="M19.07 4.93a10 10 0 0 1 0 14.14"></path>
+          </svg>
+        </span>
+        <span class="vol-icon" id="iconVolMuted" hidden>
+          <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" fill="currentColor"></polygon>
+            <line x1="23" y1="9" x2="17" y2="15"></line>
+            <line x1="17" y1="9" x2="23" y2="15"></line>
+          </svg>
+        </span>
+      </button>
+    </div>
+
+    <!-- Hidden audio tag; easily customized via public/music/song.mp3 -->
+    <audio id="bgAudio" src="./music/song.mp3" preload="auto" loop></audio>
+  </aside>
 
   <!-- ============================================================
        MAIN CINEMATIC FILM STAGE (Six Chapters)
