@@ -1002,11 +1002,17 @@ body.film-body{
 }
 .gallery-title{
   font-family: "Fraunces", Georgia, serif;
-  font-size: clamp(32px, 5.2vw, 56px);
+  font-size: clamp(22px, 4.8vw, 50px);
   font-weight: 700;
   color: #fff9f5;
   margin-top: 6px;
   margin-bottom: 12px;
+  line-height: 1.22;
+  text-wrap: balance;
+}
+.gallery-title span{
+  display: inline-block;
+  white-space: nowrap;
 }
 .gallery-subtitle{
   font-size: clamp(15px, 2.2vw, 18px);
@@ -1750,6 +1756,11 @@ body.film-body{
   /* Chapter 3 Photo Gallery */
   .chapter--3{ padding-top: 60px; padding-bottom: 40px; }
   .gallery-header{ padding: 0 16px; margin-bottom: 24px; }
+  .gallery-title{
+    font-size: clamp(20px, 5.8vw, 26px);
+    line-height: 1.25;
+    margin-bottom: 10px;
+  }
 
   .polaroid-grid{
     grid-template-columns: 1fr;
