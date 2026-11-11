@@ -55,7 +55,7 @@ export const BIRTHDAY_CONFIG = {
       stageKey: "growing",
       title: "Stepping into Youth",
       caption: "Gentle days of growing up, learning life's lessons, and stepping forward with quiet grace.",
-      objectPosition: "center 5%"
+      objectPosition: "center top"
     },
 
     // --- Stage 4: Beautiful Moments ---
@@ -129,7 +129,7 @@ export const BIRTHDAY_CONFIG = {
       stageKey: "moments",
       title: "Golden Hour Glow",
       caption: "Flowers in hair, draped in evening colors, catching the golden rays of the setting sun.",
-      objectPosition: "center 30%"
+      objectPosition: "center top"
     },
     {
       id: 12,
@@ -138,7 +138,7 @@ export const BIRTHDAY_CONFIG = {
       stageKey: "moments",
       title: "Poetic Grace",
       caption: "A quiet, thoughtful moment of beauty, moving through the journey with natural poise.",
-      objectPosition: "center 30%"
+      objectPosition: "center top"
     },
     {
       id: 13,
@@ -156,7 +156,7 @@ export const BIRTHDAY_CONFIG = {
       stageKey: "moments",
       title: "Joy & Celebration",
       caption: "Surrounded by festive warmth and flower garlands, making memories to treasure forever.",
-      objectPosition: "center 25%"
+      objectPosition: "center top"
     },
 
     // --- Stage 5: Recent Memories ---
@@ -205,33 +205,33 @@ export const BIRTHDAY_CONFIG = {
   },
 
   // -------------------------------------------------------------
-  // CHAPTER 5: WISHES BEYOND WORDS (Celestial Wishes)
+  // CHAPTER 5: WISHES (Personal Heartfelt Wishes)
   // -------------------------------------------------------------
   wishes: [
     {
       icon: "✨",
-      title: "For Dearest Ranjeetha",
-      text: "Happy Birthday, Ranjeetha. May this special year bring you boundless blessings, quiet strength, and endless reasons to smile."
+      title: "My Sweetest Wish",
+      text: "Happy birthday, Chellakutty. More than anything, I just want to see you genuinely happy and smiling today. You deserve the best of everything life has to offer."
     },
     {
-      icon: "🌟",
-      title: "Courage & Bright Dreams",
-      text: "May you always believe in the brilliance of your dreams, with the courage to reach every milestone your heart desires."
-    },
-    {
-      icon: "🌿",
-      title: "Peace & Gentle Serenity",
-      text: "May peace walk beside you in every chapter of life, and may you always know how deeply cherished and valued you are."
+      icon: "🌸",
+      title: "Peace & Calm Days",
+      text: "Whatever comes your way, Gundu, I hope you always have peace of mind, calm days, and the strength to handle whatever you set your heart on."
     },
     {
       icon: "💫",
-      title: "Health & Endless Vitality",
-      text: "May every morning fill your days with vibrant vitality, bright laughter, and renewed optimism for the road ahead."
+      title: "Keep Smiling Always",
+      text: "Your smile is truly one of the sweetest things, Pattu. I hope this year brings you so many little reasons to laugh out loud and feel lighter every single day."
     },
     {
-      icon: "♥",
-      title: "Unconditional Love & Joy",
-      text: "May you be surrounded today and every day with genuine warmth, unconditional love, and moments of pure happiness."
+      icon: "🌿",
+      title: "Health & Happiness",
+      text: "Wishing you good health, lots of energy, and bright moments every morning, C.H.E. Take good care of yourself always."
+    },
+    {
+      icon: "❤️",
+      title: "Always Special",
+      text: "Never forget how truly valued and special you are to me. May this year be gentle on you, kind to your heart, and full of blessings."
     }
   ],
 

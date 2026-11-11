@@ -1528,14 +1528,19 @@ body.film-body{
 }
 
 /* ============================================================
-   CHAPTER 5: WISHES BEYOND WORDS (Celestial Wishes)
+   CHAPTER 5: WISHES (Personal Heartfelt Wishes)
    ============================================================ */
 .chapter--5{
   background: radial-gradient(120% 120% at 50% 10%, #150310 0%, #0c0209 50%, #050104 100%);
-  overflow-y: auto;
-  -webkit-overflow-scrolling: touch;
-  padding: 80px 20px 90px;
+  display: flex !important;
+  flex-direction: column;
+  align-items: center;
   justify-content: flex-start;
+  padding: clamp(50px, 7vh, 85px) clamp(16px, 4vw, 24px) clamp(60px, 8vh, 95px);
+  width: 100%;
+  box-sizing: border-box;
+  overflow-x: hidden;
+  position: relative;
 }
 
 .celestial-sky{
@@ -1554,78 +1559,90 @@ body.film-body{
   opacity: 0.7;
 }
 
-.birthday-date-pill{
-  display: inline-flex;
+.wishes-container-inner{
+  width: 100%;
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 0;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: 10px;
-  margin: 12px auto 16px;
-  padding: 6px 20px;
-  background: rgba(255, 215, 225, 0.12);
-  border: 1px solid rgba(255, 190, 215, 0.35);
-  border-radius: 999px;
+  overflow: visible;
+}
+
+.wishes-date-tag{
+  display: inline-block;
   font-family: "Montserrat", sans-serif;
-  font-size: 11.5px;
+  font-size: 11px;
   font-weight: 600;
   letter-spacing: 0.16em;
   text-transform: uppercase;
-  color: #ffd0de;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.35), 0 0 14px rgba(232, 162, 61, 0.22);
-  backdrop-filter: blur(10px);
-}
-.birthday-date-pill .star-sparkle{
-  color: #f7ce72;
-  font-size: 11px;
+  color: #f3a6be;
+  margin-bottom: 10px;
+  text-align: center;
 }
 
 .wishes-headline{
   font-family: "Fraunces", Georgia, serif;
   font-weight: 700;
-  font-size: clamp(32px, 5.2vw, 54px);
+  font-size: clamp(2.2rem, 6vw, 3.2rem);
   color: #fff9f5;
-  margin-bottom: 8px;
-}
-.wishes-subhead{
-  font-size: clamp(15px, 2.2vw, 18px);
-  color: #e5bdc8;
-  max-width: 620px;
-  line-height: 1.55;
-  margin-bottom: 40px;
+  margin: 0 0 8px;
+  text-align: center;
 }
 
-/* Wishes Cards Grid */
+.wishes-subhead{
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-style: italic;
+  font-size: clamp(15px, 3.5vw, 18.5px);
+  color: #f7cbd7;
+  max-width: 580px;
+  line-height: 1.5;
+  margin: 0 auto clamp(24px, 4vh, 36px);
+  text-align: center;
+}
+
+/* Wishes Cards Grid (Zero Overflow, Fully Responsive) */
 .wishes-grid{
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 22px;
-  max-width: 1000px;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 340px), 1fr));
+  gap: clamp(16px, 3vw, 22px);
   width: 100%;
+  max-width: 860px;
+  box-sizing: border-box;
+  margin: 0 auto;
 }
 
 .wish-card{
-  background: rgba(36, 10, 24, 0.65);
-  border: 1px solid rgba(255, 180, 205, 0.22);
-  border-radius: 12px;
-  padding: 28px 22px;
+  background: rgba(36, 10, 24, 0.72);
+  border: 1px solid rgba(255, 180, 205, 0.25);
+  border-radius: 16px;
+  padding: clamp(20px, 4vw, 28px) clamp(18px, 3.5vw, 24px);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
   transition: all 0.4s var(--ease-spring);
   text-align: left;
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 10px;
+  width: 100%;
+  box-sizing: border-box;
+  overflow-wrap: break-word;
+  word-break: break-word;
 }
 
 .wish-card:hover{
-  transform: translateY(-8px) scale(1.02);
+  transform: translateY(-6px) scale(1.015);
   border-color: rgba(255, 210, 230, 0.55);
   box-shadow: 0 18px 45px -8px rgba(216, 30, 87, 0.45);
-  background: rgba(50, 14, 34, 0.8);
+  background: rgba(50, 14, 34, 0.85);
 }
 
 .wish-icon{
   font-size: 24px;
-  margin-bottom: 4px;
+  margin-bottom: 2px;
   display: inline-block;
 }
 
@@ -1637,10 +1654,11 @@ body.film-body{
 }
 
 .wish-text{
-  font-size: 15.5px;
-  line-height: 1.6;
+  font-size: 15px;
+  line-height: 1.62;
   color: #eed6df;
   font-style: italic;
+  margin: 0;
 }
 
 /* ============================================================
@@ -1980,15 +1998,38 @@ body.film-body{
     margin: 12px auto 0;
   }
 
-  /* Chapter 5 Wishes */
-  .birthday-date-pill{ margin: 8px auto 12px; font-size: 10.5px; padding: 5px 16px; }
-  .wishes-headline{ font-size: clamp(24px, 6vw, 36px); padding: 0 16px; }
-  .wishes-subhead{ font-size: 14px; padding: 0 16px; }
+  /* Chapter 5 Wishes Mobile (Zero Horizontal Overflow) */
+  .chapter--5{
+    padding: clamp(40px, 6vh, 60px) 14px clamp(50px, 7vh, 80px) !important;
+  }
+  .wishes-container-inner{
+    width: 100% !important;
+    padding: 0 !important;
+  }
+  .wishes-headline{
+    font-size: clamp(26px, 7.5vw, 36px) !important;
+    padding: 0 !important;
+    margin-bottom: 6px !important;
+  }
+  .wishes-subhead{
+    font-size: 14.5px !important;
+    padding: 0 8px !important;
+    margin-bottom: 22px !important;
+  }
   .wishes-grid{
-    grid-template-columns: 1fr;
-    width: min(92vw, 440px);
-    margin: 0 auto;
-    gap: 16px;
+    grid-template-columns: 1fr !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    box-sizing: border-box !important;
+    gap: 14px !important;
+  }
+  .wish-card{
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+    padding: 20px 18px !important;
   }
 
   /* Chapter Action Buttons Mobile Stacking */
