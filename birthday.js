@@ -1032,7 +1032,7 @@ function initChapter3(){
     <article class="polaroid-card" data-index="${idx}" data-stage="${item.stageKey || ''}" tabindex="0" role="button" aria-label="Open ${item.title}">
       <div class="polaroid-tape" aria-hidden="true"></div>
       <div class="polaroid-photo">
-        <img src="./images/${item.filename}" alt="${item.title}" loading="lazy" />
+        <img src="./images/${item.filename}" alt="${item.title}" loading="lazy" style="${item.objectPosition ? `object-position: ${item.objectPosition};` : ''}" />
         <div class="polaroid-overlay">
           <span class="polaroid-zoom-badge">
             <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.4" style="margin-right:4px;"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line><line x1="11" y1="8" x2="11" y2="14"></line><line x1="8" y1="11" x2="14" y2="11"></line></svg>
