@@ -1,0 +1,18 @@
+# dependencies
+node_modules/
+node_modules.bin-*
+
+# build output (regenerate with `npm run build`)
+dist/
+
+# OS / editor noise
+.DS_Store
+Thumbs.db
+*.log
+
+# temporary extracted album
+extracted_album/
+
+.env
+.env.*
+.vercel

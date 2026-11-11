@@ -1,0 +1,586 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>Happy Birthday ♥ — A Cinematic Experience in Six Chapters</title>
+  <meta name="description" content="An interactive romantic birthday film in six chapters: the invitation, a beautiful beginning, cherished memories, words from the heart, celestial wishes, and the grand finale." />
+  <meta name="theme-color" content="#12060c" />
+  <link rel="icon" type="image/png" href="/favicon.png" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600&family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700;9..144,900&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+  <script>document.documentElement.classList.add('js')</script>
+  <link rel="stylesheet" href="./birthday.css" />
+</head>
+<body class="film-body">
+
+  <!-- ============================================================
+       PERSISTENT CINEMATIC CHAPTER PROGRESS BAR
+       ============================================================ -->
+  <header class="film-header" id="filmHeader" aria-label="Movie Navigation">
+    <div class="chapter-tracker" id="chapterTracker">
+      <div class="chapter-tracker__title" id="chapterTrackerTitle">Chapter I • The Invitation</div>
+      <div class="chapter-dots" id="chapterDots" role="tablist" aria-label="Chapters">
+        <button class="chapter-dot is-active" data-chapter="1" role="tab" aria-selected="true" title="Chapter 1: The Invitation">
+          <span class="dot-num">I</span>
+          <span class="dot-label">The Invitation</span>
+        </button>
+        <button class="chapter-dot" data-chapter="2" role="tab" aria-selected="false" title="Chapter 2: A Beautiful Beginning">
+          <span class="dot-num">II</span>
+          <span class="dot-label">A Beginning</span>
+        </button>
+        <button class="chapter-dot" data-chapter="3" role="tab" aria-selected="false" title="Chapter 3: Little Moments">
+          <span class="dot-num">III</span>
+          <span class="dot-label">Memories</span>
+        </button>
+        <button class="chapter-dot" data-chapter="4" role="tab" aria-selected="false" title="Chapter 4: Words From The Heart">
+          <span class="dot-num">IV</span>
+          <span class="dot-label">The Letter</span>
+        </button>
+        <button class="chapter-dot" data-chapter="5" role="tab" aria-selected="false" title="Chapter 5: Wishes Beyond Words">
+          <span class="dot-num">V</span>
+          <span class="dot-label">Wishes</span>
+        </button>
+        <button class="chapter-dot" data-chapter="6" role="tab" aria-selected="false" title="Chapter 6: The Grand Finale">
+          <span class="dot-num">VI</span>
+          <span class="dot-label">The Finale</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ============================================================
+       BACKGROUND MUSIC CONTROLLER (Persistent Across All Chapters)
+       ============================================================ -->
+  <aside class="music-widget" id="musicWidget" aria-label="Background Music Controller">
+    <div class="music-widget__pill">
+      <button class="music-widget__btn music-widget__play-btn" id="musicPlayBtn" type="button" aria-label="Play background music" title="Toggle background music">
+        <span class="music-icon music-icon--play" id="iconPlay">
+          <svg viewBox="0 0 24 24" width="15" height="15" fill="currentColor">
+            <polygon points="6 4 20 12 6 20 6 4"></polygon>
+          </svg>
+        </span>
+        <span class="music-icon music-icon--pause" id="iconPause" hidden>
+          <svg viewBox="0 0 24 24" width="15" height="15" fill="currentColor">
+            <rect x="6" y="5" width="4" height="14" rx="1"></rect>
+            <rect x="14" y="5" width="4" height="14" rx="1"></rect>
+          </svg>
+        </span>
+        <div class="music-equalizer" id="musicEqualizer" aria-hidden="true">
+          <span class="eq-bar eq-bar-1"></span>
+          <span class="eq-bar eq-bar-2"></span>
+          <span class="eq-bar eq-bar-3"></span>
+        </div>
+      </button>
+
+      <div class="music-widget__info" id="musicInfoWrap">
+        <span class="music-widget__label" id="musicLabel">Birthday Melody</span>
+        <span class="music-widget__sub" id="musicSub">Click to Play</span>
+      </div>
+
+      <button class="music-widget__btn music-widget__mute-btn" id="musicMuteBtn" type="button" aria-label="Mute or Unmute" title="Mute/Unmute audio">
+        <span class="vol-icon" id="iconVolHigh">
+          <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" fill="currentColor"></polygon>
+            <path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+            <path d="M19.07 4.93a10 10 0 0 1 0 14.14"></path>
+          </svg>
+        </span>
+        <span class="vol-icon" id="iconVolMuted" hidden>
+          <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" fill="currentColor"></polygon>
+            <line x1="23" y1="9" x2="17" y2="15"></line>
+            <line x1="17" y1="9" x2="23" y2="15"></line>
+          </svg>
+        </span>
+      </button>
+    </div>
+
+    <!-- Hidden audio tag; easily customized via public/music/song.mp3 -->
+    <audio id="bgAudio" src="./music/song.mp3" preload="auto" loop></audio>
+  </aside>
+
+  <!-- ============================================================
+       MAIN CINEMATIC FILM STAGE (Six Chapters)
+       ============================================================ -->
+  <main class="film-stage" id="filmStage">
+
+    <!-- ==========================================================
+         CHAPTER 1: THE INVITATION
+         (Preserved original archery bow, arrow, heart impact & flood)
+         ========================================================== -->
+    <section class="chapter chapter--1 is-active" id="chapter1" aria-label="Chapter 1: The Invitation">
+      <div class="hero" id="hero" aria-label="Draw the bow to open your card">
+        <div class="hero__bg" aria-hidden="true"></div>
+        <div class="hero__motes" id="motes" aria-hidden="true"></div>
+
+        <p class="hero__eyebrow" id="eyebrow">a little something, for you</p>
+
+        <!-- THE TARGET HEART -->
+        <div class="targetWrap" aria-hidden="true">
+          <div class="target" id="target">
+            <span class="heart__glow" aria-hidden="true"></span>
+            <span class="target__heart" id="targetHeart">
+              <svg class="heart__svg" viewBox="0 0 100 92" aria-hidden="true">
+                <defs>
+                  <radialGradient id="hg" cx="38%" cy="30%" r="80%">
+                    <stop offset="0%"  stop-color="#ffd9e4" />
+                    <stop offset="42%" stop-color="#ff6f97" />
+                    <stop offset="82%" stop-color="#d81e57" />
+                    <stop offset="100%" stop-color="#9d0f3e" />
+                  </radialGradient>
+                  <linearGradient id="hsheen" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%"  stop-color="rgba(255,255,255,.85)" />
+                    <stop offset="34%" stop-color="rgba(255,255,255,0)" />
+                  </linearGradient>
+                </defs>
+                <path d="M50 86.5C26 68 10.5 53.6 10.5 34.6 10.5 20.4 21 11 33.2 11c8.6 0 14.2 4.7 16.8 11.4C52.6 15.7 58.2 11 66.8 11 79 11 89.5 20.4 89.5 34.6 89.5 53.6 74 68 50 86.5Z" fill="url(#hg)" />
+                <path d="M50 86.5C26 68 10.5 53.6 10.5 34.6 10.5 20.4 21 11 33.2 11c8.6 0 14.2 4.7 16.8 11.4C52.6 15.7 58.2 11 66.8 11 79 11 89.5 20.4 89.5 34.6 89.5 53.6 74 68 50 86.5Z" fill="url(#hsheen)" opacity=".7" />
+                <ellipse cx="34" cy="30" rx="8.5" ry="5.4" fill="#fff" opacity=".72" style="mix-blend-mode:screen" />
+              </svg>
+            </span>
+          </div>
+        </div>
+
+        <!-- THE BOW + ARROW -->
+        <div class="archery" id="archery" role="button" tabindex="0"
+             aria-label="Draw the bow and release to send the arrow to the heart">
+            <div class="aim" id="aim" aria-hidden="true"></div>
+
+            <svg class="bow" id="bow" viewBox="0 0 460 300" aria-hidden="true">
+              <defs>
+                <linearGradient id="limb" x1="0" y1="0" x2="1" y2="0">
+                  <stop offset="0"   stop-color="#4a2a1a" />
+                  <stop offset=".18" stop-color="#6b3f24" />
+                  <stop offset=".5"  stop-color="#8a5127" />
+                  <stop offset=".82" stop-color="#6b3f24" />
+                  <stop offset="1"   stop-color="#4a2a1a" />
+                </linearGradient>
+                <linearGradient id="limbHi" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0" stop-color="rgba(255,214,160,.8)" />
+                  <stop offset="1" stop-color="rgba(255,214,160,0)" />
+                </linearGradient>
+                <linearGradient id="grip" x1="0" y1="0" x2="1" y2="0">
+                  <stop offset="0" stop-color="#2a1a10" />
+                  <stop offset=".5" stop-color="#5a3822" />
+                  <stop offset="1" stop-color="#2a1a10" />
+                </linearGradient>
+              </defs>
+              <path class="bow__limb" d="M34 96 C 118 168, 168 240, 230 252 C 292 240, 342 168, 426 96"
+                    fill="none" stroke="url(#limb)" stroke-width="13" stroke-linecap="round" />
+              <path class="bow__limbHi" d="M34 96 C 118 168, 168 240, 230 252 C 292 240, 342 168, 426 96"
+                    fill="none" stroke="url(#limbHi)" stroke-width="3" stroke-linecap="round" opacity=".7" />
+              <path d="M34 96 C 22 82, 26 70, 40 66" fill="none" stroke="url(#limb)" stroke-width="8" stroke-linecap="round" />
+              <path d="M426 96 C 438 82, 434 70, 420 66" fill="none" stroke="url(#limb)" stroke-width="8" stroke-linecap="round" />
+              <rect x="216" y="206" width="28" height="70" rx="9" fill="url(#grip)" />
+              <path d="M219 220h22 M219 236h22 M219 252h22" stroke="rgba(0,0,0,.35)" stroke-width="2" />
+              <line class="bow__str" id="strL" x1="40" y1="70" x2="230" y2="96" stroke="#9a8068" stroke-width="2.2" stroke-linecap="round" />
+              <line class="bow__str" id="strR" x1="420" y1="70" x2="230" y2="96" stroke="#9a8068" stroke-width="2.2" stroke-linecap="round" />
+              <circle class="bow__serving" id="serving" cx="230" cy="96" r="4.5" fill="#6f5137" />
+            </svg>
+
+            <svg class="arrow" id="arrow" viewBox="0 0 64 220" aria-hidden="true">
+              <defs>
+                <linearGradient id="shaft" x1="0" y1="0" x2="1" y2="0">
+                  <stop offset="0" stop-color="#4a2c14" />
+                  <stop offset=".5" stop-color="#8a5a2c" />
+                  <stop offset="1" stop-color="#3e2410" />
+                </linearGradient>
+                <linearGradient id="gold" x1="0" y1="0" x2="1" y2="1">
+                  <stop offset="0" stop-color="#ffe38c" />
+                  <stop offset=".45" stop-color="#f4a626" />
+                  <stop offset="1" stop-color="#a85f0e" />
+                </linearGradient>
+                <linearGradient id="feath" x1="0" y1="0" x2="1" y2="1">
+                  <stop offset="0" stop-color="#ff7f9c" />
+                  <stop offset=".5" stop-color="#e6396a" />
+                  <stop offset="1" stop-color="#a8154a" />
+                </linearGradient>
+                <linearGradient id="wing" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0" stop-color="#ffffff" />
+                  <stop offset="1" stop-color="#ffe0c4" />
+                </linearGradient>
+              </defs>
+              <rect x="29.4" y="30" width="5.2" height="168" rx="2.6" fill="url(#shaft)" />
+              <g class="arrow__wings">
+                <path class="wingL" d="M31 30 C 10 16, 2 20, 4 34 C 12 30, 20 32, 31 40 Z" fill="url(#wing)" stroke="rgba(196,132,58,.72)" stroke-width="1.2"/>
+                <path class="wingR" d="M33 30 C 54 16, 62 20, 60 34 C 52 30, 44 32, 33 40 Z" fill="url(#wing)" stroke="rgba(196,132,58,.72)" stroke-width="1.2"/>
+              </g>
+              <path class="arrow__head" d="M32 12 C 30 7, 22 6.5, 21.5 13 C 21 18, 27 22, 32 27 C 37 22, 43 18, 42.5 13 C 42 6.5, 34 7, 32 12 Z" fill="url(#gold)" stroke="#a5701a" stroke-width=".8" />
+              <ellipse cx="27" cy="13" rx="2.6" ry="1.7" fill="#fff" opacity=".8" style="mix-blend-mode:screen" />
+              <g class="arrow__fletch">
+                <path d="M32 150 C 16 156, 10 178, 15 200 C 24 194, 30 184, 32 176 Z" fill="url(#feath)" />
+                <path d="M32 150 C 48 156, 54 178, 49 200 C 40 194, 34 184, 32 176 Z" fill="url(#feath)" opacity=".92" />
+                <path d="M28 160l4 3 M26 170l6 3 M25 180l7 3" stroke="rgba(130,12,48,.45)" stroke-width="1" />
+                <path d="M36 160l-4 3 M38 170l-6 3 M39 180l-7 3" stroke="rgba(130,12,48,.45)" stroke-width="1" />
+              </g>
+              <path d="M29 200 L32 205 L35 200" fill="none" stroke="#c9a25a" stroke-width="2" stroke-linecap="round"/>
+              <circle id="tip" cx="32" cy="9" r="0.6" fill="none" />
+            </svg>
+        </div>
+
+        <p class="hero__hint" id="hint">pull &amp; release</p>
+      </div>
+
+      <!-- Rose Flood Circle (Burst on impact) -->
+      <div class="flood" id="flood" aria-hidden="true"></div>
+
+      <!-- Kinetic Typography Wish Field -->
+      <div class="field" id="field" aria-hidden="true">
+        <div class="blob blob--1"></div>
+        <div class="blob blob--2"></div>
+        <div class="blob blob--3"></div>
+        <div class="fgrid" id="fgrid"></div>
+        <div class="fvignette"></div>
+
+        <div class="camera" id="camera">
+          <p class="kEyebrow" id="kEyebrow">make a wish&hellip;</p>
+          <h2 class="headline" id="headline">
+            <span class="hl__line"><span class="mask"><span class="hl__word" id="wLine1">Happy</span></span></span>
+            <span class="hl__line"><span class="mask"><span class="hl__word" id="wLine2">Birthday</span></span></span>
+          </h2>
+          <svg class="uline" id="uline" viewBox="0 0 300 26" fill="none" aria-hidden="true">
+            <path class="uline__path" d="M8 16C56 7 132 4 178 6c30 1 78 5 114 12-40 3-108 4-176 3"
+                  stroke="currentColor" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+          <p class="kSub" id="kSub">to someone worth celebrating</p>
+          
+          <!-- Next Chapter Prompt at end of Chapter 1 -->
+          <div class="ch1-continue-wrap" id="ch1ContinueWrap" hidden>
+            <button class="chapter-cta-btn" id="ch1NextBtn" type="button">
+              <span>Open Chapter II: A Beautiful Beginning</span>
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg>
+            </button>
+          </div>
+        </div>
+
+        <div class="bar bar--top" id="barTop"></div>
+        <div class="bar bar--bot" id="barBot"></div>
+      </div>
+
+      <div class="bloom" id="bloom" aria-hidden="true"></div>
+    </section>
+
+    <!-- ==========================================================
+         CHAPTER 2: A BEAUTIFUL BEGINNING
+         (Magical animated memory book with sequential reveals)
+         ========================================================== -->
+    <section class="chapter chapter--2" id="chapter2" aria-label="Chapter 2: A Beautiful Beginning">
+      <div class="chapter-backdrop" aria-hidden="true">
+        <div class="glow-orb glow-orb--left"></div>
+        <div class="glow-orb glow-orb--right"></div>
+        <div class="dust-particles" id="dustParticles"></div>
+      </div>
+
+      <div class="chapter-inner chapter-inner--center">
+        <header class="chapter-badge">
+          <span class="chapter-roman">Chapter II</span>
+          <span class="chapter-name">A Beautiful Beginning</span>
+        </header>
+
+        <!-- 3D Animated Magical Memory Book -->
+        <div class="book-stage" id="bookStage">
+          <div class="memory-book" id="memoryBook" role="region" aria-label="Magical Storybook">
+            <!-- Left Page / Cover Interior -->
+            <div class="book-page book-page--left">
+              <div class="book-page__content">
+                <div class="book-ornament" aria-hidden="true">
+                  <svg viewBox="0 0 100 100" width="60" height="60" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <circle cx="50" cy="50" r="42" stroke-dasharray="3 3"></circle>
+                    <path d="M50 20 C50 38, 20 50, 20 50 C20 50, 50 62, 50 80 C50 62, 80 50, 80 50 C80 50, 50 38, 50 20 Z" fill="rgba(232,162,61,0.15)"></path>
+                  </svg>
+                </div>
+                <span class="book-caption-tag">PROLOGUE</span>
+                <h3 class="book-heading">A Story Written In Stars</h3>
+                <div class="candle-glow" aria-hidden="true"></div>
+              </div>
+            </div>
+
+            <!-- Right Page (Sequential Story Messages) -->
+            <div class="book-page book-page--right">
+              <div class="book-page__content">
+                <div class="story-stream" id="storyStream">
+                  <p class="story-line story-line--1" id="storyLine1">
+                    &ldquo;Every beautiful story begins somewhere...&rdquo;
+                  </p>
+                  <p class="story-line story-line--2" id="storyLine2">
+                    &ldquo;And some people make ordinary moments unforgettable.&rdquo;
+                  </p>
+                  <p class="story-line story-line--3 story-line--highlight" id="storyLine3">
+                    &ldquo;Today is all about celebrating someone special.&rdquo;
+                  </p>
+                </div>
+                <div class="book-corner-heart" aria-hidden="true">♥</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Chapter Navigation Actions -->
+        <div class="chapter-actions">
+          <button class="chapter-nav-btn chapter-nav-btn--prev" id="ch2PrevBtn" type="button">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"></polyline></svg>
+            <span>Back to The Invitation</span>
+          </button>
+          <button class="chapter-nav-btn chapter-nav-btn--next chapter-nav-btn--primary" id="ch2NextBtn" type="button">
+            <span>Continue to Chapter III: Memories</span>
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================================
+         CHAPTER 3: LITTLE MOMENTS, BIG MEMORIES
+         (10 Polaroid Photo Gallery + Fullscreen Lightbox)
+         ========================================================== -->
+    <section class="chapter chapter--3" id="chapter3" aria-label="Chapter 3: Little Moments, Big Memories">
+      <div class="fairy-lights" aria-hidden="true">
+        <span class="light-bulb b1"></span>
+        <span class="light-bulb b2"></span>
+        <span class="light-bulb b3"></span>
+        <span class="light-bulb b4"></span>
+        <span class="light-bulb b5"></span>
+        <span class="light-bulb b6"></span>
+        <span class="light-bulb b7"></span>
+        <span class="light-bulb b8"></span>
+      </div>
+
+      <div class="chapter-inner">
+        <header class="gallery-header">
+          <span class="chapter-roman">Chapter III</span>
+          <h2 class="gallery-title">Little Moments, Big Memories</h2>
+          <p class="gallery-subtitle">
+            A chronological journey through cherished memories &mdash; from childhood beginnings to today. Tap any photo to enlarge.
+          </p>
+          <div class="gallery-ornament" aria-hidden="true">
+            <span class="ornament-line"></span>
+            <span class="ornament-heart">♥</span>
+            <span class="ornament-line"></span>
+          </div>
+
+          <!-- Chronological Journey Stages Filter -->
+          <div class="gallery-stages" id="galleryStages" role="tablist" aria-label="Memory Journey Stages">
+            <button class="stage-pill is-active" data-stage="all" type="button">All Memories (17)</button>
+            <button class="stage-pill" data-stage="childhood" type="button">🧸 Childhood</button>
+            <button class="stage-pill" data-stage="school" type="button">🎒 School Days</button>
+            <button class="stage-pill" data-stage="growing" type="button">🌸 Growing Up</button>
+            <button class="stage-pill" data-stage="moments" type="button">✨ Beautiful Moments</button>
+            <button class="stage-pill" data-stage="recent" type="button">💫 Recent Memories</button>
+          </div>
+        </header>
+
+        <!-- Dynamic 10 Polaroid Cards Container -->
+        <div class="polaroid-grid" id="polaroidGrid">
+          <!-- Populated dynamically via birthday.config.js -->
+        </div>
+
+        <!-- Chapter Navigation Actions -->
+        <div class="chapter-actions chapter-actions--centered">
+          <button class="chapter-nav-btn chapter-nav-btn--prev" id="ch3PrevBtn" type="button">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"></polyline></svg>
+            <span>Previous Chapter</span>
+          </button>
+          <button class="chapter-nav-btn chapter-nav-btn--next chapter-nav-btn--primary" id="ch3NextBtn" type="button">
+            <span>Continue to Chapter IV: Words From The Heart</span>
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================================
+         CHAPTER 4: WORDS FROM THE HEART
+         (Sealed Wax Envelope with Typewriter Text Animation)
+         ========================================================== -->
+    <section class="chapter chapter--4" id="chapter4" aria-label="Chapter 4: Words From The Heart">
+      <div class="chapter-backdrop" aria-hidden="true">
+        <div class="rose-petals-falling" id="letterPetals"></div>
+      </div>
+
+      <div class="chapter-inner chapter-inner--center">
+        <header class="chapter-badge">
+          <span class="chapter-roman">Chapter IV</span>
+          <span class="chapter-name">Words From The Heart</span>
+        </header>
+
+        <!-- Wax Sealed Envelope Container -->
+        <div class="envelope-area" id="envelopeArea">
+          <div class="envelope-card" id="envelopeCard" role="button" tabindex="0" aria-label="Open your birthday letter">
+            <div class="envelope-flap" id="envelopeFlap">
+              <div class="envelope-seal" id="envelopeSeal">
+                <span class="seal-heart-icon">♥</span>
+              </div>
+            </div>
+            <div class="envelope-front">
+              <p class="envelope-recipient" id="envelopeRecipient">For Someone Special</p>
+              <p class="envelope-hint" id="envelopeHint">Tap the wax seal to open</p>
+            </div>
+          </div>
+
+          <!-- Unfolded Letter (Appears when opened) -->
+          <article class="letter-parchment" id="letterParchment" hidden aria-label="Birthday Letter">
+            <div class="parchment-inner">
+              <div class="parchment-seal-watermark" aria-hidden="true">♥</div>
+              <h3 class="letter-salutation" id="letterSalutation">Dearest Birthday Star,</h3>
+              
+              <div class="letter-typewriter" id="letterBody">
+                <!-- Dynamically typed via birthday.config.js -->
+              </div>
+
+              <blockquote class="letter-quote" id="letterQuote">
+                &ldquo;Here's to days filled with sunshine, nights full of stars, and a heart full of joy.&rdquo;
+              </blockquote>
+
+              <div class="letter-signoff">
+                <p class="letter-closing" id="letterClosing">With the warmest birthday wishes,</p>
+                <p class="letter-signature" id="letterSignature">Always Celebrating You</p>
+              </div>
+            </div>
+          </article>
+        </div>
+
+        <!-- Chapter Navigation Actions -->
+        <div class="chapter-actions">
+          <button class="chapter-nav-btn chapter-nav-btn--prev" id="ch4PrevBtn" type="button">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"></polyline></svg>
+            <span>Back to Memories</span>
+          </button>
+          <button class="chapter-nav-btn chapter-nav-btn--next chapter-nav-btn--primary" id="ch4NextBtn" type="button">
+            <span>Continue to Chapter V: Wishes</span>
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================================
+         CHAPTER 5: WISHES BEYOND WORDS
+         (Deep Celestial Night Sky + Floating Sequential Wishes)
+         ========================================================== -->
+    <section class="chapter chapter--5" id="chapter5" aria-label="Chapter 5: Wishes Beyond Words">
+      <div class="celestial-sky" id="celestialSky" aria-hidden="true">
+        <div class="stars-cluster stars-cluster--1"></div>
+        <div class="stars-cluster stars-cluster--2"></div>
+        <div class="nebula-dust"></div>
+      </div>
+
+      <div class="chapter-inner chapter-inner--center">
+        <header class="chapter-badge">
+          <span class="chapter-roman">Chapter V</span>
+          <span class="chapter-name">Wishes Beyond Words</span>
+        </header>
+
+        <h2 class="wishes-headline">Wishes Sent To The Stars</h2>
+        <p class="wishes-subhead">Five heartfelt wishes floating under the velvet midnight sky, meant only for you.</p>
+
+        <!-- Sequential Floating Wish Cards Container -->
+        <div class="wishes-grid" id="wishesGrid">
+          <!-- Populated dynamically via birthday.config.js -->
+        </div>
+
+        <!-- Chapter Navigation Actions -->
+        <div class="chapter-actions">
+          <button class="chapter-nav-btn chapter-nav-btn--prev" id="ch5PrevBtn" type="button">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"></polyline></svg>
+            <span>Back to Letter</span>
+          </button>
+          <button class="chapter-nav-btn chapter-nav-btn--next chapter-nav-btn--primary" id="ch5NextBtn" type="button">
+            <span>The Grand Finale — Chapter VI</span>
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================================
+         CHAPTER 6: THE GRAND FINALE
+         (Magical Glowing Heart Blossom Tree + Confetti + Replay)
+         ========================================================== -->
+    <section class="chapter chapter--6" id="chapter6" aria-label="Chapter 6: The Grand Finale">
+      <!-- The Blossom Tree Canvas Engine -->
+      <canvas id="tree" class="tree" aria-label="A blossom tree blooms into a heart of lit petals" role="img"></canvas>
+
+      <!-- Hand-lettered Finale Wish Message -->
+      <div class="wish" id="wish" aria-hidden="true">
+        <p class="wish__eyebrow" id="wEyebrow">and&hellip; make it count</p>
+        <div class="wish__heroWrap"><h1 class="wish__hero" id="wHero">Happy Birthday</h1></div>
+        <span class="wish__rule" id="wRule"></span>
+        <p class="wish__sub" id="wSub">here&rsquo;s to a year that blooms into everything you desire</p>
+      </div>
+
+      <!-- Finale Controls & Celebration Toolbar -->
+      <div class="finale-bar" id="finaleBar" hidden>
+        <button class="celebrate-btn" id="celebrateBtn" type="button" aria-label="Send birthday love and confetti">
+          <span class="celebrate-btn__icon">♥</span>
+          <span>Send Birthday Love &amp; Confetti</span>
+        </button>
+        <span class="celebrate-count" id="celebrateCount">0 wishes sent ♥</span>
+
+        <button class="replay-all-btn" id="replayAllBtn" type="button" aria-label="Replay Entire Experience">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
+            <path d="M12 5V2L7 6l5 4V7a5 5 0 1 1-5 5H5a7 7 0 1 0 7-7z" />
+          </svg>
+          <span>Replay Entire Film</span>
+        </button>
+      </div>
+
+      <!-- Chapter Navigation (Back to Chapter 5) -->
+      <div class="finale-nav" id="finaleNav" hidden>
+        <button class="chapter-nav-btn chapter-nav-btn--prev" id="ch6PrevBtn" type="button">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"></polyline></svg>
+          <span>Back to Wishes</span>
+        </button>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ============================================================
+       FULLSCREEN POLAROID LIGHTBOX MODAL
+       ============================================================ -->
+  <div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-hidden="true" tabindex="-1">
+    <div class="lightbox__backdrop" id="lightboxBackdrop"></div>
+    <div class="lightbox__dialog">
+      <button class="lightbox__close-btn" id="lightboxCloseBtn" type="button" aria-label="Close photo view">
+        <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+      </button>
+
+      <div class="lightbox__polaroid">
+        <div class="lightbox__tape" aria-hidden="true"></div>
+        <div class="lightbox__photo-frame">
+          <img id="lightboxImg" src="" alt="Full Memory View" />
+        </div>
+        <div class="lightbox__details">
+          <div class="lightbox__meta">
+            <span class="lightbox__badge" id="lightboxBadge">Memory 01 of 10</span>
+            <h3 class="lightbox__title" id="lightboxTitle">Memory Title</h3>
+          </div>
+          <p class="lightbox__desc" id="lightboxDesc">Memory description note.</p>
+        </div>
+      </div>
+
+      <button class="lightbox__nav-btn lightbox__nav-btn--prev" id="lightboxPrevBtn" type="button" aria-label="Previous memory">
+        <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+      </button>
+      <button class="lightbox__nav-btn lightbox__nav-btn--next" id="lightboxNextBtn" type="button" aria-label="Next memory">
+        <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- Confetti Canvas for Celebratory Hearts & Petals -->
+  <canvas class="confetti-canvas" id="confettiCanvas" aria-hidden="true"></canvas>
+
+  <!-- Film Grain Overlay across whole film -->
+  <div class="film-grain" aria-hidden="true"></div>
+
+  <!-- Screen reader accessible equivalent -->
+  <p class="sr-only">Happy Birthday. An interactive cinematic film in six chapters celebrating an extraordinary person.</p>
+
+  <script type="module" src="./birthday.js"></script>
+</body>
+</html>
