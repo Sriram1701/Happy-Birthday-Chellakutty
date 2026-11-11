@@ -684,12 +684,10 @@ function buildFilm(m){
       const ch1Continue = $('ch1ContinueWrap');
       if (ch1Continue) {
         ch1Continue.hidden = false;
-        gsap.fromTo(ch1Continue, { opacity: 0, y: 15 }, { opacity: 1, y: 0, duration: 0.8, ease: 'power2.out' });
+        ch1Continue.style.opacity = '1';
       }
       // Auto-advance to Chapter 2 after showing the wish
-      setTimeout(() => {
-        if (activeChapter === 1) switchChapter(2);
-      }, 2500);
+      if (activeChapter === 1) switchChapter(2);
     },
   });
 
@@ -697,7 +695,7 @@ function buildFilm(m){
    .set(arrow, { opacity: 1, x: arrowBaseX, y: m.arrowStartY, scaleY: 1 })
    .set([flood, bloom], { autoAlpha: 0, scale: 0.001, x: 0, y: 0 })
    .set(flood, { x: m.fx, y: m.fy })
-   .set(field, { autoAlpha: 0 })
+   .set(field, { autoAlpha: 1 })
    .set('.blob', { opacity: 0 })
    .set(camera, { scale: 1, yPercent: 0 })
    .set(fgrid, { xPercent: 0, yPercent: 0 })
@@ -750,8 +748,18 @@ function buildFilm(m){
     }, wishT0 + 0.18)
    .to(uline, { drawn: 1, duration: 0.95, ease: 'power2.out' }, wishT0 + 0.72)
    .to(kSub,   { opacity: 1, y: 0, duration: 0.85, ease: 'power3.out' }, wishT0 + 0.95)
-   .to(camera, { scale: 1.055, duration: 4.2, ease: 'none' }, wishT0)
-   .to(fgrid,  { yPercent: -4, duration: 4.2, ease: 'none' }, wishT0);
+   .to(camera, { scale: 1.055, duration: 2.2, ease: 'none' }, wishT0)
+   .to(fgrid,  { yPercent: -4, duration: 2.2, ease: 'none' }, wishT0)
+   .add(() => {
+     const ch1Continue = $('ch1ContinueWrap');
+     if (ch1Continue) {
+       ch1Continue.hidden = false;
+       gsap.fromTo(ch1Continue, { opacity: 0, y: 15 }, { opacity: 1, y: 0, duration: 0.6, ease: 'power2.out' });
+     }
+     setTimeout(() => {
+       if (activeChapter === 1) switchChapter(2);
+     }, 2000);
+   }, wishT0 + 1.2);
 
   return t;
 }
@@ -988,6 +996,14 @@ if (ch1NextBtn){
 
 if (field){
   field.addEventListener('click', () => {
+    if (activeChapter === 1 && played){
+      switchChapter(2);
+    }
+  });
+}
+
+if (camera){
+  camera.addEventListener('click', () => {
     if (activeChapter === 1 && played){
       switchChapter(2);
     }
@@ -1382,21 +1398,18 @@ if (celebrateBtn){
    BACKGROUND MUSIC ENGINE (Persistent & Seamless)
    ============================================================ */
 const musicWidget  = $('musicWidget');
-const musicPlayBtn = $('musicPlayBtn');
-const musicMuteBtn = $('musicMuteBtn');
+const musicPillBtn = $('musicPillBtn') || $('musicPlayBtn');
 const iconPlay     = $('iconPlay');
 const iconPause    = $('iconPause');
-const iconVolHigh  = $('iconVolHigh');
-const iconVolMuted = $('iconVolMuted');
 const musicLabel   = $('musicLabel');
 const musicSub     = $('musicSub');
 const bgAudio      = $('bgAudio');
 
 let isMusicPlaying = false;
-let isMusicMuted   = false;
 let ytPlayer       = null;
 let ytReady        = false;
 let ytStartedOnce  = false;
+let playRequested  = false;
 
 function setMusicUIState(playing){
   isMusicPlaying = playing;
@@ -1406,13 +1419,13 @@ function setMusicUIState(playing){
     iconPause.hidden = !playing;
   }
   if (musicSub){
-    musicSub.textContent = playing ? 'Playing (00:15)' : 'Click to Play';
+    musicSub.textContent = playing ? 'Click to Stop' : 'Click to Play';
   }
 }
 
 function initYouTubePlayer(){
-  const videoId   = BIRTHDAY_CONFIG.music.youtubeVideoId || 'hNXs3ny2adA';
-  const startTime = BIRTHDAY_CONFIG.music.startTime || 15;
+  const videoId   = (BIRTHDAY_CONFIG.music && BIRTHDAY_CONFIG.music.youtubeVideoId) || 'hNXs3ny2adA';
+  const startTime = (BIRTHDAY_CONFIG.music && BIRTHDAY_CONFIG.music.startTime) || 15;
 
   window.onYouTubeIframeAPIReady = function(){
     try {
@@ -1423,7 +1436,7 @@ function initYouTubePlayer(){
         playerVars: {
           autoplay: 0,
           start: startTime,
-          controls: 1,
+          controls: 0,
           enablejsapi: 1,
           playsinline: 1,
           rel: 0,
@@ -1433,9 +1446,12 @@ function initYouTubePlayer(){
         events: {
           onReady: (event) => {
             ytReady = true;
-            const vol = BIRTHDAY_CONFIG.music.defaultVolume || 85;
-            event.target.setVolume(vol);
-            if (musicLabel) musicLabel.textContent = BIRTHDAY_CONFIG.music.title || 'Birthday Song';
+            const vol = (BIRTHDAY_CONFIG.music && BIRTHDAY_CONFIG.music.defaultVolume) || 85;
+            try { event.target.setVolume(vol); } catch (_) {}
+            if (musicLabel) musicLabel.textContent = (BIRTHDAY_CONFIG.music && BIRTHDAY_CONFIG.music.title) || 'Birthday Song';
+            if (playRequested && !isMusicPlaying){
+              tryPlayMusic();
+            }
           },
           onStateChange: (event) => {
             // YT.PlayerState.PLAYING = 1, PAUSED = 2, ENDED = 0
@@ -1459,11 +1475,12 @@ function initYouTubePlayer(){
 }
 
 function tryPlayMusic(){
+  playRequested = true;
   if (ytPlayer && ytReady){
     try {
       if (!ytStartedOnce){
         ytStartedOnce = true;
-        const startTime = BIRTHDAY_CONFIG.music.startTime || 15;
+        const startTime = (BIRTHDAY_CONFIG.music && BIRTHDAY_CONFIG.music.startTime) || 15;
         ytPlayer.seekTo(startTime, true);
       }
       ytPlayer.playVideo();
@@ -1476,7 +1493,7 @@ function tryPlayMusic(){
 
 function tryFallbackAudio(){
   if (bgAudio && bgAudio.src){
-    bgAudio.volume = isMusicMuted ? 0 : 0.75;
+    bgAudio.volume = 0.75;
     const p = bgAudio.play();
     if (p !== undefined){
       p.then(() => setMusicUIState(true)).catch(() => setMusicUIState(false));
@@ -1485,6 +1502,7 @@ function tryFallbackAudio(){
 }
 
 function pauseMusic(){
+  playRequested = false;
   if (ytPlayer && ytReady){
     try { ytPlayer.pauseVideo(); } catch (_) {}
   }
@@ -1497,26 +1515,17 @@ function toggleMusic(){
   else tryPlayMusic();
 }
 
-function toggleMute(){
-  isMusicMuted = !isMusicMuted;
-  if (ytPlayer && ytReady){
-    try {
-      if (isMusicMuted) ytPlayer.mute();
-      else ytPlayer.unMute();
-    } catch (_) {}
-  }
-  if (bgAudio) bgAudio.volume = isMusicMuted ? 0 : 0.75;
-  if (iconVolHigh && iconVolMuted){
-    iconVolHigh.hidden = isMusicMuted;
-    iconVolMuted.hidden = !isMusicMuted;
-  }
+if (musicPillBtn){
+  musicPillBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    toggleMusic();
+  });
 }
 
-if (musicPlayBtn) musicPlayBtn.addEventListener('click', toggleMusic);
-if (musicMuteBtn) musicMuteBtn.addEventListener('click', toggleMute);
-
 const unlockAudioOnGesture = () => {
-  if (!isMusicPlaying) tryPlayMusic();
+  if (!isMusicPlaying && !playRequested){
+    tryPlayMusic();
+  }
   window.removeEventListener('pointerdown', unlockAudioOnGesture);
   window.removeEventListener('keydown', unlockAudioOnGesture);
 };

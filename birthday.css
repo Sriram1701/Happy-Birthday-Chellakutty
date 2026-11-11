@@ -136,7 +136,7 @@ body.film-body{
   display: flex;
   align-items: center;
   gap: 10px;
-  padding: 6px 14px 6px 8px;
+  padding: 6px 16px 6px 8px;
   background: rgba(22, 5, 15, 0.76);
   border: 1px solid rgba(255, 180, 205, 0.24);
   border-radius: 999px;
@@ -144,12 +144,22 @@ body.film-body{
   backdrop-filter: blur(14px);
   -webkit-backdrop-filter: blur(14px);
   transition: all 0.3s ease;
+  cursor: pointer;
+  outline: none;
+  font: inherit;
+  color: inherit;
+  user-select: none;
 }
 
 .music-widget__pill:hover{
   background: rgba(35, 8, 24, 0.9);
   border-color: rgba(255, 200, 220, 0.45);
   box-shadow: 0 10px 35px rgba(0, 0, 0, 0.55), 0 0 24px rgba(216, 30, 87, 0.32);
+  transform: translateY(-2px);
+}
+
+.music-widget__pill:active{
+  transform: scale(0.96);
 }
 
 .music-widget__btn{
@@ -240,14 +250,15 @@ body.film-body{
 
 /* YouTube Player hidden offscreen so audio plays seamlessly without video box */
 .music-widget__player-card{
-  position: fixed;
-  left: -9999px;
-  top: -9999px;
-  width: 200px;
-  height: 112px;
-  opacity: 0;
-  pointer-events: none;
-  visibility: hidden;
+  position: fixed !important;
+  left: -9999px !important;
+  top: -9999px !important;
+  width: 1px !important;
+  height: 1px !important;
+  opacity: 0.001 !important;
+  pointer-events: none !important;
+  z-index: -9999 !important;
+  overflow: hidden !important;
 }
 
 .yt-embed-box{
