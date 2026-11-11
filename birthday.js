@@ -33,14 +33,14 @@ const canvas = $('tree');
 const ctx    = canvas.getContext('2d');
 const wishEl = $('wish');
 
-/* Act 1 Invitation Elements */
+/* Act 1 Invitation Elements (Guarded for minimal redesign) */
 const hero       = $('hero');
 const eyebrow    = $('eyebrow');
 const hint       = $('hint');
 const motes      = $('motes');
 const target     = $('target');
 const targetHeart= $('targetHeart');
-const heartGlow  = target.querySelector('.heart__glow');
+const heartGlow  = target ? target.querySelector('.heart__glow') : null;
 const aim        = $('aim');
 
 const archery = $('archery');
@@ -58,7 +58,8 @@ const kEyebrow= $('kEyebrow');
 const kSub    = $('kSub');
 const barTop  = $('barTop');
 const barBot  = $('barBot');
-const uline   = $('uline').querySelector('.uline__path');
+const ulineEl = $('uline');
+const uline   = ulineEl ? ulineEl.querySelector('.uline__path') : null;
 const bloom   = $('bloom');
 
 const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -489,6 +490,7 @@ function drawFinal(){
    CHAPTER 1: THE INVITATION (Archery + Arrow + Flood)
    ============================================================ */
 function splitWord(el){
+  if (!el) return [];
   const chars = [...el.textContent];
   el.textContent = '';
   return chars.map((ch) => {
@@ -499,9 +501,11 @@ function splitWord(el){
     return s;
   });
 }
-const kChars = [...splitWord($('wLine1')), ...splitWord($('wLine2'))];
+const wLine1 = $('wLine1'), wLine2 = $('wLine2');
+const kChars = (wLine1 && wLine2) ? [...splitWord(wLine1), ...splitWord(wLine2)] : [];
 
 function buildMotes(){
+  if (!motes) return;
   motes.innerHTML = '';
   const count = 18;
   for (let i = 0; i < count; i++){
@@ -536,6 +540,7 @@ let arrowBaseX = 0, arrowBaseY = 0, svgScale = 1, gripX = 0, gripY = 0;
 function refreshRig(){
   W = window.innerWidth;
   H = window.innerHeight;
+  if (!target || !archery) return;
 
   const tR = target.getBoundingClientRect();
   const tcx = (tR && tR.width > 0) ? (tR.left + tR.width / 2) : (W / 2);
@@ -830,7 +835,13 @@ function onPointerUp(e){
   }
 }
 
-archery.addEventListener('pointerdown', onPointerDown);
+if (archery){
+  archery.addEventListener('pointerdown', onPointerDown);
+  archery.addEventListener('keydown', (e) => {
+    if (played) return;
+    if (e.key === 'Enter' || e.key === ' '){ e.preventDefault(); autoFire(); }
+  });
+}
 
 if (hint){
   hint.addEventListener('click', () => { if (!played) autoFire(); });
@@ -840,41 +851,91 @@ if (target){
   target.addEventListener('click', () => { if (!played) autoFire(); });
 }
 
-archery.addEventListener('keydown', (e) => {
-  if (played) return;
-  if (e.key === 'Enter' || e.key === ' '){ e.preventDefault(); autoFire(); }
-});
+/* ============================================================
+   CHAPTER 1: SIMPLE & ELEGANT BIRTHDAY HOMEPAGE
+   Minimal, clean, centered, glowing heart + Cupid arrow
+   ============================================================ */
+let cupidInitialized = false;
+
+function initCupidCenterpiece(){
+  const centerpiece = $('cupidCenterpiece');
+  const arrowCarrier = $('cupidArrowCarrier');
+  const heartGroup = $('cupidHeartGroup');
+  const pulseGlow = $('cupidPulseGlow');
+  if (!centerpiece || !arrowCarrier || !heartGroup) return;
+
+  let isAnimating = false;
+
+  function playPierce(){
+    if (isAnimating) return;
+    isAnimating = true;
+
+    const tl = gsap.timeline({
+      onComplete: () => { isAnimating = false; }
+    });
+
+    // Retract arrow slightly back along its diagonal flight path
+    gsap.set(arrowCarrier, { x: -80, y: -50, opacity: 0 });
+
+    tl.to(arrowCarrier, {
+      opacity: 1,
+      duration: 0.28,
+      ease: 'power1.out'
+    }, 0.15)
+    .to(arrowCarrier, {
+      x: 0,
+      y: 0,
+      duration: 1.05,
+      ease: 'power2.out'
+    }, 0.15)
+    // Heart expansion and joyful recoil on impact
+    .to(heartGroup, {
+      scale: 1.12,
+      duration: 0.22,
+      ease: 'back.out(2)',
+      transformOrigin: '170px 140px'
+    }, 0.62)
+    .to(heartGroup, {
+      scale: 1,
+      duration: 0.55,
+      ease: 'elastic.out(1, 0.5)',
+      transformOrigin: '170px 140px'
+    }, 0.84);
+
+    if (pulseGlow){
+      tl.fromTo(pulseGlow,
+        { scale: 0.8, opacity: 0.3 },
+        { scale: 1.35, opacity: 0.95, duration: 0.45, yoyo: true, repeat: 1, ease: 'power2.out' },
+        0.62
+      );
+    }
+  }
+
+  // Smooth entrance pierce animation
+  setTimeout(playPierce, 350);
+
+  if (!cupidInitialized){
+    cupidInitialized = true;
+    centerpiece.addEventListener('click', () => {
+      playPierce();
+      tryPlayMusic();
+    });
+    centerpiece.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' '){
+        e.preventDefault();
+        playPierce();
+        tryPlayMusic();
+      }
+    });
+  }
+}
 
 function enterChapter1(){
-  gsap.set(hero, { autoAlpha: 1 });
-  gsap.set([flood, bloom], { autoAlpha: 0 });
-  gsap.set(field, { autoAlpha: 0 });
-  refreshRig();
-  setDraw(0);
-  gsap.set([eyebrow, hint], { opacity: 0, y: 14 });
-  gsap.set(target, { opacity: 0, y: 10, scaleX: 0.9, scaleY: 0.9 });
-  gsap.set(archery, { opacity: 0, scale: 0.85 });
-  gsap.set(heartGlow, { opacity: 0, scale: 1 });
-  gsap.set(arrow, { opacity: 1 });
-
-  const tl = gsap.timeline({ onComplete: startBeat });
-  tl.to(target,   { opacity: 1, y: 0, scaleX: 1, scaleY: 1, duration: 0.8, ease: 'power3.out' }, 0.1)
-    .to(heartGlow,{ opacity: 0.7, duration: 0.8, ease: 'power2.out' }, 0.2)
-    .to(archery,  { opacity: 1, scale: 1, duration: 0.8, ease: 'power3.out' }, 0.28)
-    .to(eyebrow,  { opacity: 1, y: 0, duration: 0.7, ease: 'power3.out' }, 0.4)
-    .to(hint,     { opacity: 1, y: 0, duration: 0.7, ease: 'power3.out' }, 0.7);
+  initCupidCenterpiece();
 }
 
 function resetChapter1(){
-  if (filmTL){ filmTL.pause(0); }
-  gsap.set(hero, { autoAlpha: 1 });
-  gsap.set([flood, bloom], { autoAlpha: 0 });
-  gsap.set(field, { autoAlpha: 0 });
-  gsap.set(arrow, { opacity: 1, scaleY: 1 });
-  const ch1Continue = $('ch1ContinueWrap');
-  if (ch1Continue) ch1Continue.hidden = true;
-  played = false;
-  enterChapter1();
+  initCupidCenterpiece();
 }
 
 /* ============================================================
