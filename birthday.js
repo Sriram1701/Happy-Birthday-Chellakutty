@@ -686,6 +686,10 @@ function buildFilm(m){
         ch1Continue.hidden = false;
         gsap.fromTo(ch1Continue, { opacity: 0, y: 15 }, { opacity: 1, y: 0, duration: 0.8, ease: 'power2.out' });
       }
+      // Auto-advance to Chapter 2 after showing the wish
+      setTimeout(() => {
+        if (activeChapter === 1) switchChapter(2);
+      }, 2500);
     },
   });
 
@@ -884,9 +888,8 @@ const CHAPTER_TITLES = [
 ];
 
 function switchChapter(targetNum){
-  if (targetNum === activeChapter || targetNum < 1 || targetNum > 6) return;
-  const currentEl = $(`chapter${activeChapter}`);
-  const targetEl  = $(`chapter${targetNum}`);
+  if (targetNum < 1 || targetNum > 6) return;
+  const targetEl = $(`chapter${targetNum}`);
   if (!targetEl) return;
 
   const prevNum = activeChapter;
@@ -905,23 +908,25 @@ function switchChapter(targetNum){
     dot.setAttribute('aria-selected', isActive ? 'true' : 'false');
   });
 
-  // Cross-fade chapters smoothly with GSAP
-  if (currentEl && currentEl !== targetEl){
-    gsap.to(currentEl, {
-      opacity: 0,
-      duration: 0.35,
-      ease: 'power2.inOut',
-      onComplete: () => {
-        currentEl.classList.remove('is-active');
-        currentEl.style.display = 'none';
-        if (prevNum === 6) treeStop();
-      },
-    });
-  }
+  // Hide all other chapters immediately to guarantee NO OVERLAY or pink field can block
+  document.querySelectorAll('.chapter').forEach((ch) => {
+    if (ch !== targetEl){
+      ch.classList.remove('is-active');
+      ch.style.display = 'none';
+      ch.style.opacity = '0';
+      ch.style.visibility = 'hidden';
+      ch.style.pointerEvents = 'none';
+    }
+  });
+
+  if (prevNum === 6 && targetNum !== 6) treeStop();
 
   targetEl.style.display = (targetNum === 1 || targetNum === 6) ? 'block' : 'flex';
+  targetEl.style.visibility = 'visible';
+  targetEl.style.pointerEvents = 'auto';
   targetEl.classList.add('is-active');
-  gsap.fromTo(targetEl, { opacity: 0 }, { opacity: 1, duration: 0.5, delay: 0.05, ease: 'power2.out' });
+
+  gsap.fromTo(targetEl, { opacity: 0 }, { opacity: 1, duration: 0.45, ease: 'power2.out' });
 
   // Trigger chapter-specific logic
   if (activeChapter === 1){
@@ -941,7 +946,8 @@ function switchChapter(targetNum){
 
 // Bind Chapter Dots
 document.querySelectorAll('.chapter-dot').forEach((dot) => {
-  dot.addEventListener('click', () => {
+  dot.addEventListener('click', (e) => {
+    e.preventDefault();
     const num = parseInt(dot.getAttribute('data-chapter'), 10);
     switchChapter(num);
   });
@@ -964,8 +970,29 @@ function enterChapter2(){
   setTimeout(() => { if (l3) l3.classList.add('is-revealed'); }, 3500);
 }
 
+const heroSkipBtn = $('heroSkipBtn');
+if (heroSkipBtn){
+  heroSkipBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    switchChapter(2);
+  });
+}
+
 const ch1NextBtn = $('ch1NextBtn');
-if (ch1NextBtn) ch1NextBtn.addEventListener('click', () => switchChapter(2));
+if (ch1NextBtn){
+  ch1NextBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    switchChapter(2);
+  });
+}
+
+if (field){
+  field.addEventListener('click', () => {
+    if (activeChapter === 1 && played){
+      switchChapter(2);
+    }
+  });
+}
 
 const ch2PrevBtn = $('ch2PrevBtn');
 if (ch2PrevBtn) ch2PrevBtn.addEventListener('click', () => switchChapter(1));
