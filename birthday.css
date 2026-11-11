@@ -935,14 +935,10 @@ body.film-body{
 }
 .ornament-heart{ color: #e8a23d; font-size: 13px; }
 
-/* Chronological Journey Stages Filter Pills */
-.gallery-stages{
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  flex-wrap: wrap;
-  margin-top: 24px;
+/* Chronological Journey Stages Filter Pills (Removed per user request) */
+.gallery-stages,
+.stage-pill{
+  display: none !important;
 }
 
 .stage-pill{
