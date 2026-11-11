@@ -809,6 +809,97 @@ body.film-body{
   margin-top: 6px;
 }
 
+/* Chapter 2 Memory Book Photo Collage (Light Theme) */
+.book-collage{
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 16px auto 8px;
+  width: 100%;
+  max-width: 290px;
+  height: 195px;
+}
+
+.book-collage__card{
+  position: absolute;
+  background: #ffffff;
+  padding: 5px 5px 14px 5px;
+  border-radius: 6px;
+  box-shadow: 0 10px 24px rgba(70, 15, 35, 0.14), 0 2px 6px rgba(0, 0, 0, 0.08);
+  border: 1px solid rgba(230, 215, 205, 0.65);
+  transition: transform 0.35s var(--ease-spring), box-shadow 0.3s ease, z-index 0.3s;
+  cursor: pointer;
+  user-select: none;
+}
+
+.book-collage__card img{
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 3px;
+}
+
+.book-collage__card--left{
+  width: 95px;
+  height: 140px;
+  left: 10px;
+  transform: rotate(-7deg) translateY(4px);
+  z-index: 1;
+}
+
+.book-collage__card--right{
+  width: 95px;
+  height: 140px;
+  right: 10px;
+  transform: rotate(7deg) translateY(4px);
+  z-index: 1;
+}
+
+.book-collage__card--center{
+  width: 118px;
+  height: 172px;
+  z-index: 2;
+  transform: rotate(0deg);
+  display: flex;
+  flex-direction: column;
+}
+
+.book-collage__card--center img{
+  height: 135px;
+}
+
+.book-collage__tape{
+  position: absolute;
+  top: -8px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 44px;
+  height: 15px;
+  background: rgba(232, 162, 61, 0.5);
+  border-left: 2px dashed rgba(255, 255, 255, 0.7);
+  border-right: 2px dashed rgba(255, 255, 255, 0.7);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+  z-index: 5;
+}
+
+.book-collage__handwriting{
+  font-family: "Great Vibes", cursive;
+  font-size: 14px;
+  color: #ad3357;
+  text-align: center;
+  margin-top: 5px;
+  letter-spacing: 0.04em;
+  line-height: 1;
+}
+
+.book-collage__card:hover{
+  z-index: 10;
+  transform: scale(1.08) translateY(-4px);
+  box-shadow: 0 16px 32px rgba(120, 20, 50, 0.22), 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
 .candle-glow{
   width: 80px; height: 80px;
   border-radius: 50%;
@@ -1646,24 +1737,19 @@ body.film-body{
   .memory-book::after{ display: none; }
   .book-page{ padding: 22px 18px; }
   .book-page--left{ border-right: none; border-bottom: 1px solid rgba(0,0,0,0.08); }
+  .book-collage{
+    max-width: 260px;
+    height: 175px;
+    margin: 12px auto 6px;
+  }
+  .book-collage__card--left{ width: 85px; height: 125px; left: 8px; }
+  .book-collage__card--right{ width: 85px; height: 125px; right: 8px; }
+  .book-collage__card--center{ width: 105px; height: 155px; }
+  .book-collage__card--center img{ height: 120px; }
 
   /* Chapter 3 Photo Gallery */
   .chapter--3{ padding-top: 60px; padding-bottom: 40px; }
   .gallery-header{ padding: 0 16px; margin-bottom: 24px; }
-  .gallery-stages{
-    display: flex;
-    justify-content: flex-start;
-    overflow-x: auto;
-    flex-wrap: nowrap;
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: none;
-    padding: 6px 16px 12px;
-    margin: 12px 0 20px;
-    gap: 8px;
-    width: 100%;
-  }
-  .gallery-stages::-webkit-scrollbar{ display: none; }
-  .stage-pill{ flex-shrink: 0; white-space: nowrap; padding: 7px 14px; font-size: 11px; }
 
   .polaroid-grid{
     grid-template-columns: 1fr;
