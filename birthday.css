@@ -51,14 +51,10 @@ body.film-body{
 }
 
 /* ============================================================
-   CHAPTER PROGRESS BAR (Floating Header)
+   CHAPTER PROGRESS BAR (Hidden per user preference)
    ============================================================ */
 .film-header{
-  position: fixed;
-  top: 18px;
-  left: 24px;
-  z-index: 100;
-  pointer-events: auto;
+  display: none !important;
 }
 
 .chapter-tracker{
