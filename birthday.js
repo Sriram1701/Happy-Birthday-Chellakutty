@@ -1178,7 +1178,7 @@ let envelopeOpened = false;
 
 function initChapter4(){
   const recipient = $('envelopeRecipient');
-  if (recipient) recipient.textContent = `For ${BIRTHDAY_CONFIG.recipientName}`;
+  if (recipient) recipient.textContent = BIRTHDAY_CONFIG.letter.envelopeRecipient || `For ${BIRTHDAY_CONFIG.recipientName} (${BIRTHDAY_CONFIG.nickname})`;
 
   const salutation = $('letterSalutation');
   if (salutation) salutation.textContent = BIRTHDAY_CONFIG.letter.salutation;

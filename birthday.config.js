@@ -6,16 +6,18 @@
  */
 
 export const BIRTHDAY_CONFIG = {
-  // Recipient Name
-  recipientName: "Someone Truly Special",
+  // Recipient Details
+  recipientName: "Ranjeetha Sri",
+  nickname: "Gundu ❤️",
+  dateOfBirth: "12 November 2004",
 
   // -------------------------------------------------------------
   // CHAPTER 2: A BEAUTIFUL BEGINNING (Memory Book Messages)
   // -------------------------------------------------------------
   beginningStory: [
     "Every beautiful story begins somewhere...",
-    "And some people make ordinary moments unforgettable.",
-    "Today is all about celebrating someone special."
+    "And some souls bring unforgettable light, grace, and warmth into this world.",
+    "Today is all about celebrating you, Ranjeetha Sri."
   ],
 
   // -------------------------------------------------------------
@@ -175,15 +177,16 @@ export const BIRTHDAY_CONFIG = {
   // -------------------------------------------------------------
   letter: {
     sealText: "♥",
-    salutation: "Dearest Birthday Star,",
+    envelopeRecipient: "For Ranjeetha Sri (Gundu ❤️)",
+    salutation: "Dearest Gundu ❤️,",
     paragraphs: [
-      "Every single year adds another layer of beauty, wisdom, and strength to who you are. Looking through these memories—from childhood days to this very moment—is a reminder of what a truly special soul you are.",
-      "May this birthday wrap you in the warmest embraces, bring quiet serenity to your soul, and inspire bold new adventures for the year ahead.",
-      "Thank you for simply being you. May life always return to you the boundless happiness, kindness, and light that you so freely give to the world."
+      "Every single year adds another layer of beauty, kindness, and quiet grace to who you are. Looking through every chapter of your journey—from the sweetness of childhood days to the radiant person you are today—is a gentle reminder of just how precious you are.",
+      "You have a heart that brings warmth to everyone who knows you, and a presence that makes ordinary days feel brighter. On your birthday, I wish you moments of pure happiness, silent dreams fulfilled, and a future that blooms with peace, success, and love.",
+      "Thank you for simply being you, my dearest Gundu. May life always return to you all the kindness, laughter, and light that you so effortlessly give to the world. You deserve the best of everything today and always."
     ],
-    highlightQuote: "“Here's to days filled with sunshine, nights full of stars, and a heart full of joy.”",
-    closing: "With the warmest birthday wishes,",
-    signature: "Always Celebrating You"
+    highlightQuote: "“May your days be filled with sunshine, your nights with stars, and your heart with endless joy.”",
+    closing: "With all my heart and warmest birthday wishes,",
+    signature: "Always Celebrating You, Gundu ❤️"
   },
 
   // -------------------------------------------------------------
@@ -192,28 +195,28 @@ export const BIRTHDAY_CONFIG = {
   wishes: [
     {
       icon: "✨",
-      title: "Boundless Joy",
-      text: "May laughter find you in unexpected moments, and happiness follow you everywhere you go."
+      title: "For Dearest Ranjeetha",
+      text: "Happy Birthday, Ranjeetha. May this special year bring you boundless blessings, quiet strength, and endless reasons to smile."
     },
     {
       icon: "🌟",
-      title: "Courage & Dreams",
-      text: "May you always have the courage to follow the quiet dreams your heart holds dearest."
+      title: "Courage & Bright Dreams",
+      text: "May you always believe in the brilliance of your dreams, with the courage to reach every milestone your heart desires."
     },
     {
       icon: "🌿",
-      title: "Peace & Serenity",
-      text: "May you find calm in every season, and rest in knowing you are deeply cherished."
+      title: "Peace & Gentle Serenity",
+      text: "May peace walk beside you in every chapter of life, and may you always know how deeply cherished and valued you are."
     },
     {
       icon: "💫",
-      title: "Health & Vitality",
-      text: "May every morning bring you vibrant energy, strength, and renewed optimism."
+      title: "Health & Endless Vitality",
+      text: "May every morning fill your days with vibrant vitality, bright laughter, and renewed optimism for the road ahead."
     },
     {
       icon: "♥",
-      title: "Unconditional Love",
-      text: "May you always feel the immense love, appreciation, and respect surrounding you today."
+      title: "Unconditional Love & Joy",
+      text: "May you be surrounded today and every day with genuine warmth, unconditional love, and moments of pure happiness."
     }
   ],
 
@@ -221,10 +224,10 @@ export const BIRTHDAY_CONFIG = {
   // CHAPTER 6: THE GRAND FINALE (The Blossom Tree & Wish)
   // -------------------------------------------------------------
   finale: {
-    eyebrow: "and... make it count",
-    heroText: "Happy Birthday",
-    subText: "here's to a year that blooms into everything you desire",
-    closingNote: "Every chapter of your life is worth celebrating."
+    eyebrow: "make a wish on this special day...",
+    heroText: "Happy Birthday, Ranjeetha Sri ❤️",
+    subText: "Always Special, Gundu ❤️",
+    closingNote: "12 November 2004 • Celebrating You Today and Always"
   },
 
   // -------------------------------------------------------------
