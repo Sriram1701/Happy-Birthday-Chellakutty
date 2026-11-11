@@ -1416,15 +1416,9 @@ function tryPlayMusic(){
         setMusicUIState(true);
         if (musicLabel) musicLabel.textContent = 'Birthday Song';
       }).catch(() => {
-        startAmbientSynth();
-        setMusicUIState(true);
-        if (musicLabel) musicLabel.textContent = 'Ambient Chimes';
-        if (musicSub) musicSub.textContent = 'Drop song.mp3 to customize';
+        setMusicUIState(false);
       });
     }
-  } else {
-    startAmbientSynth();
-    setMusicUIState(true);
   }
 }
 
