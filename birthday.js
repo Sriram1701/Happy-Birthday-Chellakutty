@@ -1664,6 +1664,18 @@ function markMemoryViewed(idx){
 }
 window.markMemoryViewed = markMemoryViewed;
 
+// Multi-tier reliable photo fallback handler
+window.handlePhotoError = function(img, filename) {
+  if (!img) return;
+  if (!img.dataset.retryCount) {
+    img.dataset.retryCount = '1';
+    img.src = `./public/images/${filename}?v=2`;
+  } else if (img.dataset.retryCount === '1') {
+    img.dataset.retryCount = '2';
+    img.src = `https://raw.githubusercontent.com/Sriram1701/Happy-Birthday-Chellakutty/main/images/${filename}`;
+  }
+};
+
 function initChapter3(){
   if (chapter3Initialized) return;
   chapter3Initialized = true;
@@ -1678,7 +1690,7 @@ function initChapter3(){
     <article class="polaroid-card" data-index="${idx}" data-stage="${item.stageKey || ''}" tabindex="0" role="button" aria-label="Open ${item.title}">
       <div class="polaroid-tape" aria-hidden="true"></div>
       <div class="polaroid-photo">
-        <img src="./images/${item.filename}" alt="${item.title}" loading="lazy" onerror="if(!this.dataset.retry){this.dataset.retry='1';this.src='./public/images/${item.filename}';}" style="${item.objectPosition ? `object-position: ${item.objectPosition};` : ''}" />
+        <img src="./images/${item.filename}?v=2" alt="${item.title}" loading="${idx < 6 ? 'eager' : 'lazy'}" decoding="async" onerror="window.handlePhotoError(this, '${item.filename}')" style="${item.objectPosition ? `object-position: ${item.objectPosition};` : ''}" />
       </div>
       <div class="polaroid-caption">
         <div style="display:flex; align-items:center; justify-content:space-between; gap:8px; margin-bottom:6px;">
@@ -1745,12 +1757,9 @@ function updateLightboxContent(idx){
   markMemoryViewed(idx);
 
   if (lightboxImg){
-    lightboxImg.src = `./images/${item.filename}`;
+    lightboxImg.src = `./images/${item.filename}?v=2`;
     lightboxImg.onerror = () => {
-      if (!lightboxImg.dataset.retry) {
-        lightboxImg.dataset.retry = '1';
-        lightboxImg.src = `./public/images/${item.filename}`;
-      }
+      window.handlePhotoError(lightboxImg, item.filename);
     };
     lightboxImg.alt = `${item.title} - Memory ${item.id}`;
   }
