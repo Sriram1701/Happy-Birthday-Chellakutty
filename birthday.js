@@ -15,17 +15,21 @@ const gsap = (typeof window !== 'undefined' && window.gsap) ? window.gsap : _gsa
 import { BIRTHDAY_CONFIG } from './birthday.config.js';
 
 /* Pen-stroke plugin for GSAP */
-gsap.registerPlugin({
-  name: 'drawn',
-  init(target, value) {
-    const len = target.getTotalLength();
-    target.style.strokeDasharray = len;
-    this.target = target; this.len = len; this.value = value;
-  },
-  render(ratio, data) {
-    data.target.style.strokeDashoffset = data.len * (1 - data.value * ratio);
-  },
-});
+if (gsap && gsap.registerPlugin){
+  try {
+    gsap.registerPlugin({
+      name: 'drawn',
+      init(target, value) {
+        const len = target.getTotalLength();
+        target.style.strokeDasharray = len;
+        this.target = target; this.len = len; this.value = value;
+      },
+      render(ratio, data) {
+        data.target.style.strokeDashoffset = data.len * (1 - data.value * ratio);
+      },
+    });
+  } catch (_) {}
+}
 
 const $ = (id) => document.getElementById(id);
 
@@ -1043,7 +1047,7 @@ function launchCupidArrow(){
       }
 
       if (instruction){
-        instruction.innerHTML = '✨ Bullseye! Happy Birthday Ranjeetha Sri! ❤️';
+        instruction.innerHTML = '✨ Bullseye! Happy Birthday, Ranjeetha! ❤️';
         gsap.fromTo(instruction, { scale: 0.95 }, { scale: 1, duration: 0.35, ease: 'back.out(2)' });
       }
 
@@ -1262,17 +1266,6 @@ function initCupidCenterpiece(){
       }
     });
   });
-
-  // If user clicks continue button while on chapter 1 and arrow hasn't shot yet -> shoot it automatically!
-  if (ch1NextBtn){
-    ch1NextBtn.addEventListener('click', (e) => {
-      if (!cupidHasHit && !cupidIsFlying){
-        e.preventDefault();
-        e.stopPropagation();
-        triggerArrowShot();
-      }
-    });
-  }
 }
 
 function enterChapter1(){
@@ -1310,23 +1303,26 @@ function unlockPage(pageId){
     el.classList.remove('is-locked');
     el.style.display = '';
   }
-  // Initialize target page when unlocked
+}
+
+function enterPage(pageId){
   if (pageId === 'chapterCake') enterChapterCake();
-  if (pageId === 'chapter2') enterChapter2();
-  if (pageId === 'chapter3') initChapter3();
-  if (pageId === 'chapter4') enterChapter4();
-  if (pageId === 'chapter5') enterChapter5();
-  if (pageId === 'chapter6') enterChapter6();
+  else if (pageId === 'chapter2') enterChapter2();
+  else if (pageId === 'chapter3') enterChapter3();
+  else if (pageId === 'chapter4') enterChapter4();
+  else if (pageId === 'chapter5') enterChapter5();
+  else if (pageId === 'chapter6') enterChapter6();
 }
 
 function navigateToPage(targetPageId){
   unlockPage(targetPageId);
+  enterPage(targetPageId);
   const targetEl = $(targetPageId);
   if (targetEl){
     requestAnimationFrame(() => {
       setTimeout(() => {
         targetEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      }, 40);
+      }, 50);
     });
   }
 }
@@ -1335,36 +1331,29 @@ function completeChapter(stepKey){
   completedPages.add(stepKey);
 
   let btnId = null;
-  let nextPageId = null;
 
   if (stepKey === 1 || stepKey === 'chapter1'){
     btnId = 'ch1NextBtn';
-    nextPageId = 'chapterCake';
     completedPages.add(1);
     completedPages.add('chapter1');
   } else if (stepKey === 'cake' || stepKey === 'chapterCake'){
     btnId = 'cakeNextBtn';
-    nextPageId = 'chapter2';
     completedPages.add('cake');
     completedPages.add('chapterCake');
   } else if (stepKey === 2 || stepKey === 'chapter2'){
     btnId = 'ch2NextBtn';
-    nextPageId = 'chapter3';
     completedPages.add(2);
     completedPages.add('chapter2');
   } else if (stepKey === 3 || stepKey === 'chapter3'){
     btnId = 'ch3NextBtn';
-    nextPageId = 'chapter4';
     completedPages.add(3);
     completedPages.add('chapter3');
   } else if (stepKey === 4 || stepKey === 'chapter4'){
     btnId = 'ch4NextBtn';
-    nextPageId = 'chapter5';
     completedPages.add(4);
     completedPages.add('chapter4');
   } else if (stepKey === 5 || stepKey === 'chapter5'){
     btnId = 'ch5NextBtn';
-    nextPageId = 'chapter6';
     completedPages.add(5);
     completedPages.add('chapter5');
   }
@@ -1379,13 +1368,10 @@ function completeChapter(stepKey){
           { opacity: 0, y: 14, scale: 0.94 },
           { opacity: 1, y: 0, scale: 1, duration: 0.5, ease: 'back.out(1.8)' }
         );
+      } else {
+        nextBtn.style.opacity = '1';
       }
     }
-  }
-
-  // Pre-unlock the next section in the DOM so it becomes accessible
-  if (nextPageId){
-    unlockPage(nextPageId);
   }
 }
 window.completeChapter = completeChapter;
@@ -1556,9 +1542,9 @@ function initCakeCutting(){
       if (cakeCutTriggerBtn) cakeCutTriggerBtn.style.display = 'none';
     }
 
-    // Celebration message: "Happy Birthday, Ranjeetha Sri! ❤️"
+    // Celebration message: "Happy Birthday, Ranjeetha! ❤️"
     if (cakeInstruction){
-      cakeInstruction.innerHTML = '<span class="cake-congrats">Happy Birthday, Ranjeetha Sri! ❤️</span>';
+      cakeInstruction.innerHTML = '<span class="cake-congrats">Happy Birthday, Ranjeetha! ❤️</span>';
       if (window.gsap){
         gsap.fromTo(cakeInstruction,
           { opacity: 0, scale: 0.88, y: 8 },
@@ -1708,6 +1694,51 @@ function initCakeCutting(){
    PAGE 3: A BEAUTIFUL BEGINNING (Magical Memory Book)
    ============================================================ */
 let chapter2HasEntered = false;
+let chapter2StoryIndex = 0;
+
+function refreshStoryRevealUI(){
+  const l1 = $('storyLine1'), l2 = $('storyLine2'), l3 = $('storyLine3');
+  const lines = [l1, l2, l3].filter(Boolean);
+  const hint = $('storyTapHint');
+  const confirmWrap = $('storyConfirmWrap');
+
+  lines.forEach((el, idx) => {
+    const isVisible = idx <= chapter2StoryIndex;
+    el.classList.toggle('is-revealed', isVisible);
+    el.style.opacity = isVisible ? '1' : '0';
+    el.style.transform = isVisible ? 'translateY(0)' : 'translateY(12px)';
+  });
+
+  if (hint){
+    if (chapter2StoryIndex >= lines.length){
+      hint.style.display = 'none';
+    } else {
+      hint.style.display = 'block';
+      hint.innerHTML = `<span>Tap to reveal next quote (${chapter2StoryIndex + 1}/${lines.length}) &hearts;</span>`;
+    }
+  }
+
+  if (confirmWrap){
+    confirmWrap.style.display = chapter2StoryIndex >= lines.length ? 'block' : 'none';
+  }
+}
+
+function revealNextStoryLine(){
+  const l1 = $('storyLine1'), l2 = $('storyLine2'), l3 = $('storyLine3');
+  const lines = [l1, l2, l3].filter(Boolean);
+  if (!lines.length) return;
+
+  chapter2StoryIndex = Math.min(chapter2StoryIndex + 1, lines.length);
+  refreshStoryRevealUI();
+
+  if (chapter2StoryIndex >= lines.length){
+    const confirmBtn = $('storyConfirmBtn');
+    if (confirmBtn && !confirmBtn.dataset.bound){
+      confirmBtn.addEventListener('click', () => completeChapter('chapter2'));
+      confirmBtn.dataset.bound = 'true';
+    }
+  }
+}
 
 function enterChapter2(){
   const l1 = $('storyLine1'), l2 = $('storyLine2'), l3 = $('storyLine3');
@@ -1716,54 +1747,38 @@ function enterChapter2(){
   if (l2 && msgs[1]) l2.innerHTML = `&ldquo;${msgs[1]}&rdquo;`;
   if (l3 && msgs[2]) l3.innerHTML = `&ldquo;${msgs[2]}&rdquo;`;
 
-  if (chapter2HasEntered){
-    [l1, l2, l3].forEach((el) => {
-      if (el){
-        el.classList.add('is-revealed');
-        el.style.opacity = '1';
-        el.style.transform = 'translateY(0)';
+  const storyHint = $('storyTapHint');
+  const confirmWrap = $('storyConfirmWrap');
+  const confirmBtn = $('storyConfirmBtn');
+  const book = $('memoryBook');
+
+  if (storyHint && !storyHint.dataset.bound){
+    storyHint.dataset.bound = 'true';
+    storyHint.addEventListener('click', revealNextStoryLine);
+    storyHint.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' '){
+        e.preventDefault();
+        revealNextStoryLine();
       }
     });
-    completeChapter('chapter2');
+  }
+
+  if (confirmBtn && !confirmBtn.dataset.bound){
+    confirmBtn.dataset.bound = 'true';
+    confirmBtn.addEventListener('click', () => completeChapter('chapter2'));
+  }
+
+  if (chapter2HasEntered){
+    chapter2StoryIndex = 2;
+    refreshStoryRevealUI();
     return;
   }
+
   chapter2HasEntered = true;
+  chapter2StoryIndex = 0;
+  refreshStoryRevealUI();
 
-  if (window.gsap && l1 && l2 && l3){
-    gsap.fromTo([l1, l2, l3],
-      { opacity: 0, y: 14 },
-      {
-        opacity: 1,
-        y: 0,
-        duration: 0.8,
-        stagger: 0.85,
-        ease: 'power2.out',
-        onComplete: () => {
-          [l1, l2, l3].forEach(el => el.classList.add('is-revealed'));
-          completeChapter('chapter2');
-        }
-      }
-    );
-  } else {
-    [l1, l2, l3].forEach((el) => {
-      if (el){
-        el.classList.add('is-revealed');
-        el.style.opacity = '1';
-        el.style.transform = 'translateY(0)';
-      }
-    });
-    completeChapter('chapter2');
-  }
-
-  // Tapping the memory book also confirms reading and ensures Continue button is unlocked
-  const book = $('memoryBook');
-  if (book){
-    book.addEventListener('click', () => {
-      completeChapter('chapter2');
-    });
-  }
-
-  // Allow tapping any collage photo to bring it forward
+  // Allow tapping any collage photo to bring it forward without auto-advancing the chapter
   const collageCards = document.querySelectorAll('.book-collage__card');
   collageCards.forEach((card) => {
     card.addEventListener('click', (e) => {
@@ -1772,6 +1787,14 @@ function enterChapter2(){
       card.style.zIndex = '12';
     });
   });
+
+  if (book){
+    book.addEventListener('click', (e) => {
+      if (e.target === book || e.target.closest('.book-page')) {
+        revealNextStoryLine();
+      }
+    });
+  }
 }
 
 /* ============================================================
@@ -1780,10 +1803,21 @@ function enterChapter2(){
 let chapter3Initialized = false;
 const viewedMemories = new Set();
 
+function maybeCompleteGallery(){
+  const galleryDone = viewedMemories.size >= BIRTHDAY_CONFIG.photos.length;
+  const endSentinel = $('galleryEndSentinel');
+  const sentinelVisible = !endSentinel || (typeof endSentinel.getBoundingClientRect === 'function' &&
+    endSentinel.getBoundingClientRect().top <= window.innerHeight + 80);
+
+  if (galleryDone && sentinelVisible) {
+    completeChapter('chapter3');
+  }
+}
+
 function markMemoryViewed(idx){
   if (idx < 0 || idx >= BIRTHDAY_CONFIG.photos.length) return;
   viewedMemories.add(idx);
-  completeChapter('chapter3');
+  maybeCompleteGallery();
 }
 window.markMemoryViewed = markMemoryViewed;
 
@@ -1806,13 +1840,10 @@ function initChapter3(){
   if (chapter3Initialized) return;
   chapter3Initialized = true;
 
-  // Ensure Chapter 3 is unlocked for smooth navigation
-  completeChapter('chapter3');
-
   const grid = $('polaroidGrid');
   if (!grid) return;
 
-  // If grid is not pre-populated in HTML, dynamically render all 19 cards
+  // If grid is not pre-populated in HTML, dynamically render all cards
   if (grid.children.length === 0){
     grid.innerHTML = BIRTHDAY_CONFIG.photos.map((item, idx) => `
       <article class="polaroid-card" data-index="${idx}" data-stage="${item.stageKey || ''}" tabindex="0" role="button" aria-label="Open ${item.title}">
@@ -1847,7 +1878,18 @@ function initChapter3(){
     });
   });
 
-  // Track each photo as it actually enters the visible viewport
+  const galleryEndSentinel = $('galleryEndSentinel');
+  if ('IntersectionObserver' in window && galleryEndSentinel){
+    const galleryObserver = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting){
+          maybeCompleteGallery();
+        }
+      });
+    }, { threshold: 0.1 });
+    galleryObserver.observe(galleryEndSentinel);
+  }
+
   if ('IntersectionObserver' in window){
     const cardObserver = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
@@ -1864,6 +1906,7 @@ function initChapter3(){
 
 function enterChapter3(){
   initChapter3();
+  maybeCompleteGallery();
 }
 
 /* Lightbox Modal */
@@ -1983,6 +2026,7 @@ function initChapter4(){
   function openEnvelope(){
     if (isEnvelopeOpened) return;
     isEnvelopeOpened = true;
+    isLetterRead = true;
 
     if (envelopeCard){
       const rect = envelopeCard.getBoundingClientRect();
@@ -2046,11 +2090,6 @@ function initChapter4(){
     letterObserver.observe(endSentinel);
   }
 
-  if (letterCard){
-    letterCard.addEventListener('click', () => {
-      completeChapter('chapter4');
-    });
-  }
 }
 
 function enterChapter4(){
@@ -2109,10 +2148,6 @@ function initChapter5(){
       }, { threshold: 0.1 });
       wishesEndObserver.observe(endSentinel);
     }
-
-    grid.addEventListener('click', () => {
-      completeChapter('chapter5');
-    });
   }
 }
 
@@ -2324,28 +2359,14 @@ function initLoveQuestion(){
   }
 }
 
-// Initialize all sections for seamless continuous vertical scrolling
+// Manual-only chapter navigation: sections are revealed via Continue buttons, not scroll position.
 initCupidCenterpiece();
 initCakeCutting();
-initChapter3();
-initChapter4();
-initChapter5();
 initLoveQuestion();
 
-const continuousScrollObserver = new IntersectionObserver((entries) => {
-  entries.forEach((entry) => {
-    if (entry.isIntersecting){
-      const id = entry.target.id;
-      if (id === 'chapterCake') enterChapterCake();
-      if (id === 'chapter2') enterChapter2();
-      if (id === 'chapter4') enterChapter4();
-      if (id === 'chapter5') enterChapter5();
-      if (id === 'chapter6') enterChapter6();
-    }
-  });
-}, { threshold: 0.12 });
+window.__manualNavigationOnly = true;
 
-// Lock all subsequent pages on initial load, leaving only Chapter 1 accessible
+// Lock all subsequent pages on initial load, leaving only Chapter 1 accessible.
 PAGE_ORDER.forEach((id, idx) => {
   const el = $(id);
   if (!el) return;
@@ -2354,11 +2375,6 @@ PAGE_ORDER.forEach((id, idx) => {
   } else {
     el.classList.add('is-locked');
   }
-});
-
-['chapterCake', 'chapter2', 'chapter3', 'chapter4', 'chapter5', 'chapter6'].forEach((id) => {
-  const el = $(id);
-  if (el) continuousScrollObserver.observe(el);
 });
 
 /* ============================================================
@@ -2457,12 +2473,37 @@ const iconPause    = $('iconPause');
 const musicLabel   = $('musicLabel');
 const musicSub     = $('musicSub');
 const bgAudio      = $('bgAudio');
+const audioSourceCandidates = [
+  './assets/music/birthday-song.mp3',
+  './music/song.mp3'
+];
 
 let isMusicPlaying = false;
 let ytPlayer       = null;
 let ytReady        = false;
 let ytStartedOnce  = false;
 let playRequested  = false;
+
+function configureAudioSource(){
+  if (!bgAudio) return;
+
+  const preferredSource = audioSourceCandidates[0];
+  const fallbackSource = audioSourceCandidates[1];
+
+  bgAudio.src = preferredSource;
+  bgAudio.setAttribute('data-preferred-source', preferredSource);
+  bgAudio.setAttribute('data-fallback-source', fallbackSource);
+
+  const applyFallbackSource = () => {
+    if (bgAudio.src === fallbackSource) return;
+    bgAudio.src = fallbackSource;
+    bgAudio.load();
+  };
+
+  bgAudio.addEventListener('error', () => {
+    applyFallbackSource();
+  }, { once: true });
+}
 
 function setMusicUIState(playing){
   isMusicPlaying = playing;
@@ -2480,7 +2521,10 @@ function initYouTubePlayer(){
   const videoId   = (BIRTHDAY_CONFIG.music && BIRTHDAY_CONFIG.music.youtubeVideoId) || 'hNXs3ny2adA';
   const startTime = (BIRTHDAY_CONFIG.music && BIRTHDAY_CONFIG.music.startTime) || 15;
 
-  window.onYouTubeIframeAPIReady = function(){
+  const buildPlayer = () => {
+    if (!document.getElementById('ytPlayer')) return false;
+    if (!(window.YT && window.YT.Player)) return false;
+
     try {
       ytPlayer = new YT.Player('ytPlayer', {
         height: '100%',
@@ -2522,61 +2566,100 @@ function initYouTubePlayer(){
             }
           },
           onError: () => {
+            ytReady = false;
             tryFallbackAudio();
           }
         }
       });
-    } catch (_) {}
+      return true;
+    } catch (_) {
+      return false;
+    }
   };
 
-  if (window.YT && window.YT.Player){
-    window.onYouTubeIframeAPIReady();
+  window.onYouTubeIframeAPIReady = function(){
+    buildPlayer();
+  };
+
+  if (!buildPlayer()){
+    const startPolling = () => {
+      if (buildPlayer()) return;
+      setTimeout(startPolling, 250);
+    };
+    startPolling();
   }
 }
 
 function tryPlayMusic(){
   playRequested = true;
-  let ytAttempted = false;
 
-  if (ytPlayer && ytReady){
-    try {
-      if (typeof ytPlayer.unMute === 'function') ytPlayer.unMute();
-      if (!ytStartedOnce){
-        ytStartedOnce = true;
-        const startTime = (BIRTHDAY_CONFIG.music && BIRTHDAY_CONFIG.music.startTime) || 15;
-        ytPlayer.seekTo(startTime, true);
-      }
-      ytPlayer.playVideo();
-      ytAttempted = true;
-      setMusicUIState(true);
-
-      // On mobile devices, check if YouTube actually starts playing within 1.2s; if blocked, activate fallback
-      setTimeout(() => {
-        if (!isMusicPlaying){
-          tryFallbackAudio();
+  if (!bgAudio) {
+    if (ytPlayer && ytReady){
+      try {
+        if (typeof ytPlayer.unMute === 'function') ytPlayer.unMute();
+        if (!ytStartedOnce){
+          ytStartedOnce = true;
+          const startTime = (BIRTHDAY_CONFIG.music && BIRTHDAY_CONFIG.music.startTime) || 15;
+          ytPlayer.seekTo(startTime, true);
         }
-      }, 1200);
-      return;
-    } catch (_) {}
+        ytPlayer.playVideo();
+        setMusicUIState(true);
+      } catch (_) {}
+    }
+    return;
   }
 
-  if (!ytAttempted){
-    tryFallbackAudio();
+  const promise = bgAudio.play();
+  if (promise && typeof promise.then === 'function'){
+    promise.then(() => {
+      setMusicUIState(true);
+      if (ytPlayer && ytReady){
+        try { ytPlayer.pauseVideo(); } catch (_) {}
+      }
+    }).catch(() => {
+      setMusicUIState(false);
+      if (ytPlayer && ytReady){
+        try {
+          if (typeof ytPlayer.unMute === 'function') ytPlayer.unMute();
+          if (!ytStartedOnce){
+            ytStartedOnce = true;
+            const startTime = (BIRTHDAY_CONFIG.music && BIRTHDAY_CONFIG.music.startTime) || 15;
+            ytPlayer.seekTo(startTime, true);
+          }
+          ytPlayer.playVideo();
+          setMusicUIState(true);
+        } catch (_) {}
+      }
+    });
+  } else {
+    setMusicUIState(true);
   }
 }
 
 function tryFallbackAudio(){
-  if (bgAudio){
-    if (!bgAudio.src) bgAudio.src = './music/song.mp3';
-    bgAudio.volume = 0.85;
-    const p = bgAudio.play();
-    if (p !== undefined){
-      p.then(() => {
-        setMusicUIState(true);
-      }).catch(() => {
-        setMusicUIState(false);
-      });
-    }
+  if (!bgAudio) return;
+
+  const preferredSource = bgAudio.getAttribute('data-preferred-source') || './assets/music/birthday-song.mp3';
+  const fallbackSource = bgAudio.getAttribute('data-fallback-source') || './music/song.mp3';
+
+  if (!bgAudio.src || bgAudio.src === window.location.href || bgAudio.src.endsWith('/')){
+    bgAudio.src = preferredSource;
+  }
+
+  if (bgAudio.src.endsWith('/birthday-song.mp3') && bgAudio.error){
+    bgAudio.src = fallbackSource;
+  }
+
+  bgAudio.volume = 0.85;
+  const p = bgAudio.play();
+  if (p !== undefined){
+    p.then(() => {
+      setMusicUIState(true);
+    }).catch(() => {
+      setMusicUIState(false);
+    });
+  } else {
+    setMusicUIState(false);
   }
 }
 
@@ -2590,8 +2673,17 @@ function pauseMusic(){
 }
 
 function toggleMusic(){
-  if (isMusicPlaying) pauseMusic();
-  else tryPlayMusic();
+  if (!bgAudio) {
+    if (isMusicPlaying) pauseMusic();
+    else tryPlayMusic();
+    return;
+  }
+
+  if (bgAudio.paused){
+    tryPlayMusic();
+  } else {
+    pauseMusic();
+  }
 }
 
 if (musicPillBtn){
@@ -2617,6 +2709,7 @@ window.addEventListener('pointerdown', unlockAudioOnGesture, { passive: true });
 window.addEventListener('touchstart', unlockAudioOnGesture, { passive: true });
 window.addEventListener('keydown', unlockAudioOnGesture, { passive: true });
 
+configureAudioSource();
 initYouTubePlayer();
 
 /* ============================================================

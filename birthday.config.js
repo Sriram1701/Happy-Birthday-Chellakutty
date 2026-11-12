@@ -15,9 +15,9 @@ export const BIRTHDAY_CONFIG = {
   // CHAPTER 2: A BEAUTIFUL BEGINNING (Memory Book Messages)
   // -------------------------------------------------------------
   beginningStory: [
-    "Celebrating a moment, a special journey, and an unforgettable soul.",
-    "Being beautiful is not just how you look, but how you make everyone around you feel.",
-    "Today is all about celebrating you, Ranjeetha Sri ❤️"
+    "Celebrating a beautiful little journey, a kind heart, and a soul that makes life brighter.",
+    "You make people feel warm, seen, and at ease just by being you, என் செல்லக்குட்டி.",
+    "Today is all about celebrating you, Ranjeetha ❤️"
   ],
 
   // -------------------------------------------------------------
@@ -211,12 +211,12 @@ export const BIRTHDAY_CONFIG = {
   // CHAPTER 4: WORDS FROM THE HEART (Interactive Letter)
   // -------------------------------------------------------------
   letter: {
-    salutation: "Hey Gundu,",
+    salutation: "Hey Gundu, my sweet பட்டு,",
     paragraphs: [
-      "I wanted to write something special for you today. I may not always know the perfect words to say, but I genuinely hope you know how special you are.",
-      "Having you in my life is something I am truly grateful for. Your presence brings an effortless warmth, and your smile has a way of making even ordinary days feel lighter and brighter.",
-      "On your birthday, more than anything, I just want to see you happy. I hope this new year brings you peace of mind, good health, genuine smiles, and everything your heart quietly hopes for. May you always stay the kind, wonderful person you are.",
-      "Always remember that you are deeply appreciated, cared for, and celebrated—today and every single day."
+      "I wanted to write something special for you today, my sweet Ranjeetha. I may not always know the perfect words to say, but I genuinely hope you know how special you are, and how much light you bring into the lives around you.",
+      "Having you in my life is something I am truly grateful for, என் செல்லக்குட்டி. Your presence brings an effortless warmth, and your smile has a way of making even ordinary days feel lighter and brighter.",
+      "On your birthday, more than anything, I just want to see you happy, my Gundu. I hope this new year brings you peace of mind, good health, genuine smiles, and everything your heart quietly hopes for. May you always stay the kind, wonderful person you are.",
+      "Always remember that you are deeply appreciated, cared for, and celebrated—today and every single day, my lovely பட்டு."
     ],
     closing: "Happy Birthday,",
     signature: "Gundu ❤️"
@@ -228,18 +228,18 @@ export const BIRTHDAY_CONFIG = {
   wishes: [
     {
       icon: "✨",
-      title: "Happy Birthday Chellakutty",
-      text: "Happy Birthday to my favorite person. You bring so much light and calm into my life just by being yourself, Chellakutty. Always keep your sweet, kind heart shining."
+      title: "Happy Birthday, Ranjeetha",
+      text: "Happy Birthday to my favorite person, என் செல்லக்குட்டி. You bring so much light and calm into my life just by being yourself. Always keep your sweet, kind heart shining."
     },
     {
       icon: "🌟",
       title: "Always Keep Smiling, Gundu",
-      text: "No matter how busy or unpredictable life gets, I just want to see that genuine smile on your face every day. You deserve every bit of happiness and peace, Gundu."
+      text: "No matter how busy or unpredictable life gets, I just want to see that genuine smile on your face every day. You deserve every bit of happiness and peace, my lovely பட்டு."
     },
     {
       icon: "🌸",
       title: "My Little Pattu",
-      text: "Take gentle care of yourself always. Believe in yourself as much as I believe in you, because you are capable of achieving every single dream in your heart, Pattu."
+      text: "Take gentle care of yourself always. Believe in yourself as much as I believe in you, because you are capable of achieving every single dream in your heart, பட்டு."
     },
     {
       icon: "💫",
@@ -249,7 +249,7 @@ export const BIRTHDAY_CONFIG = {
     {
       icon: "♥",
       title: "Forever Cherished",
-      text: "May this year bring you all the warmth, joy, and peace you so richly deserve. Happy Birthday once again, Ranjeetha Sri ❤️"
+      text: "May this year bring you all the warmth, joy, and peace you so richly deserve. Happy Birthday once again, Ranjeetha ❤️"
     }
   ],
 
@@ -267,8 +267,8 @@ export const BIRTHDAY_CONFIG = {
   // BACKGROUND MUSIC SETTINGS
   // -------------------------------------------------------------
   music: {
-    // Selected Birthday Song: https://youtu.be/hNXs3ny2adA
-    youtubeUrl: "https://youtu.be/hNXs3ny2adA",
+    // Selected Birthday Song: https://youtu.be/hNXs3ny2adA?si=757eESQhvE2ANlo5
+    youtubeUrl: "https://youtu.be/hNXs3ny2adA?si=757eESQhvE2ANlo5",
     youtubeVideoId: "hNXs3ny2adA",
     startTime: 15, // Skip initial 15 seconds, start at 00:15
     title: "Birthday Song",

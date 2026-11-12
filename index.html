@@ -64,7 +64,7 @@
     </div>
 
     <!-- Background Audio & Fallback Player -->
-    <audio id="bgAudio" preload="auto" loop src="./music/song.mp3" playsinline></audio>
+    <audio id="bgAudio" preload="auto" loop src="./assets/music/birthday-song.mp3" playsinline></audio>
   </aside>
 
   <!-- ============================================================
@@ -77,7 +77,7 @@
          (Clean soft cream / very light pink background, elegant
           typography, glowing heart pierced by golden Cupid arrow)
          ========================================================== -->
-    <section class="chapter chapter--1 is-active" id="chapter1" aria-label="Happy Birthday Ranjeetha Sri">
+    <section class="chapter chapter--1 is-active" id="chapter1" aria-label="Happy Birthday Ranjeetha">
       <div class="minimal-homepage" id="minimalHomepage">
         <!-- Soft, subtle ambient blush glow (no glitter, no petals, no clutter) -->
         <div class="minimal-homepage__glow" aria-hidden="true"></div>
@@ -86,7 +86,7 @@
           <!-- Elegant Typography Header -->
           <header class="minimal-homepage__header">
             <h1 class="minimal-homepage__title">HAPPY BIRTHDAY</h1>
-            <p class="minimal-homepage__name">Ranjeetha Sri</p>
+            <p class="minimal-homepage__name">Ranjeetha</p>
           </header>
 
           <!-- The Centerpiece: Target Heart (Top) and Separated Cupid Bow & Arrow (Bottom) -->
@@ -741,21 +741,21 @@
             <div class="book-page book-page--left">
               <div class="book-page__content">
                 <span class="book-caption-tag">CELEBRATING</span>
-                <h3 class="book-heading">Ranjeetha Sri</h3>
+                <h3 class="book-heading">Ranjeetha</h3>
                 <p class="book-date-tag">12 November 2004</p>
 
                 <!-- Light Theme Polaroid Photo Collage -->
-                <div class="book-collage" aria-label="Photo collage of Ranjeetha Sri">
-                  <div class="book-collage__card book-collage__card--left" title="Ranjeetha Sri">
-                    <img src="./images/Polish_20241106_191645053.jpg?v=2" alt="Ranjeetha Sri" loading="eager" decoding="async" onerror="window.handlePhotoError(this, 'Polish_20241106_191645053.jpg')" />
+                <div class="book-collage" aria-label="Photo collage of Ranjeetha">
+                  <div class="book-collage__card book-collage__card--left" title="Ranjeetha">
+                    <img src="./images/Polish_20241106_191645053.jpg?v=2" alt="Ranjeetha" loading="eager" decoding="async" onerror="window.handlePhotoError(this, 'Polish_20241106_191645053.jpg')" />
                   </div>
                   <div class="book-collage__card book-collage__card--center" title="Laughter in Four Frames">
                     <div class="book-collage__tape" aria-hidden="true"></div>
-                    <img src="./images/Polish_20241106_192708490.jpg?v=2" alt="Ranjeetha Sri Collage" loading="eager" decoding="async" onerror="window.handlePhotoError(this, 'Polish_20241106_192708490.jpg')" />
+                    <img src="./images/Polish_20241106_192708490.jpg?v=2" alt="Ranjeetha Collage" loading="eager" decoding="async" onerror="window.handlePhotoError(this, 'Polish_20241106_192708490.jpg')" />
                     <span class="book-collage__handwriting">Always Smiling ♥</span>
                   </div>
-                  <div class="book-collage__card book-collage__card--right" title="Ranjeetha Sri">
-                    <img src="./images/IMG-20261108-WA0056.jpg?v=2" alt="Ranjeetha Sri" loading="eager" decoding="async" onerror="window.handlePhotoError(this, 'IMG-20261108-WA0056.jpg')" />
+                  <div class="book-collage__card book-collage__card--right" title="Ranjeetha">
+                    <img src="./images/IMG-20261108-WA0056.jpg?v=2" alt="Ranjeetha" loading="eager" decoding="async" onerror="window.handlePhotoError(this, 'IMG-20261108-WA0056.jpg')" />
                   </div>
                 </div>
 
@@ -774,8 +774,11 @@
                     &ldquo;Being beautiful is not just how you look, but how you make everyone around you feel.&rdquo;
                   </p>
                   <p class="story-line story-line--3 story-line--highlight is-revealed" id="storyLine3">
-                    &ldquo;Today is all about celebrating you, Ranjeetha Sri &hearts;&rdquo;
+                    &ldquo;Today is all about celebrating you, Ranjeetha &hearts;&rdquo;
                   </p>
+                  <div class="story-tap-hint" id="storyTapHint" role="button" tabindex="0" style="font-family:'Montserrat',sans-serif; font-size:12px; font-weight:600; color:#ad5068; margin-top:14px; cursor:pointer; text-align:center;">
+                    <span>Tap to reveal next quote (1/3) &hearts;</span>
+                  </div>
                   <div class="story-confirm-wrap" id="storyConfirmWrap" style="display:none; margin-top:14px; text-align:center;">
                     <button class="story-confirm-btn" id="storyConfirmBtn" type="button" aria-label="Confirm read">
                       <span>I've read this with love &hearts;</span>
@@ -804,7 +807,7 @@
          PAGE 4: LITTLE MOMENTS, BIG MEMORIES
          (19 Polaroid Photo Gallery + Fullscreen Lightbox)
          ========================================================== -->
-    <section class="chapter chapter--3" id="chapter3" aria-label="Chapter 3: Little Moments, Big Memories">
+    <section class="chapter chapter--3 is-locked" id="chapter3" aria-label="Chapter 3: Little Moments, Big Memories">
       <div class="fairy-lights" aria-hidden="true">
         <span class="light-bulb b1"></span>
         <span class="light-bulb b2"></span>
@@ -1100,12 +1103,15 @@
           </article>
         </div>
 
+        <!-- Gallery Completion Sentinel -->
+        <div id="galleryEndSentinel" style="height: 1px; width: 100%;"></div>
+
         <!-- Navigation Actions (Left-aligned compact) -->
         <div class="chapter-actions chapter-actions--ch3">
           <button class="nav-btn nav-btn--back" id="ch3PrevBtn" type="button" aria-label="Back">
             <span>&larr; Back</span>
           </button>
-          <button class="nav-btn nav-btn--continue" id="ch3NextBtn" type="button" aria-label="Continue">
+          <button class="nav-btn nav-btn--continue is-gated" id="ch3NextBtn" type="button" aria-label="Continue">
             <span>Continue &darr;</span>
           </button>
         </div>
@@ -1114,7 +1120,7 @@
 
     <!-- ==========================================================
          PAGE 5: WORDS FROM THE HEART
-         (Personal Heartfelt Letter to Ranjeetha Sri)
+         (Personal Heartfelt Letter to Ranjeetha)
          ========================================================== -->
     <section class="chapter chapter--4 is-locked" id="chapter4" aria-label="Chapter 4: Words From The Heart">
       <div class="chapter-inner chapter-inner--center letter-section-inner">
@@ -1132,14 +1138,14 @@
               </div>
             </div>
             <div class="envelope-front">
-              <p class="envelope-recipient" id="envelopeRecipient">For Ranjeetha Sri (Gundu ❤️)</p>
+              <p class="envelope-recipient" id="envelopeRecipient">For Ranjeetha (Gundu ❤️)</p>
               <p class="envelope-hint" id="envelopeHint">Open your letter ❤️</p>
             </div>
           </div>
         </div>
 
         <!-- Full-Width Warm Ivory Personal Letter Card (Revealed when envelope is opened) -->
-        <article class="personal-letter-card" id="personalLetterCard" aria-label="Personal Birthday Letter to Ranjeetha Sri" style="display: none;">
+        <article class="personal-letter-card" id="personalLetterCard" aria-label="Personal Birthday Letter to Ranjeetha" style="display: none;">
           <!-- Elegant Top Wax Stamp Accent -->
           <div class="letter-stationery-top" aria-hidden="true">
             <span class="letter-wax-stamp">&hearts;</span>
@@ -1148,7 +1154,7 @@
 
           <!-- Letter Content -->
           <div class="letter-content-body">
-            <h2 class="personal-letter-salutation" id="letterSalutation">Hey Gundu,</h2>
+            <h2 class="personal-letter-salutation" id="letterSalutation">Hey Gundu, my sweet பட்டு,</h2>
 
             <div class="personal-letter-paragraphs" id="letterParagraphs">
               <p>I wanted to write something special for you today. I may not always know the perfect words to say, but I genuinely hope you know how special you are.</p>
@@ -1275,7 +1281,7 @@
         <div class="love-final-reveal" id="loveFinalReveal" hidden>
           <div class="love-final-heart" aria-hidden="true">💖</div>
           <h3 class="love-final-title">I Love You Too! ❤️</h3>
-          <p class="love-final-subtitle">Once Again, Happy Birthday, Ranjeetha Sri! ❤️</p>
+          <p class="love-final-subtitle">Once Again, Happy Birthday, Ranjeetha! ❤️</p>
           <div class="love-final-actions">
             <button class="replay-all-btn" id="replayAllBtn" type="button" aria-label="Replay Experience">
               <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor">

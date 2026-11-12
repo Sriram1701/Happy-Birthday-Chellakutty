@@ -139,7 +139,7 @@ async function generateRomanticHeartQR() {
 
   <!-- Header: Birthday Greeting & Romantic Subtitle -->
   <g transform="translate(${cardWidth / 2}, 54)">
-    <text class="title-script" y="0">Happy Birthday, Ranjeetha Sri</text>
+    <text class="title-script" y="0">Happy Birthday, Ranjeetha</text>
     <!-- Delicate Flourish Line with Heart -->
     <line x1="-90" y1="18" x2="-18" y2="18" stroke="url(#goldGrad)" stroke-width="1" opacity="0.65" />
     <path d="M 0 16 C 0 13 -4 10 -7 13 C -10 16 -7 20 0 25 C 7 20 10 16 7 13 C 4 10 0 13 0 16 Z" fill="#d81e57" />
