@@ -344,9 +344,43 @@ body.film-body{
   overflow-x: hidden !important;
 }
 
-/* Locked future chapters are completely hidden from scroll flow until previous is completed */
+/* Sequential gated locking: Future chapters remain hidden until unlocked */
 .chapter.is-locked{
   display: none !important;
+}
+
+/* Friendly task hint styling across chapters */
+.chapter-task-hint{
+  font-family: 'Montserrat', -apple-system, sans-serif;
+  font-size: 0.85rem;
+  color: #a04058;
+  margin: 4px 0 0 0;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+}
+
+.story-confirm-btn{
+  background: linear-gradient(135deg, #ff2a6d 0%, #d81e57 100%);
+  color: #ffffff;
+  font-family: 'Montserrat', -apple-system, sans-serif;
+  font-size: 0.86rem;
+  font-weight: 600;
+  padding: 8px 24px;
+  border: 1px solid rgba(255, 255, 255, 0.45);
+  border-radius: 999px;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(216, 30, 87, 0.3);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  letter-spacing: 0.02em;
+}
+
+.story-confirm-btn:hover{
+  transform: translateY(-1.5px);
+  box-shadow: 0 6px 18px rgba(216, 30, 87, 0.45);
+}
+
+.story-confirm-btn:active{
+  transform: translateY(0);
 }
 
 /* Continue button hidden until chapter's required activity is completed */
@@ -1100,38 +1134,72 @@ body.film-body{
 
 .chapter-actions--cake-top{
   align-self: flex-start;
-  margin-bottom: 12px;
+  margin-bottom: 8px;
 }
 
 .cake-header{
   text-align: center;
-  margin-bottom: 14px;
+  margin-bottom: 10px;
+}
+
+.cake-header-flourish,
+.cake-footer-flourish{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin: 4px auto 6px;
+  opacity: 0.75;
+}
+
+.flourish-line{
+  width: 48px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, #d81e57 50%, transparent);
+}
+
+.flourish-heart{
+  color: #d81e57;
+  font-size: 11px;
 }
 
 .cake-title{
-  font-family: 'Playfair Display', Georgia, serif;
-  font-size: clamp(1.8rem, 5vw, 2.35rem);
-  font-weight: 700;
+  font-family: 'Great Vibes', 'Playfair Display', Georgia, cursive, serif;
+  font-size: clamp(2.1rem, 6vw, 3rem);
+  font-weight: 400;
   color: #4a1324;
-  letter-spacing: -0.01em;
-  margin: 0 0 6px 0;
-  line-height: 1.2;
+  letter-spacing: 0.01em;
+  margin: 0 0 4px 0;
+  line-height: 1.15;
+  text-shadow: 0 2px 12px rgba(216, 30, 87, 0.12);
 }
 
 .cake-instruction{
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-  font-size: clamp(0.9rem, 2.5vw, 1.05rem);
+  font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: clamp(0.92rem, 2.6vw, 1.05rem);
   color: #924053;
   font-weight: 500;
   margin: 0;
-  letter-spacing: 0.01em;
+  letter-spacing: 0.02em;
+  min-height: 26px;
+  transition: all 0.3s ease;
+}
+
+.cake-congrats{
+  display: inline-block;
+  font-family: 'Great Vibes', 'Playfair Display', Georgia, cursive, serif;
+  font-size: clamp(1.6rem, 4.8vw, 2.2rem);
+  font-weight: 600;
+  color: #d81e57;
+  text-shadow: 0 2px 14px rgba(216, 30, 87, 0.25);
+  line-height: 1.2;
 }
 
 .cake-stage{
   position: relative;
   width: 100%;
-  max-width: 380px;
-  margin: 4px auto 14px;
+  max-width: 420px;
+  margin: 0 auto 8px;
   user-select: none;
   touch-action: pan-y;
 }
@@ -1141,72 +1209,69 @@ body.film-body{
   height: auto;
   display: block;
   overflow: visible;
-  filter: drop-shadow(0 12px 28px rgba(186, 18, 67, 0.12));
+  filter: drop-shadow(0 14px 32px rgba(186, 18, 67, 0.16));
 }
 
-/* Pulsing Guide Line Indicator */
+/* Pulsing Center Guide Line Indicator */
 .cake-slice-guide{
-  position: absolute;
-  top: 18%;
-  left: 50%;
-  transform: translateX(-50%);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 4px;
+  animation: guideGlowPulse 1.8s ease-in-out infinite;
+  transform-origin: 210px 160px;
   pointer-events: none;
-  opacity: 0.85;
-  animation: guidePulse 1.8s ease-in-out infinite;
-  z-index: 3;
 }
 
-.slice-guide-line{
-  width: 2px;
-  height: 48px;
-  background: linear-gradient(180deg, rgba(216, 30, 87, 0.9) 0%, rgba(216, 30, 87, 0.1) 100%);
-  border-radius: 2px;
-  border-left: 2px dashed #d81e57;
-}
-
-.slice-guide-chevron{
-  font-size: 13px;
-  color: #d81e57;
-  transform: translateY(-2px);
-}
-
-@keyframes guidePulse{
-  0%, 100%{ opacity: 0.35; transform: translate(-50%, 0); }
-  50%{ opacity: 0.95; transform: translate(-50%, 8px); }
-}
-
-/* Flickering Candles */
-@keyframes flameFlicker{
-  0%, 100%{ transform: scale(1) rotate(0deg); opacity: 0.95; }
-  25%{ transform: scale(1.08, 0.92) rotate(-2deg); opacity: 1; }
-  50%{ transform: scale(0.93, 1.07) rotate(2deg); opacity: 0.9; }
-  75%{ transform: scale(1.05, 0.96) rotate(-1deg); opacity: 0.98; }
-}
-
-.candle-flame{
-  transform-origin: center bottom;
-  animation: flameFlicker 1.4s ease-in-out infinite alternate;
-}
-.candle-flame--2{
-  animation-delay: 0.25s;
-  animation-duration: 1.6s;
-}
-.candle-flame--3{
-  animation-delay: 0.5s;
-  animation-duration: 1.3s;
+@keyframes guideGlowPulse{
+  0%, 100%{
+    opacity: 0.88;
+    filter: drop-shadow(0 0 2px rgba(255, 46, 120, 0.5));
+  }
+  50%{
+    opacity: 1;
+    filter: drop-shadow(0 0 8px rgba(255, 46, 120, 0.95));
+  }
 }
 
 .knife-rig{
   cursor: grab;
   touch-action: none;
+  filter: drop-shadow(0 6px 14px rgba(140, 20, 50, 0.25));
   transition: filter 0.2s ease;
 }
+
 .knife-rig:active{
   cursor: grabbing;
+  filter: drop-shadow(0 10px 22px rgba(140, 20, 50, 0.38));
+}
+
+.cake-trigger-row{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 4px auto 6px;
+  width: 100%;
+}
+
+.cake-cut-trigger-btn{
+  background: linear-gradient(135deg, #ff2a6d 0%, #d81e57 100%);
+  color: #ffffff;
+  font-family: 'Montserrat', -apple-system, sans-serif;
+  font-size: clamp(0.88rem, 2.4vw, 0.98rem);
+  font-weight: 600;
+  padding: 8px 26px;
+  border: 1.5px solid rgba(255, 255, 255, 0.45);
+  border-radius: 999px;
+  box-shadow: 0 6px 20px rgba(216, 30, 87, 0.38), inset 0 1px 1px rgba(255, 255, 255, 0.5);
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.3s ease;
+  letter-spacing: 0.02em;
+}
+
+.cake-cut-trigger-btn:hover{
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 8px 24px rgba(216, 30, 87, 0.48);
+}
+
+.cake-cut-trigger-btn:active{
+  transform: translateY(1px) scale(0.98);
 }
 
 .chapter-actions--cake-bottom{
@@ -1215,7 +1280,15 @@ body.film-body{
   justify-content: flex-start;
   gap: 12px;
   width: 100%;
-  margin-top: 10px;
+  margin-top: 8px;
+}
+
+#cakeReplayBtn:not(.is-active){
+  display: none !important;
+}
+
+#cakeReplayBtn.is-active{
+  display: inline-flex !important;
 }
 
 /* ============================================================
@@ -2166,7 +2239,16 @@ body.film-body{
   box-shadow: 0 8px 22px rgba(216, 30, 87, 0.35);
   position: relative;
   z-index: 2;
-  will-change: transform;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.love-btn--yes:hover{
+  transform: translateY(-2px) scale(1.03);
+  box-shadow: 0 12px 28px rgba(216, 30, 87, 0.45);
+}
+
+.love-btn--yes:active{
+  transform: translateY(1px) scale(0.98);
 }
 
 .love-btn--no{
@@ -2174,12 +2256,13 @@ body.film-body{
   color: #5a2032;
   border: 1.5px solid rgba(216, 30, 87, 0.25);
   position: relative;
-  z-index: 1;
+  z-index: 3;
+  will-change: transform;
+  touch-action: none;
 }
 
 .love-btn--no:hover{
   background: #edd2df;
-  transform: scale(1.04);
 }
 
 /* Hidden Reveal State */

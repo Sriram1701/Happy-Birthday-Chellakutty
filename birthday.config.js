@@ -186,6 +186,24 @@ export const BIRTHDAY_CONFIG = {
       title: "The Journey Continues",
       caption: "Ready for another wonderful year ahead, shining brighter and more beautiful than ever.",
       objectPosition: "center 15%"
+    },
+    {
+      id: 18,
+      filename: "Ranjeetha_Yellow_Shawl.jpg",
+      stage: "Recent Memories",
+      stageKey: "recent",
+      title: "Festive Radiance",
+      caption: "Glowing in traditional elegance with an effortless smile and festive grace.",
+      objectPosition: "center 18%"
+    },
+    {
+      id: 19,
+      filename: "Ranjeetha_Purple_Kurti.jpg",
+      stage: "Recent Memories",
+      stageKey: "recent",
+      title: "Graceful Moments",
+      caption: "Captured in a quiet, beautiful moment — radiating warmth, elegance, and charm.",
+      objectPosition: "55% 12%"
     }
   ],
 

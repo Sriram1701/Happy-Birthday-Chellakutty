@@ -165,8 +165,8 @@
 
               <!-- 3. Independent Golden Cupid Arrow (Positioned Vertically Between Bow & Heart, Tip Pointing Upward) -->
               <g class="cupid-arrow-carrier" id="cupidArrowCarrier" filter="url(#cupidGoldGlow)" style="cursor: grab; touch-action: none;" pointer-events="all">
-                <!-- Large Invisible Mobile Touch Grab Zone (Full arrow shaft & nock) -->
-                <rect x="125" y="235" width="90" height="155" fill="transparent" pointer-events="all" />
+                <!-- Large Invisible Mobile Touch Grab Zone (Full arrow shaft, bowstring & nock) -->
+                <rect x="80" y="210" width="180" height="190" fill="rgba(0,0,0,0.001)" pointer-events="all" />
 
                 <!-- Arrow Shaft (Points Upward to Heart) -->
                 <line x1="170" y1="260" x2="170" y2="372" stroke="url(#cupidGoldGrad)" stroke-width="4.8" stroke-linecap="round" />
@@ -222,230 +222,474 @@
         </div>
 
         <header class="cake-header">
-          <h2 class="cake-title">Let's Cut the Cake! 🎂</h2>
-          <p class="cake-instruction" id="cakeInstruction">Drag the knife down to cut the cake</p>
+          <div class="cake-header-flourish" aria-hidden="true">
+            <span class="flourish-line"></span>
+            <span class="flourish-heart">&hearts;</span>
+            <span class="flourish-line"></span>
+          </div>
+          <h2 class="cake-title">Let's Cut the Birthday Cake!</h2>
+          <p class="cake-instruction" id="cakeInstruction">Let's Cut the Cake! 🎂</p>
         </header>
 
         <!-- Interactive Cake Cutting Area -->
         <div class="cake-stage" id="cakeStage" role="region" aria-label="Interactive Cake Cutting">
-          <!-- Guide pulse indicator -->
-          <div class="cake-slice-guide" id="cakeSliceGuide" aria-hidden="true">
-            <span class="slice-guide-line"></span>
-            <span class="slice-guide-chevron">&#x25BC;</span>
-          </div>
-
-          <!-- SVG Cake & Knife Artboard -->
-          <svg class="cake-svg" id="cakeSvg" viewBox="0 0 380 340" aria-hidden="true">
+          <!-- SVG Realistic Cake & Knife Artboard -->
+          <svg class="cake-svg" id="cakeSvg" viewBox="0 0 440 370" aria-hidden="true">
             <defs>
-              <!-- Cake Frosting Gradient (Soft Blush Cream) -->
-              <linearGradient id="cakeFrostingGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-                <stop offset="0%" stop-color="#fff5f7" />
-                <stop offset="35%" stop-color="#fedce5" />
-                <stop offset="70%" stop-color="#f8b6c8" />
-                <stop offset="100%" stop-color="#e991a9" />
-              </linearGradient>
+              <!-- Drop Shadows and Glows -->
+              <filter id="cakeDropShadow" x="-20%" y="-20%" width="140%" height="150%">
+                <feDropShadow dx="0" dy="14" stdDeviation="10" flood-color="#8c1d3d" flood-opacity="0.18" />
+              </filter>
+              <filter id="plateShadow" x="-30%" y="-30%" width="160%" height="180%">
+                <feGaussianBlur stdDeviation="8" />
+              </filter>
+              <filter id="cutGlow" x="-30%" y="-30%" width="160%" height="160%">
+                <feDropShadow dx="0" dy="0" stdDeviation="4" flood-color="#ff2e78" flood-opacity="0.85" />
+              </filter>
+              <filter id="strawberryGlow" x="-20%" y="-20%" width="140%" height="140%">
+                <feDropShadow dx="0" dy="2" stdDeviation="2" flood-color="#80001a" flood-opacity="0.3" />
+              </filter>
 
-              <!-- Top Surface Gradient -->
-              <linearGradient id="cakeTopGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+              <!-- Plate Gold Rim & Ceramic Gradients -->
+              <linearGradient id="goldRimGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" stop-color="#c99738" />
+                <stop offset="25%" stop-color="#fae498" />
+                <stop offset="50%" stop-color="#fff6cf" />
+                <stop offset="75%" stop-color="#e8bd54" />
+                <stop offset="100%" stop-color="#aa791c" />
+              </linearGradient>
+              <radialGradient id="plateCeramicGrad" cx="50%" cy="45%" r="55%">
                 <stop offset="0%" stop-color="#ffffff" />
-                <stop offset="60%" stop-color="#ffeef3" />
-                <stop offset="100%" stop-color="#fad4df" />
-              </linearGradient>
-
-              <!-- Cake Inner Sponge Cake Gradient -->
-              <linearGradient id="cakeSpongeGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-                <stop offset="0%" stop-color="#fae3c2" />
-                <stop offset="100%" stop-color="#f2c896" />
-              </linearGradient>
-
-              <!-- Cake Cream Filling Gradient -->
-              <linearGradient id="cakeCreamGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-                <stop offset="0%" stop-color="#ff7b9f" />
-                <stop offset="100%" stop-color="#d81e57" />
-              </linearGradient>
-
-              <!-- Cake Stand Rose-Gold Gradient -->
-              <linearGradient id="cakeStandGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-                <stop offset="0%" stop-color="#d8a47f" />
-                <stop offset="30%" stop-color="#fae3d2" />
-                <stop offset="70%" stop-color="#e5b08b" />
-                <stop offset="100%" stop-color="#b67a54" />
-              </linearGradient>
-
-              <!-- Candle Wax Gradient -->
-              <linearGradient id="candleGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-                <stop offset="0%" stop-color="#ffe4ec" />
-                <stop offset="50%" stop-color="#ffffff" />
-                <stop offset="100%" stop-color="#ff9ab5" />
-              </linearGradient>
-
-              <!-- Candle Flame Radial Gradient -->
-              <radialGradient id="flameGrad" cx="50%" cy="65%" r="50%">
-                <stop offset="0%" stop-color="#ffffff" />
-                <stop offset="35%" stop-color="#ffe600" />
-                <stop offset="75%" stop-color="#ff6b08" />
-                <stop offset="100%" stop-color="rgba(255, 30, 0, 0)" />
+                <stop offset="70%" stop-color="#fffbfd" />
+                <stop offset="92%" stop-color="#fbedf2" />
+                <stop offset="100%" stop-color="#ebd5de" />
               </radialGradient>
 
-              <!-- Knife Blade Steel Gradient -->
-              <linearGradient id="bladeGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-                <stop offset="0%" stop-color="#f0f4f8" />
-                <stop offset="30%" stop-color="#ffffff" />
-                <stop offset="70%" stop-color="#cbd5e1" />
+              <!-- Cake Body Ivory/Vanilla Buttercream Gradient -->
+              <linearGradient id="cakeIvorySide" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" stop-color="#ffffff" />
+                <stop offset="20%" stop-color="#fff8f2" />
+                <stop offset="55%" stop-color="#faebf0" />
+                <stop offset="85%" stop-color="#f5dce3" />
+                <stop offset="100%" stop-color="#eac8d3" />
+              </linearGradient>
+
+              <!-- Glossy Strawberry Glaze Gradient -->
+              <linearGradient id="strawberryGlazeGrad" x1="0%" y1="0%" x2="100%" y2="25%">
+                <stop offset="0%" stop-color="#ff7da2" />
+                <stop offset="30%" stop-color="#f75080" />
+                <stop offset="70%" stop-color="#e62d66" />
+                <stop offset="100%" stop-color="#c4144b" />
+              </linearGradient>
+              <radialGradient id="topGlazeSurface" cx="48%" cy="42%" r="55%">
+                <stop offset="0%" stop-color="#ffa8c1" />
+                <stop offset="50%" stop-color="#f55988" />
+                <stop offset="100%" stop-color="#d9245c" />
+              </radialGradient>
+
+              <!-- Whipped Cream Swirls -->
+              <linearGradient id="whippedCreamGrad" x1="20%" y1="0%" x2="80%" y2="100%">
+                <stop offset="0%" stop-color="#ffffff" />
+                <stop offset="60%" stop-color="#fff6f8" />
+                <stop offset="100%" stop-color="#fad9e3" />
+              </linearGradient>
+
+              <!-- Fresh Strawberries -->
+              <radialGradient id="strawberryBodyGrad" cx="38%" cy="32%" r="65%">
+                <stop offset="0%" stop-color="#ff5775" />
+                <stop offset="45%" stop-color="#e6103c" />
+                <stop offset="80%" stop-color="#b30024" />
+                <stop offset="100%" stop-color="#700017" />
+              </radialGradient>
+              <linearGradient id="strawberryLeafGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#5cb85c" />
+                <stop offset="100%" stop-color="#2d6a2e" />
+              </linearGradient>
+
+              <!-- White Chocolate Plaque -->
+              <linearGradient id="chocolatePlaqueGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                <stop offset="0%" stop-color="#ffffff" />
+                <stop offset="65%" stop-color="#fffef6" />
+                <stop offset="100%" stop-color="#faedd2" />
+              </linearGradient>
+
+              <!-- Moist Sponge Cake & Strawberry Cream Cross Section Layers -->
+              <linearGradient id="spongeLayerGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                <stop offset="0%" stop-color="#fdf1d9" />
+                <stop offset="50%" stop-color="#f5d69b" />
+                <stop offset="100%" stop-color="#e6be77" />
+              </linearGradient>
+              <linearGradient id="strawberryFillingGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                <stop offset="0%" stop-color="#ff547f" />
+                <stop offset="50%" stop-color="#d41449" />
+                <stop offset="100%" stop-color="#99042c" />
+              </linearGradient>
+              <linearGradient id="creamLayerGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                <stop offset="0%" stop-color="#ffffff" />
+                <stop offset="100%" stop-color="#ffeef2" />
+              </linearGradient>
+
+              <!-- Stainless Steel Knife Blade -->
+              <linearGradient id="knifeBladeGrad" x1="0%" y1="0%" x2="10%" y2="100%">
+                <stop offset="0%" stop-color="#ffffff" />
+                <stop offset="20%" stop-color="#f8fafc" />
+                <stop offset="60%" stop-color="#e2e8f0" />
+                <stop offset="85%" stop-color="#cbd5e1" />
                 <stop offset="100%" stop-color="#94a3b8" />
               </linearGradient>
 
-              <!-- Knife Handle Rose-Gold -->
-              <linearGradient id="handleGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-                <stop offset="0%" stop-color="#cf7a90" />
-                <stop offset="40%" stop-color="#f5b8c7" />
-                <stop offset="100%" stop-color="#963c52" />
+              <!-- Ornate Golden Knife Handle -->
+              <linearGradient id="knifeGoldHandle" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#ebd074" />
+                <stop offset="35%" stop-color="#fff4c2" />
+                <stop offset="70%" stop-color="#d9a836" />
+                <stop offset="100%" stop-color="#8c6418" />
               </linearGradient>
 
-              <!-- Hand Skin Tone Gradient -->
-              <linearGradient id="skinGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" stop-color="#ffeedf" />
-                <stop offset="60%" stop-color="#f6cfbe" />
-                <stop offset="100%" stop-color="#e2ab95" />
+              <!-- Feminine Hand Skin Tone & Manicure -->
+              <linearGradient id="handSkinGrad" x1="15%" y1="0%" x2="85%" y2="100%">
+                <stop offset="0%" stop-color="#fff5ed" />
+                <stop offset="45%" stop-color="#feddce" />
+                <stop offset="80%" stop-color="#f5c2b0" />
+                <stop offset="100%" stop-color="#df9a85" />
               </linearGradient>
+              <linearGradient id="nailPolishGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#ffc2d4" />
+                <stop offset="100%" stop-color="#f2658e" />
+              </linearGradient>
+
+              <!-- Gold Sugar Beads (Dragees) -->
+              <radialGradient id="goldPearlGrad" cx="35%" cy="35%" r="65%">
+                <stop offset="0%" stop-color="#fffbe0" />
+                <stop offset="50%" stop-color="#f0c24d" />
+                <stop offset="100%" stop-color="#a67b17" />
+              </radialGradient>
             </defs>
 
-            <!-- 1. Pedestal Stand & Base Shadow -->
-            <g id="cakeStandGroup">
-              <ellipse cx="190" cy="278" rx="136" ry="16" fill="rgba(30, 6, 18, 0.45)" filter="blur(6px)" />
-              <!-- Stand Base Plate -->
-              <ellipse cx="190" cy="265" rx="124" ry="22" fill="url(#cakeStandGrad)" stroke="#8e5334" stroke-width="1.2" />
-              <ellipse cx="190" cy="262" rx="114" ry="18" fill="url(#cakeTopGrad)" opacity="0.6" />
-              <!-- Stand Stem -->
-              <path d="M 174 266 Q 170 290 156 304 L 224 304 Q 210 290 206 266 Z" fill="url(#cakeStandGrad)" />
-              <ellipse cx="190" cy="304" rx="42" ry="10" fill="url(#cakeStandGrad)" stroke="#8e5334" stroke-width="1" />
+            <!-- 1. BASE PLATE & SOFT REALISTIC SHADOW (Stays in place during cut) -->
+            <g id="cakePlateGroup">
+              <!-- Soft Table Drop Shadow -->
+              <ellipse cx="210" cy="308" rx="168" ry="28" fill="rgba(140, 20, 50, 0.2)" filter="url(#plateShadow)" />
+              <!-- Gold-Rimmed Plate -->
+              <ellipse cx="210" cy="296" rx="162" ry="28" fill="url(#goldRimGrad)" />
+              <ellipse cx="210" cy="295" rx="158" ry="26" fill="url(#plateCeramicGrad)" />
+              <ellipse cx="210" cy="294" rx="148" ry="23" fill="#ffffff" opacity="0.5" />
+              <!-- Ambient Shadow Under Cake -->
+              <ellipse cx="210" cy="278" rx="126" ry="20" fill="rgba(60, 10, 25, 0.28)" filter="url(#plateShadow)" />
             </g>
 
-            <!-- 2. Left Half of Cake (Separates left when cut) -->
+            <!-- 2. LEFT HALF OF CAKE (Splits to left when cut) -->
             <g class="cake-half cake-half--left" id="cakeHalfLeft">
-              <!-- Left Cylinder Body -->
-              <path d="M 76 165 C 76 195 125 240 190 240 L 190 168 C 125 168 76 138 76 165 Z" fill="url(#cakeFrostingGrad)" />
-              <!-- Left Inner Cut Cross-Section (Moist golden sponge & rich cream layers) -->
+              <!-- Left Cylinder Side Body (Ivory Buttercream, seamless join at 211) -->
+              <path d="M 90,160 L 90,265 C 90,279 144,291 211,291 L 211,186 C 144,186 90,174 90,160 Z" fill="url(#cakeIvorySide)" />
+
+              <!-- Left Side Fondant Hearts & Gold Dragees -->
+              <g class="side-decorations-left">
+                <path d="M 120,225 c -2.5,-3 -7,-1 -7,2.5 c 0,3.5 7,7 7,7 c 0,0 7,-3.5 7,-7 c 0,-3.5 -4.5,-5.5 -7,-2.5 z" fill="#ff4071" opacity="0.9" />
+                <path d="M 155,248 c -2.5,-3 -7,-1 -7,2.5 c 0,3.5 7,7 7,7 c 0,0 7,-3.5 7,-7 c 0,-3.5 -4.5,-5.5 -7,-2.5 z" fill="#ff4071" opacity="0.9" />
+                <path d="M 180,228 c -2.5,-3 -7,-1 -7,2.5 c 0,3.5 7,7 7,7 c 0,0 7,-3.5 7,-7 c 0,-3.5 -4.5,-5.5 -7,-2.5 z" fill="#ff4071" opacity="0.9" />
+                <circle cx="108" cy="215" r="2.5" fill="url(#goldPearlGrad)" />
+                <circle cx="138" cy="210" r="2.8" fill="url(#goldPearlGrad)" />
+                <circle cx="140" cy="242" r="2.5" fill="url(#goldPearlGrad)" />
+                <circle cx="168" cy="218" r="2.8" fill="url(#goldPearlGrad)" />
+                <circle cx="195" cy="252" r="2.5" fill="url(#goldPearlGrad)" />
+                <circle cx="198" cy="216" r="2.8" fill="url(#goldPearlGrad)" />
+              </g>
+
+              <!-- Left Strawberry Glaze & Organic Drips -->
+              <path d="M 90,160 C 90,174 144,186 211,186 L 211,208 Q 204,222 198,208 Q 192,192 184,215 Q 178,232 172,212 Q 166,194 158,222 Q 152,238 146,220 Q 138,198 130,215 Q 124,228 118,208 Q 112,194 104,206 Q 96,215 90,195 Z" fill="url(#strawberryGlazeGrad)" />
+              <path d="M 95,164 C 115,174 155,183 208,185" fill="none" stroke="#ffffff" stroke-width="2" opacity="0.65" stroke-linecap="round" />
+
+              <!-- Left Bottom Whipped Cream Shell Rosettes -->
+              <g class="bottom-cream-left">
+                <ellipse cx="98" cy="265" rx="8" ry="6" fill="url(#whippedCreamGrad)" />
+                <ellipse cx="114" cy="268" rx="8.5" ry="6" fill="url(#whippedCreamGrad)" />
+                <ellipse cx="132" cy="272" rx="9" ry="6.5" fill="url(#whippedCreamGrad)" />
+                <ellipse cx="151" cy="276" rx="9.5" ry="7" fill="url(#whippedCreamGrad)" />
+                <ellipse cx="171" cy="281" rx="9.5" ry="7" fill="url(#whippedCreamGrad)" />
+                <ellipse cx="191" cy="285" rx="9.5" ry="7" fill="url(#whippedCreamGrad)" />
+                <ellipse cx="206" cy="288" rx="8" ry="6.5" fill="url(#whippedCreamGrad)" />
+              </g>
+
+              <!-- Left Top Surface (Glossy Pink Glaze, seamless at 211) -->
+              <path d="M 211,134 C 144,134 90,146 90,160 C 90,174 144,186 211,186 Z" fill="url(#topGlazeSurface)" />
+
+              <!-- Left Top Whipped Cream Rosettes around Rim -->
+              <g class="top-cream-left">
+                <ellipse cx="98" cy="158" rx="8.5" ry="6" fill="url(#whippedCreamGrad)" />
+                <ellipse cx="115" cy="150" rx="8.5" ry="6" fill="url(#whippedCreamGrad)" />
+                <ellipse cx="134" cy="144" rx="8.5" ry="6" fill="url(#whippedCreamGrad)" />
+                <ellipse cx="156" cy="139" rx="8.5" ry="6" fill="url(#whippedCreamGrad)" />
+                <ellipse cx="179" cy="136" rx="8" ry="5.5" fill="url(#whippedCreamGrad)" />
+                <ellipse cx="201" cy="135" rx="7.5" ry="5.5" fill="url(#whippedCreamGrad)" />
+              </g>
+
+              <!-- Left Plump Fresh Strawberries with Seeds & Leaves -->
+              <g class="strawberries-left">
+                <!-- Main Left Strawberry -->
+                <g transform="translate(150, 142) rotate(-8)">
+                  <path d="M 0,-14 C 10,-14 14,-2 10,12 C 7,18 0,22 -2,22 C -4,22 -11,18 -14,12 C -18,-2 -10,-14 0,-14 Z" fill="url(#strawberryBodyGrad)" filter="url(#strawberryGlow)" />
+                  <ellipse cx="-4" cy="-2" rx="4" ry="7" fill="#ffffff" opacity="0.45" />
+                  <!-- Seeds -->
+                  <circle cx="-6" cy="4" r="0.9" fill="#ffea80" />
+                  <circle cx="0" cy="5" r="0.9" fill="#ffea80" />
+                  <circle cx="5" cy="4" r="0.9" fill="#ffea80" />
+                  <circle cx="-2" cy="12" r="0.8" fill="#ffea80" />
+                  <circle cx="3" cy="11" r="0.8" fill="#ffea80" />
+                  <circle cx="-5" cy="-5" r="0.8" fill="#ffea80" />
+                  <circle cx="4" cy="-5" r="0.8" fill="#ffea80" />
+                  <!-- Green Calyx -->
+                  <polygon points="0,-13 -4,-18 -1,-14 -9,-17 -3,-13 0,-19 3,-13 9,-17 1,-14 4,-18" fill="url(#strawberryLeafGrad)" />
+                </g>
+                <!-- Smaller Left Strawberry -->
+                <g transform="translate(118, 155) rotate(-16) scale(0.8)">
+                  <path d="M 0,-14 C 10,-14 14,-2 10,12 C 7,18 0,22 -2,22 C -4,22 -11,18 -14,12 C -18,-2 -10,-14 0,-14 Z" fill="url(#strawberryBodyGrad)" />
+                  <ellipse cx="-4" cy="-2" rx="3" ry="5" fill="#ffffff" opacity="0.4" />
+                  <polygon points="0,-13 -4,-18 -1,-14 -9,-17 -3,-13 0,-19 3,-13 9,-17 1,-14 4,-18" fill="url(#strawberryLeafGrad)" />
+                </g>
+              </g>
+
+              <!-- Left Buttercream Rose -->
+              <g transform="translate(180, 148) scale(0.9)">
+                <ellipse cx="0" cy="0" rx="9" ry="7" fill="#ff7da2" />
+                <path d="M -5,-3 C -2,-7 4,-7 7,-3 C 9,1 5,6 0,6 C -5,6 -9,1 -5,-3 Z" fill="#ff99b6" />
+                <ellipse cx="0" cy="0" rx="4" ry="3" fill="#ffffff" opacity="0.8" />
+              </g>
+
+              <!-- Left Half of White Chocolate Plaque -->
+              <g class="plaque-left">
+                <path d="M 210.5,132 C 205,125 190,123 182,132 C 174,142 188,155 210.5,168 Z" fill="url(#chocolatePlaqueGrad)" stroke="#eed59a" stroke-width="0.8" />
+                <text x="206" y="146" fill="#5c2612" font-family="'Great Vibes', cursive" font-size="12" font-weight="bold" text-anchor="end">Happy</text>
+                <text x="206" y="157" fill="#5c2612" font-family="'Great Vibes', cursive" font-size="10" text-anchor="end">Birth-</text>
+              </g>
+
+              <!-- LEFT INNER CUT CROSS-SECTION (Reveals golden sponge & rich strawberry cream) -->
               <g class="cake-cut-face" id="leftCutFace" opacity="0">
-                <!-- Golden Sponge Tier -->
-                <rect x="189" y="166" width="3" height="74" fill="url(#cakeSpongeGrad)" />
-                <!-- Cream Layers -->
-                <line x1="189" y1="184" x2="192" y2="184" stroke="url(#cakeCreamGrad)" stroke-width="3.5" />
-                <line x1="189" y1="204" x2="192" y2="204" stroke="url(#cakeCreamGrad)" stroke-width="3.5" />
-                <line x1="189" y1="224" x2="192" y2="224" stroke="url(#cakeCreamGrad)" stroke-width="3.5" />
+                <!-- Base Sponge Tier -->
+                <polygon points="196,258 211,266 211,291 196,283" fill="url(#spongeLayerGrad)" />
+                <!-- Cream & Jam Layer 1 -->
+                <polygon points="196,249 211,257 211,266 196,258" fill="url(#strawberryFillingGrad)" />
+                <!-- Middle Sponge Tier -->
+                <polygon points="196,223 211,231 211,257 196,249" fill="url(#spongeLayerGrad)" />
+                <!-- Cream & Jam Layer 2 -->
+                <polygon points="196,214 211,222 211,231 196,223" fill="url(#strawberryFillingGrad)" />
+                <!-- Top Sponge Tier -->
+                <polygon points="196,192 211,198 211,222 196,214" fill="url(#spongeLayerGrad)" />
+                <!-- Top Pink Glaze & Frosting Edge -->
+                <polygon points="196,186 211,186 211,198 196,192" fill="url(#strawberryGlazeGrad)" />
+                <!-- Sponge crumb texture accents -->
+                <circle cx="204" cy="210" r="1" fill="#e6be77" />
+                <circle cx="202" cy="240" r="1.1" fill="#e6be77" />
+                <circle cx="205" cy="272" r="1" fill="#e6be77" />
               </g>
-              <!-- Left Top Surface -->
-              <path d="M 76 165 C 76 138 125 120 190 120 L 190 168 C 125 168 76 150 76 165 Z" fill="url(#cakeTopGrad)" stroke="#f8c3d1" stroke-width="1" />
-              <!-- Frosting Piped Shell Borders Left -->
-              <ellipse cx="132" cy="168" rx="8" ry="5" fill="#ffffff" />
-              <ellipse cx="106" cy="165" rx="7" ry="4.5" fill="#fff0f4" />
-              <ellipse cx="88" cy="160" rx="6" ry="4" fill="#ffffff" />
-              <ellipse cx="160" cy="168" rx="8" ry="5" fill="#fff0f4" />
-              <!-- Left Candle -->
-              <g id="cakeCandleLeft">
-                <rect x="138" y="112" width="7" height="34" rx="2" fill="url(#candleGrad)" stroke="#d97a95" stroke-width="0.8" />
-                <line x1="141.5" y1="112" x2="141.5" y2="105" stroke="#333333" stroke-width="1.5" />
-                <!-- Flickering Flame -->
-                <path class="candle-flame candle-flame--1" d="M 141.5 88 Q 148 97 141.5 105 Q 135 97 141.5 88 Z" fill="url(#flameGrad)" />
-                <circle cx="141.5" cy="98" r="10" fill="#ffaa00" opacity="0.3" filter="blur(3px)" />
-              </g>
-              <!-- Rose-Gold Sugar Pearls -->
-              <circle cx="168" cy="154" r="4.5" fill="#ffccd8" stroke="#d45b7a" stroke-width="0.8" />
-              <circle cx="120" cy="150" r="4" fill="#ffe0b2" stroke="#d88d40" stroke-width="0.8" />
             </g>
 
-            <!-- 3. Right Half of Cake (Separates right when cut) -->
+            <!-- 3. RIGHT HALF OF CAKE (Splits to right when cut) -->
             <g class="cake-half cake-half--right" id="cakeHalfRight">
-              <!-- Right Cylinder Body -->
-              <path d="M 190 240 C 255 240 304 195 304 165 L 304 165 C 304 138 255 168 190 168 Z" fill="url(#cakeFrostingGrad)" />
-              <!-- Right Inner Cut Cross-Section (Moist golden sponge & rich cream layers) -->
+              <!-- Right Cylinder Side Body (Ivory Buttercream, seamless join at 209) -->
+              <path d="M 330,160 L 330,265 C 330,279 276,291 209,291 L 209,186 C 276,186 330,174 330,160 Z" fill="url(#cakeIvorySide)" />
+
+              <!-- Right Side Fondant Hearts & Gold Dragees -->
+              <g class="side-decorations-right">
+                <path d="M 240,228 c -2.5,-3 -7,-1 -7,2.5 c 0,3.5 7,7 7,7 c 0,0 7,-3.5 7,-7 c 0,-3.5 -4.5,-5.5 -7,-2.5 z" fill="#ff4071" opacity="0.9" />
+                <path d="M 265,248 c -2.5,-3 -7,-1 -7,2.5 c 0,3.5 7,7 7,7 c 0,0 7,-3.5 7,-7 c 0,-3.5 -4.5,-5.5 -7,-2.5 z" fill="#ff4071" opacity="0.9" />
+                <path d="M 300,225 c -2.5,-3 -7,-1 -7,2.5 c 0,3.5 7,7 7,7 c 0,0 7,-3.5 7,-7 c 0,-3.5 -4.5,-5.5 -7,-2.5 z" fill="#ff4071" opacity="0.9" />
+                <circle cx="222" cy="216" r="2.8" fill="url(#goldPearlGrad)" />
+                <circle cx="225" cy="252" r="2.5" fill="url(#goldPearlGrad)" />
+                <circle cx="252" cy="218" r="2.8" fill="url(#goldPearlGrad)" />
+                <circle cx="280" cy="210" r="2.8" fill="url(#goldPearlGrad)" />
+                <circle cx="282" cy="242" r="2.5" fill="url(#goldPearlGrad)" />
+                <circle cx="312" cy="215" r="2.5" fill="url(#goldPearlGrad)" />
+              </g>
+
+              <!-- Right Strawberry Glaze & Organic Drips -->
+              <path d="M 209,186 C 276,186 330,174 330,160 L 330,195 Q 324,215 316,206 Q 308,194 302,208 Q 296,228 290,215 Q 282,198 274,220 Q 268,238 262,222 Q 254,194 248,212 Q 242,232 236,215 Q 228,192 222,208 Q 216,222 209,208 Z" fill="url(#strawberryGlazeGrad)" />
+              <path d="M 212,185 C 265,183 305,174 325,164" fill="none" stroke="#ffffff" stroke-width="2" opacity="0.65" stroke-linecap="round" />
+
+              <!-- Right Bottom Whipped Cream Shell Rosettes -->
+              <g class="bottom-cream-right">
+                <ellipse cx="214" cy="288" rx="8" ry="6.5" fill="url(#whippedCreamGrad)" />
+                <ellipse cx="229" cy="285" rx="9.5" ry="7" fill="url(#whippedCreamGrad)" />
+                <ellipse cx="249" cy="281" rx="9.5" ry="7" fill="url(#whippedCreamGrad)" />
+                <ellipse cx="269" cy="276" rx="9.5" ry="7" fill="url(#whippedCreamGrad)" />
+                <ellipse cx="288" cy="272" rx="9" ry="6.5" fill="url(#whippedCreamGrad)" />
+                <ellipse cx="306" cy="268" rx="8.5" ry="6" fill="url(#whippedCreamGrad)" />
+                <ellipse cx="322" cy="265" rx="8" ry="6" fill="url(#whippedCreamGrad)" />
+              </g>
+
+              <!-- Right Top Surface (Glossy Pink Glaze, seamless at 209) -->
+              <path d="M 209,134 C 276,134 330,146 330,160 C 330,174 276,186 209,186 Z" fill="url(#topGlazeSurface)" />
+
+              <!-- Right Top Whipped Cream Rosettes around Rim -->
+              <g class="top-cream-right">
+                <ellipse cx="219" cy="135" rx="7.5" ry="5.5" fill="url(#whippedCreamGrad)" />
+                <ellipse cx="241" cy="136" rx="8" ry="5.5" fill="url(#whippedCreamGrad)" />
+                <ellipse cx="264" cy="139" rx="8.5" ry="6" fill="url(#whippedCreamGrad)" />
+                <ellipse cx="286" cy="144" rx="8.5" ry="6" fill="url(#whippedCreamGrad)" />
+                <ellipse cx="305" cy="150" rx="8.5" ry="6" fill="url(#whippedCreamGrad)" />
+                <ellipse cx="322" cy="158" rx="8.5" ry="6" fill="url(#whippedCreamGrad)" />
+              </g>
+
+              <!-- Right Plump Fresh Strawberries with Seeds & Leaves -->
+              <g class="strawberries-right">
+                <!-- Main Right Strawberry -->
+                <g transform="translate(268, 142) rotate(8)">
+                  <path d="M 0,-14 C 10,-14 14,-2 10,12 C 7,18 0,22 -2,22 C -4,22 -11,18 -14,12 C -18,-2 -10,-14 0,-14 Z" fill="url(#strawberryBodyGrad)" filter="url(#strawberryGlow)" />
+                  <ellipse cx="-3" cy="-2" rx="4" ry="7" fill="#ffffff" opacity="0.45" />
+                  <!-- Seeds -->
+                  <circle cx="-5" cy="4" r="0.9" fill="#ffea80" />
+                  <circle cx="0" cy="5" r="0.9" fill="#ffea80" />
+                  <circle cx="5" cy="4" r="0.9" fill="#ffea80" />
+                  <circle cx="-2" cy="12" r="0.8" fill="#ffea80" />
+                  <circle cx="3" cy="11" r="0.8" fill="#ffea80" />
+                  <circle cx="-4" cy="-5" r="0.8" fill="#ffea80" />
+                  <circle cx="4" cy="-5" r="0.8" fill="#ffea80" />
+                  <!-- Green Calyx -->
+                  <polygon points="0,-13 -4,-18 -1,-14 -9,-17 -3,-13 0,-19 3,-13 9,-17 1,-14 4,-18" fill="url(#strawberryLeafGrad)" />
+                </g>
+                <!-- Smaller Right Strawberry -->
+                <g transform="translate(302, 155) rotate(16) scale(0.8)">
+                  <path d="M 0,-14 C 10,-14 14,-2 10,12 C 7,18 0,22 -2,22 C -4,22 -11,18 -14,12 C -18,-2 -10,-14 0,-14 Z" fill="url(#strawberryBodyGrad)" />
+                  <ellipse cx="-3" cy="-2" rx="3" ry="5" fill="#ffffff" opacity="0.4" />
+                  <polygon points="0,-13 -4,-18 -1,-14 -9,-17 -3,-13 0,-19 3,-13 9,-17 1,-14 4,-18" fill="url(#strawberryLeafGrad)" />
+                </g>
+              </g>
+
+              <!-- Right Buttercream Rose -->
+              <g transform="translate(240, 148) scale(0.9)">
+                <ellipse cx="0" cy="0" rx="9" ry="7" fill="#ff7da2" />
+                <path d="M -5,-3 C -2,-7 4,-7 7,-3 C 9,1 5,6 0,6 C -5,6 -9,1 -5,-3 Z" fill="#ff99b6" />
+                <ellipse cx="0" cy="0" rx="4" ry="3" fill="#ffffff" opacity="0.8" />
+              </g>
+
+              <!-- Right Half of White Chocolate Plaque -->
+              <g class="plaque-right">
+                <path d="M 209.5,132 C 215,125 230,123 238,132 C 246,142 232,155 209.5,168 Z" fill="url(#chocolatePlaqueGrad)" stroke="#eed59a" stroke-width="0.8" />
+                <text x="214" y="146" fill="#5c2612" font-family="'Great Vibes', cursive" font-size="11" text-anchor="start">day &hearts;</text>
+                <text x="214" y="157" fill="#d81e57" font-family="'Montserrat', sans-serif" font-size="7" font-weight="700" text-anchor="start">SRI</text>
+              </g>
+
+              <!-- RIGHT INNER CUT CROSS-SECTION (Reveals golden sponge & rich strawberry cream) -->
               <g class="cake-cut-face" id="rightCutFace" opacity="0">
-                <rect x="188" y="166" width="3" height="74" fill="url(#cakeSpongeGrad)" />
-                <!-- Cream Layers -->
-                <line x1="188" y1="184" x2="191" y2="184" stroke="url(#cakeCreamGrad)" stroke-width="3.5" />
-                <line x1="188" y1="204" x2="191" y2="204" stroke="url(#cakeCreamGrad)" stroke-width="3.5" />
-                <line x1="188" y1="224" x2="191" y2="224" stroke="url(#cakeCreamGrad)" stroke-width="3.5" />
+                <!-- Base Sponge Tier -->
+                <polygon points="209,266 224,258 224,283 209,291" fill="url(#spongeLayerGrad)" />
+                <!-- Cream & Jam Layer 1 -->
+                <polygon points="209,257 224,249 224,258 209,266" fill="url(#strawberryFillingGrad)" />
+                <!-- Middle Sponge Tier -->
+                <polygon points="209,231 224,223 224,249 209,257" fill="url(#spongeLayerGrad)" />
+                <!-- Cream & Jam Layer 2 -->
+                <polygon points="209,222 224,214 224,223 209,231" fill="url(#strawberryFillingGrad)" />
+                <!-- Top Sponge Tier -->
+                <polygon points="209,198 224,192 224,214 209,222" fill="url(#spongeLayerGrad)" />
+                <!-- Top Pink Glaze & Frosting Edge -->
+                <polygon points="209,186 224,186 224,192 209,198" fill="url(#strawberryGlazeGrad)" />
+                <!-- Sponge crumb texture accents -->
+                <circle cx="216" cy="210" r="1" fill="#e6be77" />
+                <circle cx="218" cy="240" r="1.1" fill="#e6be77" />
+                <circle cx="215" cy="272" r="1" fill="#e6be77" />
               </g>
-              <!-- Right Top Surface -->
-              <path d="M 190 120 C 255 120 304 138 304 165 C 304 150 255 168 190 168 Z" fill="url(#cakeTopGrad)" stroke="#f8c3d1" stroke-width="1" />
-              <!-- Frosting Piped Shell Borders Right -->
-              <ellipse cx="220" cy="168" rx="8" ry="5" fill="#ffffff" />
-              <ellipse cx="248" cy="168" rx="8" ry="5" fill="#fff0f4" />
-              <ellipse cx="274" cy="165" rx="7" ry="4.5" fill="#ffffff" />
-              <ellipse cx="292" cy="160" rx="6" ry="4" fill="#fff0f4" />
-              <!-- Right Candle -->
-              <g id="cakeCandleRight">
-                <rect x="236" y="112" width="7" height="34" rx="2" fill="url(#candleGrad)" stroke="#d97a95" stroke-width="0.8" />
-                <line x1="239.5" y1="112" x2="239.5" y2="105" stroke="#333333" stroke-width="1.5" />
-                <!-- Flickering Flame -->
-                <path class="candle-flame candle-flame--2" d="M 239.5 88 Q 246 97 239.5 105 Q 233 97 239.5 88 Z" fill="url(#flameGrad)" />
-                <circle cx="239.5" cy="98" r="10" fill="#ffaa00" opacity="0.3" filter="blur(3px)" />
-              </g>
-              <!-- Center Candle (Sits on right half edge) -->
-              <g id="cakeCandleCenter">
-                <rect x="187" y="102" width="6.5" height="36" rx="2" fill="url(#candleGrad)" stroke="#d97a95" stroke-width="0.8" />
-                <line x1="190.2" y1="102" x2="190.2" y2="95" stroke="#333333" stroke-width="1.5" />
-                <!-- Flickering Flame -->
-                <path class="candle-flame candle-flame--3" d="M 190.2 78 Q 197 87 190.2 95 Q 183.5 87 190.2 78 Z" fill="url(#flameGrad)" />
-                <circle cx="190.2" cy="88" r="12" fill="#ffaa00" opacity="0.35" filter="blur(3px)" />
-              </g>
-              <!-- Rose-Gold Sugar Pearls -->
-              <circle cx="212" cy="154" r="4.5" fill="#ffccd8" stroke="#d45b7a" stroke-width="0.8" />
-              <circle cx="260" cy="150" r="4" fill="#ffe0b2" stroke="#d88d40" stroke-width="0.8" />
             </g>
 
-            <!-- 4. Interactive Knife & Animated Hand Carrier (Draggable vertically) -->
+            <!-- 4. VISIBLE CUTTING GUIDE (Dashed Line & Glowing Badge) -->
+            <g class="cake-slice-guide" id="cakeSliceGuide" aria-hidden="true">
+              <!-- "CUT HERE" Pill Badge -->
+              <g class="guide-badge-group">
+                <rect x="170" y="38" width="80" height="26" rx="13" fill="#ff0055" filter="url(#cutGlow)" />
+                <text x="210" y="55" fill="#ffffff" font-family="'Montserrat', sans-serif" font-size="11" font-weight="700" letter-spacing="1px" text-anchor="middle">CUT HERE</text>
+                <polygon points="204,64 216,64 210,72" fill="#ff0055" />
+              </g>
+              <!-- Bright Pink Dashed Line Straight Through Cake Center -->
+              <line class="guide-dashed-line" x1="210" y1="74" x2="210" y2="282" stroke="#ff0055" stroke-width="3" stroke-dasharray="6 4" />
+              <circle cx="210" cy="285" r="3.5" fill="#ff0055" />
+            </g>
+
+            <!-- 5. REALISTIC ANIMATED HAND & CAKE KNIFE RIG (Independent Draggable Element) -->
             <g class="knife-rig" id="knifeRig" style="cursor: grab; touch-action: none;">
-              <!-- Invisible larger grab zone for easy mobile dragging -->
-              <rect x="150" y="-10" width="100" height="175" fill="transparent" />
+              <!-- Invisible Expanded Hitbox for effortless mobile and desktop grabbing -->
+              <rect x="165" y="40" width="270" height="190" fill="transparent" />
 
-              <!-- Stainless Steel Blade (Points down towards center of cake) -->
-              <path d="M 189 45 L 189 155 Q 190 162 191 155 L 191 45 Z" fill="url(#bladeGrad)" stroke="#718096" stroke-width="0.6" filter="drop-shadow(0 4px 6px rgba(0,0,0,0.3))" />
-              <!-- Knife Spine & Cutting Edge Highlight -->
-              <line x1="189.5" y1="46" x2="189.5" y2="152" stroke="#ffffff" stroke-width="0.8" opacity="0.9" />
+              <!-- Knife Blade Shadow onto Cake -->
+              <path d="M 204,136 L 332,130 L 334,142 L 206,142 Z" fill="rgba(60, 10, 25, 0.22)" filter="url(#plateShadow)" />
 
-              <!-- Rose-Gold Bolster / Guard -->
-              <rect x="184" y="42" width="12" height="5" rx="1.5" fill="url(#handleGrad)" stroke="#682132" stroke-width="0.6" />
+              <!-- Stainless Steel Chef/Cake Blade -->
+              <g id="knifeBladeGroup">
+                <path d="M 204,130 L 330,118 Q 336,118 336,134 L 206,136 Q 202,132 204,130 Z" fill="url(#knifeBladeGrad)" stroke="#64748b" stroke-width="0.6" filter="drop-shadow(0 6px 10px rgba(0,0,0,0.3))" />
+                <!-- Blade Highlight along Spine -->
+                <line x1="206" y1="130" x2="330" y2="119" stroke="#ffffff" stroke-width="1.3" opacity="0.95" />
+                <!-- Blade Bevel Shadow Line -->
+                <line x1="207" y1="133.5" x2="332" y2="126" stroke="#94a3b8" stroke-width="0.8" />
+              </g>
 
-              <!-- Rose-Gold Handle -->
-              <rect x="186.5" y="6" width="7" height="38" rx="3" fill="url(#handleGrad)" stroke="#682132" stroke-width="0.8" />
-              <circle cx="190" cy="14" r="1.5" fill="#ffccd8" />
-              <circle cx="190" cy="25" r="1.5" fill="#ffccd8" />
-              <circle cx="190" cy="36" r="1.5" fill="#ffccd8" />
+              <!-- Ornate Golden Bolster & Handle -->
+              <g id="knifeHandleGroup">
+                <!-- Bolster/Guard -->
+                <path d="M 330,116 L 342,118 L 340,140 L 328,138 Z" fill="url(#knifeGoldHandle)" stroke="#78500c" stroke-width="0.8" />
+                <!-- Filigree Handle -->
+                <path d="M 342,118 L 405,128 Q 412,131 408,143 L 340,140 Z" fill="url(#knifeGoldHandle)" stroke="#78500c" stroke-width="0.8" filter="drop-shadow(0 4px 6px rgba(0,0,0,0.22))" />
+                <!-- Baroque Filigree Relief & Gem Accents -->
+                <circle cx="360" cy="126" r="2.2" fill="#ff4071" stroke="#ffffff" stroke-width="0.5" />
+                <circle cx="378" cy="130" r="2.2" fill="#ff4071" stroke="#ffffff" stroke-width="0.5" />
+                <circle cx="396" cy="134" r="2.2" fill="#ff4071" stroke="#ffffff" stroke-width="0.5" />
+              </g>
 
-              <!-- Elegant Hand Holding Knife -->
+              <!-- Elegant Feminine Hand Holding the Knife -->
               <g class="knife-hand" id="knifeHand">
-                <!-- Wrist & Forearm softly entering from top-right -->
-                <path d="M 240 -20 Q 220 5 198 12 L 202 38 Q 230 28 260 0 Z" fill="url(#skinGrad)" opacity="0.92" />
-                <!-- Fingers gently wrapped around handle -->
-                <rect x="183" y="14" width="15" height="6.5" rx="3" fill="url(#skinGrad)" stroke="#b87865" stroke-width="0.5" />
-                <rect x="183" y="21" width="15" height="6.5" rx="3" fill="url(#skinGrad)" stroke="#b87865" stroke-width="0.5" />
-                <rect x="183.5" y="28" width="14.5" height="6" rx="3" fill="url(#skinGrad)" stroke="#b87865" stroke-width="0.5" />
-                <rect x="184" y="34.5" width="13.5" height="5.5" rx="2.5" fill="url(#skinGrad)" stroke="#b87865" stroke-width="0.5" />
-                <path d="M 197 10 Q 192 18 193 28 Q 199 26 200 18 Z" fill="url(#skinGrad)" stroke="#b87865" stroke-width="0.5" />
-                <!-- Nail Accents -->
-                <ellipse cx="184.5" cy="17.2" rx="1.5" ry="2" fill="#ffd5df" opacity="0.8" />
-                <ellipse cx="184.5" cy="24.2" rx="1.5" ry="2" fill="#ffd5df" opacity="0.8" />
-                <ellipse cx="185" cy="31" rx="1.4" ry="1.8" fill="#ffd5df" opacity="0.8" />
+                <!-- Natural Wrist and Forearm Entering Gracefully From Right -->
+                <path d="M 440,65 C 415,80 385,95 365,112 C 375,122 395,132 440,105 Z" fill="url(#handSkinGrad)" opacity="0.96" />
+
+                <!-- Thumb Resting on Top of Knife Handle -->
+                <path d="M 352,110 C 346,110 342,114 344,119 C 347,123 354,124 360,121 C 366,118 368,111 362,110 Z" fill="url(#handSkinGrad)" stroke="#c48370" stroke-width="0.4" />
+                <ellipse cx="346" cy="118" rx="2.2" ry="3" fill="url(#nailPolishGrad)" />
+
+                <!-- Four Curled Manicured Fingers Wrapping the Handle -->
+                <!-- Index Finger -->
+                <path d="M 344,118 C 340,118 337,122 337,128 C 337,133 342,136 348,136 C 352,136 354,130 352,124 Z" fill="url(#handSkinGrad)" stroke="#c48370" stroke-width="0.4" />
+                <ellipse cx="339" cy="130" rx="2" ry="2.8" fill="url(#nailPolishGrad)" />
+
+                <!-- Middle Finger -->
+                <path d="M 354,121 C 350,121 347,125 347,131 C 347,136 352,139 358,139 C 362,139 364,133 362,126 Z" fill="url(#handSkinGrad)" stroke="#c48370" stroke-width="0.4" />
+                <ellipse cx="349" cy="133" rx="2" ry="2.8" fill="url(#nailPolishGrad)" />
+
+                <!-- Ring Finger -->
+                <path d="M 364,124 C 360,124 357,128 357,133 C 357,138 362,141 368,141 C 372,141 374,135 372,129 Z" fill="url(#handSkinGrad)" stroke="#c48370" stroke-width="0.4" />
+                <ellipse cx="359" cy="135" rx="2" ry="2.8" fill="url(#nailPolishGrad)" />
+
+                <!-- Little Finger -->
+                <path d="M 374,127 C 370,127 367,131 367,136 C 367,140 371,143 377,143 C 381,143 383,137 381,131 Z" fill="url(#handSkinGrad)" stroke="#c48370" stroke-width="0.4" />
+                <ellipse cx="369" cy="138" rx="1.8" ry="2.5" fill="url(#nailPolishGrad)" />
               </g>
             </g>
           </svg>
         </div>
 
+        <!-- Tappable "Cut the Cake 🎂" Action Trigger (Matching reference image) -->
+        <div class="cake-trigger-row" id="cakeTriggerRow">
+          <button class="cake-cut-trigger-btn" id="cakeCutTriggerBtn" type="button" aria-label="Cut the Cake">
+            <span>Cut the Cake 🎂</span>
+          </button>
+        </div>
+
+        <!-- Elegant Flourish Divider -->
+        <div class="cake-footer-flourish" aria-hidden="true">
+          <span class="flourish-line"></span>
+          <span class="flourish-heart">&hearts;</span>
+          <span class="flourish-line"></span>
+        </div>
+
         <!-- Navigation Action: Continue (Gated until cake is sliced) -->
         <div class="chapter-actions chapter-actions--cake-bottom">
-          <button class="nav-btn nav-btn--back" id="cakeReplayBtn" type="button" aria-label="Re-slice Cake" style="display:none;">
+          <button class="nav-btn nav-btn--back" id="cakeReplayBtn" type="button" aria-label="Re-slice Cake">
             <span>↺ Cut Again</span>
           </button>
           <button class="nav-btn nav-btn--continue is-gated" id="cakeNextBtn" type="button" aria-label="Continue">
-            <span>Continue &darr;</span>
+            <span>Continue &rarr;</span>
           </button>
         </div>
       </div>
     </section>
 
     <!-- ==========================================================
-         CHAPTER 2: A BEAUTIFUL BEGINNING
+         PAGE 3: A BEAUTIFUL BEGINNING
          (Magical animated memory book with sequential reveals)
          ========================================================== -->
     <section class="chapter chapter--2 is-locked" id="chapter2" aria-label="Chapter 2: A Beautiful Beginning">
@@ -458,6 +702,7 @@
       <div class="chapter-inner chapter-inner--center">
         <header class="chapter-badge">
           <span class="chapter-name">A Beautiful Beginning</span>
+          <p class="chapter-task-hint">Read the opening story &amp; confirm to continue &hearts;</p>
         </header>
 
         <!-- 3D Animated Magical Memory Book -->
@@ -502,6 +747,11 @@
                   <p class="story-line story-line--3 story-line--highlight" id="storyLine3">
                     &ldquo;Today is all about celebrating you, Ranjeetha Sri &hearts;&rdquo;
                   </p>
+                  <div class="story-confirm-wrap" id="storyConfirmWrap" style="display:none; margin-top:14px; text-align:center;">
+                    <button class="story-confirm-btn" id="storyConfirmBtn" type="button" aria-label="Confirm read">
+                      <span>I've read this with love &hearts;</span>
+                    </button>
+                  </div>
                 </div>
                 <div class="book-corner-heart" aria-hidden="true">♥</div>
               </div>
@@ -522,8 +772,8 @@
     </section>
 
     <!-- ==========================================================
-         CHAPTER 3: LITTLE MOMENTS, BIG MEMORIES
-         (10 Polaroid Photo Gallery + Fullscreen Lightbox)
+         PAGE 4: LITTLE MOMENTS, BIG MEMORIES
+         (19 Polaroid Photo Gallery + Fullscreen Lightbox)
          ========================================================== -->
     <section class="chapter chapter--3 is-locked" id="chapter3" aria-label="Chapter 3: Little Moments, Big Memories">
       <div class="fairy-lights" aria-hidden="true">
@@ -546,19 +796,19 @@
           </p>
           <div class="gallery-ornament" aria-hidden="true">
             <span class="ornament-line"></span>
-            <span class="ornament-heart">♥</span>
+            <span class="ornament-heart">&hearts;</span>
             <span class="ornament-line"></span>
           </div>
         </header>
 
-        <!-- Dynamic 10 Polaroid Cards Container -->
+        <!-- Dynamic 19 Polaroid Cards Container -->
         <div class="polaroid-grid" id="polaroidGrid">
           <!-- Populated dynamically via birthday.config.js -->
         </div>
 
         <!-- Progress tag & Navigation Actions (Left-aligned compact) -->
         <div class="memories-status-wrap">
-          <span class="memories-progress-pill" id="memoriesProgress">Scroll or tap to view all 17 photos (0/17)</span>
+          <span class="memories-progress-pill" id="memoriesProgress">0/19 Photos Viewed</span>
         </div>
         <div class="chapter-actions chapter-actions--ch3">
           <button class="nav-btn nav-btn--back" id="ch3PrevBtn" type="button" aria-label="Back">
@@ -572,20 +822,21 @@
     </section>
 
     <!-- ==========================================================
-         CHAPTER 4: WORDS FROM THE HEART
+         PAGE 5: WORDS FROM THE HEART
          (Personal Heartfelt Letter to Ranjeetha Sri)
          ========================================================== -->
     <section class="chapter chapter--4 is-locked" id="chapter4" aria-label="Chapter 4: Words From The Heart">
       <div class="chapter-inner chapter-inner--center letter-section-inner">
         <header class="chapter-badge">
           <span class="chapter-name">Words From The Heart</span>
+          <p class="chapter-task-hint">Read the personal letter to the end &hearts;</p>
         </header>
 
         <!-- Full-Width Warm Ivory Personal Letter Card (Natural reading layout, zero scrollbars) -->
         <article class="personal-letter-card" id="personalLetterCard" aria-label="Personal Birthday Letter to Ranjeetha Sri">
           <!-- Elegant Top Wax Stamp Accent -->
           <div class="letter-stationery-top" aria-hidden="true">
-            <span class="letter-wax-stamp">♥</span>
+            <span class="letter-wax-stamp">&hearts;</span>
             <span class="letter-stationery-line"></span>
           </div>
 
@@ -615,7 +866,7 @@
           <!-- Bottom Stationery Accent -->
           <div class="letter-stationery-bottom" aria-hidden="true">
             <span class="letter-corner-dot"></span>
-            <span class="letter-heart-mark">♥</span>
+            <span class="letter-heart-mark">&hearts;</span>
             <span class="letter-corner-dot"></span>
           </div>
         </article>
@@ -633,7 +884,7 @@
     </section>
 
     <!-- ==========================================================
-         CHAPTER 5: WISHES BEYOND WORDS
+         PAGE 6: WISHES BEYOND WORDS
          (Deep Celestial Night Sky + Floating Sequential Wishes)
          ========================================================== -->
     <section class="chapter chapter--5 is-locked" id="chapter5" aria-label="Chapter 5: Wishes Beyond Words">
@@ -649,6 +900,7 @@
           <p class="wishes-date">12 November 2004</p>
           <h2 class="wishes-headline">Wishes</h2>
           <p class="wishes-subhead">Heartfelt wishes for you on your special day.</p>
+          <p class="chapter-task-hint">Read through all birthday wishes &hearts;</p>
         </header>
 
         <!-- Sequential Floating Wish Cards Container -->
@@ -671,7 +923,7 @@
     </section>
 
     <!-- ==========================================================
-         CHAPTER 6: THE GRAND FINALE
+         PAGE 7: THE GRAND FINALE
          (Blossom Tree + Birthday Wish + Playful Love Question)
          ========================================================== -->
     <section class="chapter chapter--6 is-locked" id="chapter6" aria-label="Chapter 6: The Grand Finale">
@@ -713,11 +965,11 @@
           </div>
         </div>
 
-        <!-- Hidden initially, revealed when NO is clicked -->
+        <!-- Hidden initially, revealed when YES is clicked -->
         <div class="love-final-reveal" id="loveFinalReveal" hidden>
           <div class="love-final-heart" aria-hidden="true">💖</div>
-          <h3 class="love-final-title">I love you anyway! ❤️</h3>
-          <p class="love-final-subtitle">Once again, Happy Birthday Ranjeetha Sri! ❤️</p>
+          <h3 class="love-final-title">I Love You Too! ❤️</h3>
+          <p class="love-final-subtitle">Once Again, Happy Birthday, Ranjeetha Sri! ❤️</p>
           <div class="love-final-actions">
             <button class="replay-all-btn" id="replayAllBtn" type="button" aria-label="Replay Experience">
               <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor">

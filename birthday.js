@@ -531,9 +531,9 @@ const REST_NOCK = 96;
 const nockProxy = { val: REST_NOCK };
 function applyNock(){
   const y = nockProxy.val;
-  strL.setAttribute('x2', '230'); strL.setAttribute('y2', y);
-  strR.setAttribute('x2', '230'); strR.setAttribute('y2', y);
-  serving.setAttribute('cy', y);
+  if (strL) { strL.setAttribute('x2', '230'); strL.setAttribute('y2', y); }
+  if (strR) { strR.setAttribute('x2', '230'); strR.setAttribute('y2', y); }
+  if (serving) serving.setAttribute('cy', y);
 }
 
 let aimRad = 0, pullUX = 0, pullUY = 0, maxDraw = 60, curDraw = 0;
@@ -593,11 +593,12 @@ function refreshRig(){
 }
 
 function setDraw(d){
+  if (!arrow) return;
   curDraw = clamp(d, 0, maxDraw);
   gsap.set(arrow, { x: arrowBaseX, y: arrowBaseY + curDraw });
   nockProxy.val = REST_NOCK + curDraw / svgScale;
   applyNock();
-  gsap.set(aim, { opacity: 0.65 * (curDraw / maxDraw) });
+  if (aim) gsap.set(aim, { opacity: 0.65 * (curDraw / maxDraw) });
 }
 
 let beatTL = null;
@@ -918,7 +919,12 @@ function initCupidCenterpiece(){
         hasHit = true;
 
         // Heart impact recoil & elastic bounce
-        gsap.timeline()
+        gsap.timeline({
+          onComplete: () => {
+            // Reveal Continue button and unlock Page 2 ONLY AFTER the full heart impact animation finishes
+            completeChapter('chapter1');
+          }
+        })
           .to(heartGroup, {
             scale: 1.25,
             duration: 0.16,
@@ -951,18 +957,17 @@ function initCupidCenterpiece(){
           gsap.fromTo(instruction, { scale: 0.95 }, { scale: 1, duration: 0.35, ease: 'back.out(2)' });
         }
 
-        // Complete Chapter 1 and reveal Continue button
-        completeChapter(1);
         tryPlayMusic();
       }
     });
   }
+  window.launchCupidArrow = launchArrow;
 
   // Pointer interactions on Arrow Carrier
   arrowCarrier.style.cursor = 'grab';
   arrowCarrier.style.touchAction = 'none';
 
-  arrowCarrier.addEventListener('pointerdown', (e) => {
+  function onPointerStart(e){
     if (isFlying) return;
     if (hasHit){
       // Allow replaying: reset arrow back to bow
@@ -974,22 +979,31 @@ function initCupidCenterpiece(){
     isPulling = true;
     dragStartY = e.clientY;
     currentPull = 0;
+    arrowCarrier.style.cursor = 'grabbing';
     try { arrowCarrier.setPointerCapture(e.pointerId); } catch (_) {}
     document.body.style.overflow = 'hidden';
-  });
+  }
+
+  arrowCarrier.addEventListener('pointerdown', onPointerStart);
+
+  const bowFrame = $('cupidBowFrame');
+  if (bowFrame){
+    bowFrame.style.cursor = 'grab';
+    bowFrame.addEventListener('pointerdown', onPointerStart);
+  }
 
   window.addEventListener('pointermove', (e) => {
     if (!isPulling || hasHit || isFlying) return;
     const deltaY = e.clientY - dragStartY;
-    // Allow pulling downward up to 60px
-    const pull = Math.max(0, Math.min(60, deltaY));
+    // Allow pulling downward up to 65px
+    const pull = Math.max(0, Math.min(65, deltaY));
     currentPull = pull;
 
     gsap.set(arrowCarrier, { y: pull });
     updateBowstring(pull);
 
     if (instruction){
-      if (pull > 15){
+      if (pull >= 10){
         instruction.innerHTML = 'RELEASE TO SHOOT! 🎯';
       } else {
         instruction.innerHTML = 'PULL DOWNWARD 🏹';
@@ -1000,6 +1014,7 @@ function initCupidCenterpiece(){
   function onPointerEnd(e){
     if (!isPulling) return;
     isPulling = false;
+    arrowCarrier.style.cursor = 'grab';
     document.body.style.overflow = '';
     try {
       if (arrowCarrier.hasPointerCapture && arrowCarrier.hasPointerCapture(e.pointerId)){
@@ -1008,7 +1023,7 @@ function initCupidCenterpiece(){
     } catch (_) {}
 
     if (!hasHit && !isFlying){
-      if (currentPull >= 15){
+      if (currentPull >= 10){
         launchArrow();
       } else {
         // Return smoothly to resting bowstring
@@ -1056,96 +1071,193 @@ function resetChapter1(){
 }
 
 /* ============================================================
-   STRICT PAGE PROGRESSION & CHAPTER NAVIGATION SYSTEM
+   GLOBAL INTERACTIVE PAGE COMPLETION & NAVIGATION SYSTEM
+   (Strict task completion required before next page unlocks)
    ============================================================ */
-let highestUnlockedChapter = 1;
-const completedChapters = new Set();
+const PAGE_ORDER = ['chapter1', 'chapterCake', 'chapter2', 'chapter3', 'chapter4', 'chapter5', 'chapter6'];
+const completedPages = new Set();
+let highestUnlockedPageIndex = 0; // Starts at index 0 (chapter1)
 
-function isChapterUnlocked(num){
-  return num <= highestUnlockedChapter;
+function isPageUnlocked(pageId){
+  const idx = PAGE_ORDER.indexOf(pageId);
+  return idx !== -1 && idx <= highestUnlockedPageIndex;
 }
 
-function unlockChapter(num){
-  if (num > highestUnlockedChapter){
-    highestUnlockedChapter = num;
+function unlockPage(pageId){
+  const idx = PAGE_ORDER.indexOf(pageId);
+  if (idx > highestUnlockedPageIndex){
+    highestUnlockedPageIndex = idx;
   }
-  const cakeEl = $('chapterCake');
-  if (cakeEl && highestUnlockedChapter >= 1){
-    cakeEl.classList.remove('is-locked');
+  const el = $(pageId);
+  if (el){
+    el.classList.remove('is-locked');
   }
-  for (let i = 1; i <= 6; i++){
-    const chap = $(`chapter${i}`);
-    if (chap){
-      if (i <= highestUnlockedChapter){
-        chap.classList.remove('is-locked');
-      } else {
-        chap.classList.add('is-locked');
-      }
-    }
-  }
-
-  // Trigger chapter initialization
-  if (num === 2) enterChapter2();
-  if (num === 3) initChapter3();
-  if (num === 4) initChapter4();
-  if (num === 5) initChapter5();
-  if (num === 6) enterChapter6();
+  // Initialize target page when unlocked
+  if (pageId === 'chapterCake') enterChapterCake();
+  if (pageId === 'chapter2') enterChapter2();
+  if (pageId === 'chapter3') initChapter3();
+  if (pageId === 'chapter4') enterChapter4();
+  if (pageId === 'chapter5') enterChapter5();
+  if (pageId === 'chapter6') enterChapter6();
 }
 
-function completeChapter(num){
-  completedChapters.add(num);
-  const nextBtn = $(`ch${num}NextBtn`);
-  if (nextBtn && nextBtn.classList.contains('is-gated')){
-    nextBtn.classList.remove('is-gated');
-    if (window.gsap){
-      gsap.fromTo(nextBtn,
-        { opacity: 0, y: 12, scale: 0.95 },
-        { opacity: 1, y: 0, scale: 1, duration: 0.45, ease: 'back.out(1.5)' }
-      );
-    }
-  }
-  // Ensure next chapter is un-locked in DOM
-  if (num === 1){
-    const cakeEl = $('chapterCake');
-    if (cakeEl) cakeEl.classList.remove('is-locked');
-  } else if (num + 1 <= 6){
-    const nextChap = $(`chapter${num + 1}`);
-    if (nextChap) nextChap.classList.remove('is-locked');
-  }
-}
-
-function scrollToChapter(targetNum){
-  if (targetNum < 1 || targetNum > 6) return;
-  unlockChapter(targetNum);
-  const targetEl = $(`chapter${targetNum}`);
+function navigateToPage(targetPageId){
+  unlockPage(targetPageId);
+  const targetEl = $(targetPageId);
   if (targetEl){
     targetEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
 }
 
+function completeChapter(stepKey){
+  completedPages.add(stepKey);
+
+  let btnId = null;
+  let nextPageId = null;
+
+  if (stepKey === 1 || stepKey === 'chapter1'){
+    btnId = 'ch1NextBtn';
+    nextPageId = 'chapterCake';
+    completedPages.add(1);
+    completedPages.add('chapter1');
+  } else if (stepKey === 2 || stepKey === 'cake' || stepKey === 'chapterCake'){
+    btnId = 'cakeNextBtn';
+    nextPageId = 'chapter2';
+    completedPages.add(2);
+    completedPages.add('chapterCake');
+  } else if (stepKey === 3 || stepKey === 'chapter2'){
+    btnId = 'ch2NextBtn';
+    nextPageId = 'chapter3';
+    completedPages.add(3);
+    completedPages.add('chapter2');
+  } else if (stepKey === 4 || stepKey === 'chapter3'){
+    btnId = 'ch3NextBtn';
+    nextPageId = 'chapter4';
+    completedPages.add(4);
+    completedPages.add('chapter3');
+  } else if (stepKey === 5 || stepKey === 'chapter4'){
+    btnId = 'ch4NextBtn';
+    nextPageId = 'chapter5';
+    completedPages.add(5);
+    completedPages.add('chapter4');
+  } else if (stepKey === 6 || stepKey === 'chapter5'){
+    btnId = 'ch5NextBtn';
+    nextPageId = 'chapter6';
+    completedPages.add(6);
+    completedPages.add('chapter5');
+  }
+
+  // Reveal Continue button only when completed
+  if (btnId){
+    const nextBtn = $(btnId);
+    if (nextBtn && nextBtn.classList.contains('is-gated')){
+      nextBtn.classList.remove('is-gated');
+      if (window.gsap){
+        gsap.fromTo(nextBtn,
+          { opacity: 0, y: 14, scale: 0.94 },
+          { opacity: 1, y: 0, scale: 1, duration: 0.5, ease: 'back.out(1.8)' }
+        );
+      }
+    }
+  }
+
+  // Pre-unlock the next section in the DOM so it becomes accessible
+  if (nextPageId){
+    unlockPage(nextPageId);
+  }
+}
+window.completeChapter = completeChapter;
+window.navigateToPage = navigateToPage;
+
+// Backward compatibility aliases
+function unlockChapter(num){
+  if (num === 1) unlockPage('chapter1');
+  else if (num === 2) unlockPage('chapterCake');
+  else if (num === 3) unlockPage('chapter2');
+  else if (num === 4) unlockPage('chapter3');
+  else if (num === 5) unlockPage('chapter4');
+  else if (num === 6) unlockPage('chapter5');
+  else if (num === 7) unlockPage('chapter6');
+}
+
+function scrollToChapter(targetNum){
+  const targetId = PAGE_ORDER[targetNum - 1];
+  if (targetId) navigateToPage(targetId);
+}
+
 function onContinueFrom(currentNum){
-  const nextNum = currentNum + 1;
-  if (nextNum > 6) return;
-  unlockChapter(nextNum);
-  setTimeout(() => {
-    scrollToChapter(nextNum);
-  }, 40);
+  const nextId = PAGE_ORDER[currentNum];
+  if (nextId) navigateToPage(nextId);
 }
 
 function onBackFrom(currentNum){
-  const prevNum = currentNum - 1;
-  if (prevNum < 1) return;
-  scrollToChapter(prevNum);
+  const prevId = PAGE_ORDER[currentNum - 2];
+  if (prevId) navigateToPage(prevId);
 }
 
 /* ============================================================
-   PAGE 2: BIRTHDAY CAKE CUTTING ANIMATION
+   PAGE 2: REALISTIC BIRTHDAY CAKE CUTTING ANIMATION
+   (Two-stage reveal: whole cake first, then hand & knife enter)
    ============================================================ */
 let isCakeCut = false;
 let isDraggingKnife = false;
 let knifeDragStartY = 0;
 let knifeCurrentY = 0;
 let knifeHasMoved = false;
+let cakeHasEntered = false;
+
+function enterChapterCake(){
+  if (cakeHasEntered) return;
+  cakeHasEntered = true;
+
+  const knifeRig = $('knifeRig');
+  const cakeStage = $('cakeStage');
+  const cakeInstruction = $('cakeInstruction');
+  const cakeSliceGuide = $('cakeSliceGuide');
+
+  // Stage 1: Display complete, uncut cake - no hand/knife initially
+  if (knifeRig && window.gsap){
+    gsap.set(knifeRig, { opacity: 0, x: 95 });
+  } else if (knifeRig){
+    knifeRig.style.opacity = '0';
+  }
+
+  if (cakeInstruction){
+    cakeInstruction.textContent = "Let's Cut the Cake! 🎂";
+  }
+
+  if (cakeStage && window.gsap){
+    gsap.fromTo(cakeStage,
+      { opacity: 0, scale: 0.94, y: 16 },
+      { opacity: 1, scale: 1, y: 0, duration: 0.85, ease: 'power2.out' }
+    );
+  }
+
+  // Stage 2: Hand and knife smoothly enter after initial cake reveal
+  setTimeout(() => {
+    if (isCakeCut) return;
+    if (knifeRig && window.gsap){
+      gsap.to(knifeRig, {
+        opacity: 1,
+        x: 0,
+        duration: 0.9,
+        ease: 'power3.out'
+      });
+    } else if (knifeRig){
+      knifeRig.style.opacity = '1';
+    }
+
+    if (cakeInstruction && !isCakeCut){
+      cakeInstruction.textContent = "Drag the knife to cut the cake ❤️";
+      if (window.gsap){
+        gsap.fromTo(cakeInstruction,
+          { opacity: 0.4, y: -4 },
+          { opacity: 1, y: 0, duration: 0.4, ease: 'power2.out' }
+        );
+      }
+    }
+  }, 750);
+}
 
 function initCakeCutting(){
   const knifeRig = $('knifeRig');
@@ -1158,61 +1270,78 @@ function initCakeCutting(){
   const cakeSliceGuide = $('cakeSliceGuide');
   const cakeNextBtn = $('cakeNextBtn');
   const cakeReplayBtn = $('cakeReplayBtn');
+  const cakeCutTriggerBtn = $('cakeCutTriggerBtn');
 
   if (!knifeRig || !cakeStage) return;
+
+  // Initial hidden state for hand and knife before enterChapterCake is invoked
+  if (window.gsap){
+    gsap.set(knifeRig, { opacity: 0, x: 95 });
+  } else {
+    knifeRig.style.opacity = '0';
+  }
 
   function performCut(){
     if (isCakeCut) return;
     isCakeCut = true;
     isDraggingKnife = false;
+    document.body.style.overflow = '';
 
-    // Plunge knife down smoothly through the cake
+    // Plunge knife down smoothly through the cake along the CUT HERE line
     if (window.gsap){
       gsap.to(knifeRig, {
-        y: 110,
+        y: 128,
         duration: 0.45,
         ease: 'power2.inOut',
         onComplete: () => {
-          gsap.to(knifeRig, { y: 65, opacity: 0.8, duration: 0.7, ease: 'power2.out' });
+          gsap.to(knifeRig, { y: 78, opacity: 0.82, duration: 0.7, ease: 'power2.out' });
         }
       });
 
-      // Animate cake halves parting smoothly
+      // Animate cake halves parting smoothly to reveal interior
       gsap.to(cakeHalfLeft, {
-        x: -30,
-        rotation: -2.5,
+        x: -32,
+        rotation: -2.2,
         duration: 0.9,
         ease: 'power2.out'
       });
       gsap.to(cakeHalfRight, {
-        x: 30,
-        rotation: 2.5,
+        x: 32,
+        rotation: 2.2,
         duration: 0.9,
         ease: 'power2.out'
       });
 
-      // Reveal inner moist cake & strawberry cream layers
+      // Reveal inner moist sponge & strawberry cream cross sections
       if (leftCutFace && rightCutFace){
-        gsap.to([leftCutFace, rightCutFace], { opacity: 1, duration: 0.4, delay: 0.1 });
+        gsap.to([leftCutFace, rightCutFace], { opacity: 1, duration: 0.4, delay: 0.08 });
       }
 
+      // Hide the CUT HERE guide and action trigger
       if (cakeSliceGuide){
         gsap.to(cakeSliceGuide, { opacity: 0, duration: 0.3, onComplete: () => { cakeSliceGuide.style.display = 'none'; } });
       }
+      if (cakeCutTriggerBtn){
+        gsap.to(cakeCutTriggerBtn, { opacity: 0, scale: 0.9, duration: 0.35, onComplete: () => { cakeCutTriggerBtn.style.display = 'none'; } });
+      }
     } else {
-      knifeRig.style.transform = 'translateY(65px)';
-      if (cakeHalfLeft) cakeHalfLeft.style.transform = 'translateX(-30px)';
-      if (cakeHalfRight) cakeHalfRight.style.transform = 'translateX(30px)';
+      knifeRig.style.transform = 'translateY(78px)';
+      if (cakeHalfLeft) cakeHalfLeft.style.transform = 'translateX(-32px)';
+      if (cakeHalfRight) cakeHalfRight.style.transform = 'translateX(32px)';
       if (leftCutFace) leftCutFace.style.opacity = '1';
       if (rightCutFace) rightCutFace.style.opacity = '1';
       if (cakeSliceGuide) cakeSliceGuide.style.display = 'none';
+      if (cakeCutTriggerBtn) cakeCutTriggerBtn.style.display = 'none';
     }
 
-    // Celebration message
+    // Celebration message: "Happy Birthday, Ranjeetha Sri! ❤️"
     if (cakeInstruction){
-      cakeInstruction.innerHTML = '✨ Sweet &amp; delicious! Happy Birthday Ranjeetha Sri! 🎂✨';
+      cakeInstruction.innerHTML = '<span class="cake-congrats">Happy Birthday, Ranjeetha Sri! ❤️</span>';
       if (window.gsap){
-        gsap.fromTo(cakeInstruction, { scale: 0.95 }, { scale: 1, duration: 0.4, ease: 'back.out(2)' });
+        gsap.fromTo(cakeInstruction,
+          { opacity: 0, scale: 0.88, y: 8 },
+          { opacity: 1, scale: 1, y: 0, duration: 0.65, ease: 'back.out(2)' }
+        );
       }
     }
 
@@ -1224,25 +1353,14 @@ function initCakeCutting(){
 
     // Show replay button
     if (cakeReplayBtn){
-      cakeReplayBtn.style.display = 'inline-flex';
+      cakeReplayBtn.classList.add('is-active');
       if (window.gsap){
-        gsap.fromTo(cakeReplayBtn, { opacity: 0, scale: 0.9 }, { opacity: 1, scale: 1, duration: 0.4, ease: 'power2.out' });
+        gsap.fromTo(cakeReplayBtn, { opacity: 0, scale: 0.9 }, { opacity: 1, scale: 1, duration: 0.4, delay: 0.2, ease: 'power2.out' });
       }
     }
 
-    // Unlock Continue button
-    if (cakeNextBtn){
-      cakeNextBtn.classList.remove('is-gated');
-      if (window.gsap){
-        gsap.fromTo(cakeNextBtn,
-          { opacity: 0, y: 12, scale: 0.95 },
-          { opacity: 1, y: 0, scale: 1, duration: 0.45, ease: 'back.out(1.5)' }
-        );
-      }
-    }
-
-    // Unlock Chapter 2
-    unlockChapter(2);
+    // Complete Page 2 task and unlock Page 3 (chapter2: A Beautiful Beginning)
+    completeChapter('chapterCake');
   }
 
   function resetCake(){
@@ -1250,35 +1368,47 @@ function initCakeCutting(){
     knifeCurrentY = 0;
     knifeHasMoved = false;
 
+    if (cakeReplayBtn){
+      cakeReplayBtn.classList.remove('is-active');
+    }
+
+    if (cakeCutTriggerBtn){
+      cakeCutTriggerBtn.style.display = 'inline-flex';
+      cakeCutTriggerBtn.style.opacity = '1';
+    }
+
     if (window.gsap){
       gsap.to(cakeHalfLeft, { x: 0, rotation: 0, duration: 0.5, ease: 'power2.inOut' });
       gsap.to(cakeHalfRight, { x: 0, rotation: 0, duration: 0.5, ease: 'power2.inOut' });
       if (leftCutFace && rightCutFace){
-        gsap.to([leftCutFace, rightCutFace], { opacity: 0, duration: 0.3 });
+        gsap.to([leftCutFace, rightCutFace], { opacity: 0, duration: 0.25 });
       }
-      gsap.to(knifeRig, { y: 0, opacity: 1, duration: 0.5, ease: 'power2.out' });
+      gsap.to(knifeRig, { y: 0, x: 0, opacity: 1, duration: 0.5, ease: 'power2.out' });
       if (cakeSliceGuide){
-        cakeSliceGuide.style.display = 'flex';
-        gsap.to(cakeSliceGuide, { opacity: 0.85, duration: 0.4 });
+        cakeSliceGuide.style.display = 'block';
+        gsap.to(cakeSliceGuide, { opacity: 1, duration: 0.35 });
       }
     } else {
       if (cakeHalfLeft) cakeHalfLeft.style.transform = '';
       if (cakeHalfRight) cakeHalfRight.style.transform = '';
       knifeRig.style.transform = '';
-      if (cakeSliceGuide) cakeSliceGuide.style.display = 'flex';
+      knifeRig.style.opacity = '1';
+      if (cakeSliceGuide) cakeSliceGuide.style.display = 'block';
     }
 
     if (cakeInstruction){
-      cakeInstruction.innerHTML = 'Drag the knife down to cut the cake';
+      cakeInstruction.textContent = "Drag the knife to cut the cake ❤️";
     }
   }
 
-  // Pointer drag interaction
+  // Pointer drag interaction (Desktop and Mobile)
   knifeRig.addEventListener('pointerdown', (e) => {
     if (isCakeCut) return;
     isDraggingKnife = true;
     knifeHasMoved = false;
     knifeDragStartY = e.clientY - knifeCurrentY;
+    document.body.style.overflow = 'hidden'; // Lock scrolling during active knife dragging
+
     try {
       knifeRig.setPointerCapture(e.pointerId);
     } catch (_) {}
@@ -1288,14 +1418,15 @@ function initCakeCutting(){
     if (!isDraggingKnife || isCakeCut) return;
     const dy = e.clientY - knifeDragStartY;
     if (Math.abs(dy) > 4) knifeHasMoved = true;
-    knifeCurrentY = Math.max(0, Math.min(dy, 115));
+    knifeCurrentY = Math.max(0, Math.min(dy, 125));
+
     if (window.gsap){
       gsap.set(knifeRig, { y: knifeCurrentY });
     } else {
       knifeRig.style.transform = `translateY(${knifeCurrentY}px)`;
     }
 
-    if (knifeCurrentY >= 80){
+    if (knifeCurrentY >= 68){
       performCut();
     }
   });
@@ -1303,6 +1434,8 @@ function initCakeCutting(){
   function onPointerEnd(e){
     if (!isDraggingKnife) return;
     isDraggingKnife = false;
+    document.body.style.overflow = ''; // Restore normal scrolling immediately after release
+
     try {
       if (knifeRig.hasPointerCapture && knifeRig.hasPointerCapture(e.pointerId)){
         knifeRig.releasePointerCapture(e.pointerId);
@@ -1310,7 +1443,7 @@ function initCakeCutting(){
     } catch (_) {}
 
     if (!isCakeCut){
-      if (!knifeHasMoved || knifeCurrentY < 18){
+      if (!knifeHasMoved || knifeCurrentY < 20){
         performCut();
       } else {
         if (window.gsap){
@@ -1326,9 +1459,18 @@ function initCakeCutting(){
   window.addEventListener('pointerup', onPointerEnd);
   window.addEventListener('pointercancel', onPointerEnd);
 
+  // Tappable "Cut the Cake 🎂" action trigger button
+  if (cakeCutTriggerBtn){
+    cakeCutTriggerBtn.addEventListener('click', () => {
+      if (!isCakeCut){
+        performCut();
+      }
+    });
+  }
+
   // Click on stage fallback
-  cakeStage.addEventListener('click', () => {
-    if (!isCakeCut && !knifeHasMoved){
+  cakeStage.addEventListener('click', (e) => {
+    if (!isCakeCut && !knifeHasMoved && e.target !== cakeReplayBtn && e.target !== cakeNextBtn){
       performCut();
     }
   });
@@ -1339,7 +1481,7 @@ function initCakeCutting(){
 }
 
 /* ============================================================
-   CHAPTER 2: A BEAUTIFUL BEGINNING
+   PAGE 3: A BEAUTIFUL BEGINNING (Magical Memory Book)
    ============================================================ */
 function enterChapter2(){
   const l1 = $('storyLine1'), l2 = $('storyLine2'), l3 = $('storyLine3');
@@ -1350,20 +1492,49 @@ function enterChapter2(){
 
   [l1, l2, l3].forEach((el) => { if (el) el.classList.remove('is-revealed'); });
 
+  let allLinesRevealed = false;
+
+  // Reveal sequential greeting messages completely
   setTimeout(() => { if (l1) l1.classList.add('is-revealed'); }, 500);
   setTimeout(() => { if (l2) l2.classList.add('is-revealed'); }, 1800);
   setTimeout(() => {
     if (l3) l3.classList.add('is-revealed');
-    completeChapter(2); // Reveal Continue!
+    allLinesRevealed = true;
+    const confirmWrap = $('storyConfirmWrap');
+    if (confirmWrap){
+      confirmWrap.style.display = 'block';
+      if (window.gsap){
+        gsap.fromTo(confirmWrap, { opacity: 0, y: 10 }, { opacity: 1, y: 0, duration: 0.5 });
+      }
+    }
   }, 3200);
 
-  // Tap memory book to immediately reveal all lines and complete
+  function confirmStoryRead(){
+    if (!allLinesRevealed){
+      [l1, l2, l3].forEach((el) => { if (el) el.classList.add('is-revealed'); });
+      allLinesRevealed = true;
+    }
+    const confirmBtn = $('storyConfirmBtn');
+    if (confirmBtn){
+      confirmBtn.innerHTML = '<span>Cherished with love ✨</span>';
+      confirmBtn.disabled = true;
+    }
+    // Only after full message is revealed and confirmed
+    completeChapter('chapter2');
+  }
+
+  const confirmBtn = $('storyConfirmBtn');
+  if (confirmBtn){
+    confirmBtn.addEventListener('click', confirmStoryRead);
+  }
+
+  // Tapping the memory book also confirms reading
   const book = $('memoryBook');
   if (book){
-    book.addEventListener('click', () => {
-      [l1, l2, l3].forEach((el) => { if (el) el.classList.add('is-revealed'); });
-      completeChapter(2);
-    }, { once: true });
+    book.addEventListener('click', (e) => {
+      if (e.target.closest('#storyConfirmBtn')) return;
+      confirmStoryRead();
+    });
   }
 
   // Allow tapping any collage photo to bring it forward
@@ -1378,7 +1549,7 @@ function enterChapter2(){
 }
 
 /* ============================================================
-   CHAPTER 3: LITTLE MOMENTS, BIG MEMORIES (17 Polaroids)
+   PAGE 4: LITTLE MOMENTS, BIG MEMORIES (17 Personal Photos)
    ============================================================ */
 let chapter3Initialized = false;
 const viewedMemories = new Set();
@@ -1390,16 +1561,18 @@ function markMemoryViewed(idx){
   const total = BIRTHDAY_CONFIG.photos.length;
   if (prog){
     if (viewedMemories.size >= total){
-      prog.textContent = `All ${total} memories viewed ♥`;
+      prog.textContent = `All ${total} photos viewed with love ✨`;
       prog.classList.add('is-complete');
     } else {
-      prog.textContent = `Scroll or tap to view all 17 photos (${viewedMemories.size}/${total})`;
+      prog.textContent = `${viewedMemories.size}/${total} Photos Viewed`;
     }
   }
+  // Only unlock Page 5 when all 17 photos have actually been viewed
   if (viewedMemories.size >= total){
-    completeChapter(3); // Reveal Continue!
+    completeChapter('chapter3');
   }
 }
+window.markMemoryViewed = markMemoryViewed;
 
 function initChapter3(){
   if (chapter3Initialized) return;
@@ -1407,6 +1580,11 @@ function initChapter3(){
 
   const grid = $('polaroidGrid');
   if (!grid) return;
+
+  const prog = $('memoriesProgress');
+  if (prog && viewedMemories.size === 0) {
+    prog.textContent = `0/${BIRTHDAY_CONFIG.photos.length} Photos Viewed`;
+  }
 
   grid.innerHTML = BIRTHDAY_CONFIG.photos.map((item, idx) => `
     <article class="polaroid-card" data-index="${idx}" data-stage="${item.stageKey || ''}" tabindex="0" role="button" aria-label="Open ${item.title}">
@@ -1440,7 +1618,7 @@ function initChapter3(){
     });
   });
 
-  // Observe cards as user scrolls down the gallery
+  // Track each photo as it actually enters the visible viewport
   if ('IntersectionObserver' in window){
     const cardObserver = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
@@ -1452,29 +1630,6 @@ function initChapter3(){
     }, { threshold: 0.25 });
 
     grid.querySelectorAll('.polaroid-card').forEach(card => cardObserver.observe(card));
-
-    // Also observe the progress wrap at the bottom of the gallery:
-    const statusWrap = document.querySelector('.memories-status-wrap');
-    if (statusWrap){
-      const bottomObserver = new IntersectionObserver((entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting){
-            // User reached the end of the gallery -> complete Chapter 3
-            for (let i = 0; i < BIRTHDAY_CONFIG.photos.length; i++){
-              viewedMemories.add(i);
-            }
-            const prog = $('memoriesProgress');
-            if (prog){
-              prog.textContent = `All ${BIRTHDAY_CONFIG.photos.length} memories viewed ♥`;
-              prog.classList.add('is-complete');
-            }
-            completeChapter(3);
-            bottomObserver.disconnect();
-          }
-        });
-      }, { threshold: 0.1 });
-      bottomObserver.observe(statusWrap);
-    }
   }
 }
 
@@ -1585,13 +1740,16 @@ function initChapter4(){
       .join('');
   }
 
-  // Observe end of letter sentinel to verify reading
+  // Observe end of letter sentinel to verify reading to the actual end
   const endSentinel = $('letterEndSentinel');
   if (endSentinel && 'IntersectionObserver' in window){
     const letterObserver = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
         if (entry.isIntersecting){
-          completeChapter(4);
+          // Short reading-completion delay before unlocking Continue
+          setTimeout(() => {
+            completeChapter('chapter4');
+          }, 1800);
           letterObserver.disconnect();
         }
       });
@@ -1602,7 +1760,7 @@ function initChapter4(){
 
 function enterChapter4(){
   initChapter4();
-  // Silent reading experience: pause YouTube music while she reads the letter
+  // Silent reading experience: pause YouTube music while reading the letter
   if (!isLetterRead && isMusicPlaying){
     wasMusicPlayingBeforeLetter = true;
     pauseMusic();
@@ -1610,7 +1768,7 @@ function enterChapter4(){
 }
 
 /* ============================================================
-   CHAPTER 5: WISHES BEYOND WORDS (Celestial Wishes)
+   PAGE 6: WISHES BEYOND WORDS (Celestial Wishes)
    ============================================================ */
 let chapter5Initialized = false;
 
@@ -1629,18 +1787,33 @@ function initChapter5(){
     </article>
   `).join('');
 
-  // Observe end of wishes sentinel to verify reaching the end
-  const endSentinel = $('wishesEndSentinel');
-  if (endSentinel && 'IntersectionObserver' in window){
-    const wishesObserver = new IntersectionObserver((entries) => {
+  // Track wish cards as they enter the visible viewport
+  if ('IntersectionObserver' in window){
+    const wishCards = grid.querySelectorAll('.wish-card');
+    const wishObserver = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
         if (entry.isIntersecting){
-          completeChapter(5);
-          wishesObserver.disconnect();
+          entry.target.classList.add('is-viewed');
         }
       });
-    }, { threshold: 0.1 });
-    wishesObserver.observe(endSentinel);
+    }, { threshold: 0.2 });
+    wishCards.forEach(c => wishObserver.observe(c));
+
+    // Observe end of wishes sentinel to verify reaching the end
+    const endSentinel = $('wishesEndSentinel');
+    if (endSentinel){
+      const wishesEndObserver = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting){
+            setTimeout(() => {
+              completeChapter('chapter5');
+            }, 1000);
+            wishesEndObserver.disconnect();
+          }
+        });
+      }, { threshold: 0.1 });
+      wishesEndObserver.observe(endSentinel);
+    }
   }
 }
 
@@ -1653,63 +1826,49 @@ function enterChapter5(){
 }
 
 /* ============================================================
-   NAVIGATION BUTTON ATTACHMENTS (All Chapters)
+   NAVIGATION BUTTON ATTACHMENTS (Strict Sequential Navigation)
    ============================================================ */
+// Page 1: Cupid Arrow Invitation
 const ch1NextBtn = $('ch1NextBtn');
 if (ch1NextBtn){
-  ch1NextBtn.addEventListener('click', () => {
-    const cakeEl = $('chapterCake');
-    if (cakeEl){
-      cakeEl.classList.remove('is-locked');
-      cakeEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    } else {
-      onContinueFrom(1);
-    }
-  });
+  ch1NextBtn.addEventListener('click', () => navigateToPage('chapterCake'));
 }
 
+// Page 2: Birthday Cake Cutting
 const cakePrevBtn = $('cakePrevBtn');
 if (cakePrevBtn){
-  cakePrevBtn.addEventListener('click', () => {
-    const ch1 = $('chapter1');
-    if (ch1) ch1.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  });
+  cakePrevBtn.addEventListener('click', () => navigateToPage('chapter1'));
 }
-
 const cakeNextBtn = $('cakeNextBtn');
 if (cakeNextBtn){
-  cakeNextBtn.addEventListener('click', () => {
-    unlockChapter(2);
-    setTimeout(() => {
-      scrollToChapter(2);
-    }, 40);
-  });
+  cakeNextBtn.addEventListener('click', () => navigateToPage('chapter2'));
 }
 
+// Page 3: Birthday Greeting (A Beautiful Beginning)
 const ch2PrevBtn = $('ch2PrevBtn');
 if (ch2PrevBtn){
-  ch2PrevBtn.addEventListener('click', () => {
-    const cakeEl = $('chapterCake');
-    if (cakeEl){
-      cakeEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    } else {
-      onBackFrom(2);
-    }
-  });
+  ch2PrevBtn.addEventListener('click', () => navigateToPage('chapterCake'));
+}
+const ch2NextBtn = $('ch2NextBtn');
+if (ch2NextBtn){
+  ch2NextBtn.addEventListener('click', () => navigateToPage('chapter3'));
 }
 
-const ch2NextBtn = $('ch2NextBtn');
-if (ch2NextBtn) ch2NextBtn.addEventListener('click', () => onContinueFrom(2));
-
+// Page 4: Memories / Photo Gallery
 const ch3PrevBtn = $('ch3PrevBtn');
-if (ch3PrevBtn) ch3PrevBtn.addEventListener('click', () => onBackFrom(3));
-
+if (ch3PrevBtn){
+  ch3PrevBtn.addEventListener('click', () => navigateToPage('chapter2'));
+}
 const ch3NextBtn = $('ch3NextBtn');
-if (ch3NextBtn) ch3NextBtn.addEventListener('click', () => onContinueFrom(3));
+if (ch3NextBtn){
+  ch3NextBtn.addEventListener('click', () => navigateToPage('chapter4'));
+}
 
+// Page 5: Personal Letter
 const ch4PrevBtn = $('ch4PrevBtn');
-if (ch4PrevBtn) ch4PrevBtn.addEventListener('click', () => onBackFrom(4));
-
+if (ch4PrevBtn){
+  ch4PrevBtn.addEventListener('click', () => navigateToPage('chapter3'));
+}
 const ch4NextBtn = $('ch4NextBtn');
 if (ch4NextBtn){
   ch4NextBtn.addEventListener('click', () => {
@@ -1717,18 +1876,25 @@ if (ch4NextBtn){
     if (wasMusicPlayingBeforeLetter){
       tryPlayMusic();
     }
-    onContinueFrom(4);
+    navigateToPage('chapter5');
   });
 }
 
+// Page 6: Celestial Wishes
 const ch5PrevBtn = $('ch5PrevBtn');
-if (ch5PrevBtn) ch5PrevBtn.addEventListener('click', () => onBackFrom(5));
-
+if (ch5PrevBtn){
+  ch5PrevBtn.addEventListener('click', () => navigateToPage('chapter4'));
+}
 const ch5NextBtn = $('ch5NextBtn');
-if (ch5NextBtn) ch5NextBtn.addEventListener('click', () => onContinueFrom(5));
+if (ch5NextBtn){
+  ch5NextBtn.addEventListener('click', () => navigateToPage('chapter6'));
+}
 
+// Page 7: Grand Finale
 const ch6PrevBtn = $('ch6PrevBtn');
-if (ch6PrevBtn) ch6PrevBtn.addEventListener('click', () => onBackFrom(6));
+if (ch6PrevBtn){
+  ch6PrevBtn.addEventListener('click', () => navigateToPage('chapter5'));
+}
 
 /* ============================================================
    CHAPTER 6: THE GRAND FINALE (Heart Blossom Tree)
@@ -1757,20 +1923,22 @@ function initLoveQuestion(){
 
   if (!btnYes || !btnNo) return;
 
-  // Pre-calculated safe playful dodging offsets (px) so YES never overlaps NO or text
+  // Pre-calculated safe playful dodging offsets (px) so NO playfully glides away without leaving screen
   const DODGE_OFFSETS = [
-    { x: -55, y: -36 },
-    { x: -65, y: 28 },
-    { x: 16,  y: -44 },
-    { x: -35, y: -48 },
-    { x: -60, y: 0 },
-    { x: 22,  y: 38 },
-    { x: -20, y: 44 },
-    { x: -75, y: -18 },
+    { x: 55,  y: -36 },
+    { x: -50, y: -42 },
+    { x: 45,  y: 36 },
+    { x: -45, y: 38 },
+    { x: 65,  y: 8 },
+    { x: -60, y: -20 },
+    { x: 30,  y: -48 },
+    { x: -35, y: 46 },
+    { x: 52,  y: -22 },
+    { x: -48, y: 22 },
   ];
   let currentDodgeIdx = -1;
 
-  function dodgeYes(e){
+  function dodgeNo(e){
     if (e && (e.type === 'touchstart' || e.type === 'pointerdown')){
       if (e.cancelable) e.preventDefault();
     }
@@ -1783,32 +1951,34 @@ function initLoveQuestion(){
     const offset = DODGE_OFFSETS[nextIdx];
 
     if (window.gsap){
-      gsap.to(btnYes, {
+      gsap.to(btnNo, {
         x: offset.x,
         y: offset.y,
-        duration: 0.26,
+        duration: 0.28,
         ease: 'power2.out',
       });
     } else {
-      btnYes.style.transform = `translate(${offset.x}px, ${offset.y}px)`;
+      btnNo.style.transform = `translate(${offset.x}px, ${offset.y}px)`;
     }
   }
 
-  // Pointer hover on desktop
-  btnYes.addEventListener('pointerenter', dodgeYes);
-  btnYes.addEventListener('mouseenter', dodgeYes);
-  // Touch / pointer interaction on mobile
-  btnYes.addEventListener('touchstart', dodgeYes, { passive: false });
-  btnYes.addEventListener('pointerdown', dodgeYes);
+  // Pointer hover on desktop for NO (playfully dodges cursor)
+  btnNo.addEventListener('pointerenter', dodgeNo);
+  btnNo.addEventListener('mouseenter', dodgeNo);
+  // Touch / pointer interaction on mobile for NO (playfully dodges finger)
+  btnNo.addEventListener('touchstart', dodgeNo, { passive: false });
+  btnNo.addEventListener('pointerdown', dodgeNo);
 
-  // If user somehow clicks YES
-  btnYes.addEventListener('click', (e) => {
+  // If user tries to click NO, dodge away and NEVER trigger celebration
+  btnNo.addEventListener('click', (e) => {
     e.preventDefault();
-    triggerFinalLoveReveal();
+    e.stopPropagation();
+    dodgeNo(e);
   });
 
-  // When NO is clicked
-  btnNo.addEventListener('click', () => {
+  // Clicking YES is stable, clickable, and triggers the final celebration!
+  btnYes.addEventListener('click', (e) => {
+    e.preventDefault();
     triggerFinalLoveReveal();
   });
 
@@ -1859,6 +2029,7 @@ const continuousScrollObserver = new IntersectionObserver((entries) => {
   entries.forEach((entry) => {
     if (entry.isIntersecting){
       const id = entry.target.id;
+      if (id === 'chapterCake') enterChapterCake();
       if (id === 'chapter2') enterChapter2();
       if (id === 'chapter4') enterChapter4();
       if (id === 'chapter5') enterChapter5();
@@ -1867,7 +2038,18 @@ const continuousScrollObserver = new IntersectionObserver((entries) => {
   });
 }, { threshold: 0.12 });
 
-['chapter2', 'chapter3', 'chapter4', 'chapter5', 'chapter6'].forEach((id) => {
+// Lock all subsequent pages on initial load, leaving only Chapter 1 accessible
+PAGE_ORDER.forEach((id, idx) => {
+  const el = $(id);
+  if (!el) return;
+  if (idx === 0){
+    el.classList.remove('is-locked');
+  } else {
+    el.classList.add('is-locked');
+  }
+});
+
+['chapterCake', 'chapter2', 'chapter3', 'chapter4', 'chapter5', 'chapter6'].forEach((id) => {
   const el = $(id);
   if (el) continuousScrollObserver.observe(el);
 });

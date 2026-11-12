@@ -10,7 +10,8 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "gsap": "^3.13.0"
+    "gsap": "^3.13.0",
+    "jsqr": "^1.4.0"
   },
   "devDependencies": {
     "qrcode": "^1.5.4",

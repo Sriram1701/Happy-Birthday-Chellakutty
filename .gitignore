@@ -12,7 +12,7 @@ Thumbs.db
 
 # temporary extracted album
 extracted_album/
-images/
+/images/
 
 .env
 .env.*
