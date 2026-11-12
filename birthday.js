@@ -10,7 +10,8 @@
    Chapter 6: The Grand Finale (Blooming Heart Blossom Tree)
    ============================================================ */
 
-import gsap from 'gsap';
+import _gsap from 'gsap';
+const gsap = (typeof window !== 'undefined' && window.gsap) ? window.gsap : _gsap;
 import { BIRTHDAY_CONFIG } from './birthday.config.js';
 
 /* Pen-stroke plugin for GSAP */
