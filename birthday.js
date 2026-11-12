@@ -1557,20 +1557,7 @@ const viewedMemories = new Set();
 function markMemoryViewed(idx){
   if (idx < 0 || idx >= BIRTHDAY_CONFIG.photos.length) return;
   viewedMemories.add(idx);
-  const prog = $('memoriesProgress');
-  const total = BIRTHDAY_CONFIG.photos.length;
-  if (prog){
-    if (viewedMemories.size >= total){
-      prog.textContent = `All ${total} photos viewed with love ✨`;
-      prog.classList.add('is-complete');
-    } else {
-      prog.textContent = `${viewedMemories.size}/${total} Photos Viewed`;
-    }
-  }
-  // Only unlock Page 5 when all 17 photos have actually been viewed
-  if (viewedMemories.size >= total){
-    completeChapter('chapter3');
-  }
+  completeChapter('chapter3');
 }
 window.markMemoryViewed = markMemoryViewed;
 
@@ -1578,13 +1565,11 @@ function initChapter3(){
   if (chapter3Initialized) return;
   chapter3Initialized = true;
 
+  // Ensure Chapter 3 is unlocked for smooth navigation
+  completeChapter('chapter3');
+
   const grid = $('polaroidGrid');
   if (!grid) return;
-
-  const prog = $('memoriesProgress');
-  if (prog && viewedMemories.size === 0) {
-    prog.textContent = `0/${BIRTHDAY_CONFIG.photos.length} Photos Viewed`;
-  }
 
   grid.innerHTML = BIRTHDAY_CONFIG.photos.map((item, idx) => `
     <article class="polaroid-card" data-index="${idx}" data-stage="${item.stageKey || ''}" tabindex="0" role="button" aria-label="Open ${item.title}">
