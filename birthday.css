@@ -346,17 +346,18 @@ body.film-body{
 
 /* Sequential gated locking: Future chapters remain hidden until unlocked */
 .chapter.is-locked{
-  display: none;
+  display: none !important;
 }
 
 /* Friendly task hint styling across chapters */
 .chapter-task-hint{
   font-family: 'Montserrat', -apple-system, sans-serif;
-  font-size: 0.85rem;
-  color: #a04058;
-  margin: 4px 0 0 0;
-  font-weight: 500;
-  letter-spacing: 0.02em;
+  font-size: clamp(0.78rem, 1.4vw, 1.05rem);
+  color: #ffb6c9;
+  margin: 0;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  line-height: 1.5;
 }
 
 .story-confirm-btn{
@@ -453,9 +454,12 @@ body.film-body{
 /* Chapter Badges */
 .chapter-badge{
   display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: 10px;
-  margin-bottom: 22px;
+  justify-content: center;
+  gap: 6px;
+  margin-bottom: 18px;
+  text-align: center;
 }
 
 .chapter-roman{
@@ -469,11 +473,13 @@ body.film-body{
 
 .chapter-name{
   font-family: "Montserrat", sans-serif;
-  font-size: 11px;
-  font-weight: 600;
+  font-size: clamp(1.7rem, 3.3vw, 2.7rem);
+  font-weight: 700;
   letter-spacing: 0.12em;
-  color: #ff9bb5;
+  color: #ffbfd0;
   text-transform: uppercase;
+  line-height: 1.15;
+  margin: 0;
 }
 
 /* Chapter Action Buttons */
@@ -1802,7 +1808,7 @@ body.film-body{
 
 .letter-section-inner {
   width: 100%;
-  max-width: 680px;
+  max-width: 760px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -1812,32 +1818,45 @@ body.film-body{
 /* Wax Sealed Envelope Container */
 .envelope-area {
   position: relative;
-  width: min(92vw, 440px);
-  min-height: 280px;
+  width: min(92vw, 780px);
+  min-height: 320px;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin: 20px auto 14px;
+  margin: 10px auto 18px;
   perspective: 1000px;
 }
 
 /* Closed Envelope State */
 .envelope-card {
-  width: min(86vw, 420px);
-  aspect-ratio: 16 / 11;
+  width: min(86vw, 660px);
+  aspect-ratio: 16 / 10;
   background: radial-gradient(circle at 50% 40%, #fffcfa, #faeedf 75%, #ebd9c3 100%);
-  border-radius: 12px;
+  border-radius: 14px;
   box-shadow: 0 25px 60px rgba(0, 0, 0, 0.65), 0 5px 15px rgba(0, 0, 0, 0.3);
   position: relative;
   cursor: pointer;
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
-  padding: 24px;
+  padding: 28px 24px;
   text-align: center;
   border: 1px solid rgba(255, 255, 255, 0.85);
   transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.4s ease;
-  overflow: visible;
+  overflow: hidden;
+}
+
+.envelope-front {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 8px;
+  z-index: 1;
+  padding: 22px 26px 18px;
+  pointer-events: none;
 }
 
 .envelope-card:hover {
@@ -1863,8 +1882,8 @@ body.film-body{
 }
 
 .envelope-seal {
-  width: 44px;
-  height: 44px;
+  width: 46px;
+  height: 46px;
   border-radius: 50%;
   background: radial-gradient(circle at 35% 35%, #e62e5c, #a80f3a);
   color: #fff;
@@ -1875,6 +1894,9 @@ body.film-body{
   border: 2px solid rgba(255, 255, 255, 0.7);
   transform: translateY(18px);
   animation: sealPulse 2.5s infinite;
+  cursor: pointer;
+  position: relative;
+  z-index: 5;
 }
 
 @keyframes sealPulse {
@@ -1887,18 +1909,20 @@ body.film-body{
 .envelope-recipient {
   font-family: "Fraunces", Georgia, serif;
   font-weight: 700;
-  font-size: clamp(18px, 4vw, 24px);
+  font-size: clamp(1.2rem, 3vw, 2.35rem);
   color: #401524;
-  margin-bottom: 4px;
+  margin: 0;
+  letter-spacing: 0.01em;
 }
 
 .envelope-hint {
   font-family: "Montserrat", sans-serif;
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 0.1em;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
   text-transform: uppercase;
   color: #a8425d;
+  margin: 0;
 }
 
 /* Warm Ivory / Pure White Personal Letter Card */
@@ -1913,7 +1937,7 @@ body.film-body{
   box-shadow: 0 25px 70px rgba(0, 0, 0, 0.45), 0 0 35px rgba(216, 30, 87, 0.12);
   position: relative;
   text-align: left;
-  overflow: visible; /* Zero internal scrollbar */
+  overflow: visible;
   margin: 16px auto 0;
 }
 
@@ -2787,8 +2811,18 @@ body.film-body{
   /* Chapter 4 Letter */
   .personal-letter-card{
     width: 100%;
+    max-height: 62vh;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
     padding: 26px 18px;
     margin: 12px auto 0;
+  }
+
+  .chapter--4 .nav-btn--back{
+    background: rgba(255, 255, 255, 0.95) !important;
+    color: #5b172f !important;
+    border: 1px solid rgba(255, 255, 255, 0.75) !important;
+    box-shadow: 0 10px 18px rgba(0, 0, 0, 0.18) !important;
   }
 
   /* Chapter 5 Wishes Mobile */

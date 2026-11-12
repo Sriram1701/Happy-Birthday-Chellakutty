@@ -2076,6 +2076,22 @@ function initChapter4(){
     });
   }
 
+  if (envelopeFlap && envelopeFlap.querySelector('.envelope-seal')){
+    const waxSeal = envelopeFlap.querySelector('.envelope-seal');
+    waxSeal.addEventListener('click', (event) => {
+      event.preventDefault();
+      event.stopPropagation();
+      openEnvelope();
+    });
+    waxSeal.addEventListener('keydown', (event) => {
+      if (event.key === 'Enter' || event.key === ' '){
+        event.preventDefault();
+        openEnvelope();
+      }
+    });
+    waxSeal.tabIndex = 0;
+  }
+
   // Observe end of letter sentinel to verify reading to the actual end
   if (endSentinel && 'IntersectionObserver' in window){
     const letterObserver = new IntersectionObserver((entries) => {
