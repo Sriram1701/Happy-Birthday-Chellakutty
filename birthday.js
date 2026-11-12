@@ -911,25 +911,34 @@ function launchCupidArrow(){
 
       const heartFlash = $('cupidHeartFlash');
       const impactBurst = $('cupidImpactBurst');
+      const impactHalo = $('cupidImpactHalo');
       const particlesContainer = $('cupidImpactParticles');
 
-      // 1. Temporarily pause CSS keyframe beats so GSAP has full smooth control
+      // 1. Pause default CSS keyframe beats so GSAP has full smooth control
       if (heartGroup) heartGroup.classList.add('is-hit');
       if (pulseGlow) pulseGlow.classList.add('is-hit');
 
       // 2. Heart brief bright pink-white flash
       if (heartFlash){
         gsap.fromTo(heartFlash,
-          { opacity: 0.92 },
-          { opacity: 0, duration: 0.42, ease: 'power2.out' }
+          { opacity: 1 },
+          { opacity: 0, duration: 0.55, ease: 'power2.out' }
         );
       }
 
       // 3. Soft expanding circular light burst behind the heart
       if (impactBurst){
         gsap.fromTo(impactBurst,
-          { attr: { r: 12 }, opacity: 0.95 },
-          { attr: { r: 130 }, opacity: 0, duration: 0.65, ease: 'power2.out' }
+          { attr: { r: 12 }, opacity: 1 },
+          { attr: { r: 160 }, opacity: 0, duration: 0.75, ease: 'power2.out' }
+        );
+      }
+
+      // 3b. High-impact expanding shockwave halo
+      if (impactHalo){
+        gsap.fromTo(impactHalo,
+          { scale: 0.2, opacity: 0.95 },
+          { scale: 2.6, opacity: 0, duration: 0.75, ease: 'power2.out' }
         );
       }
 
@@ -939,33 +948,35 @@ function launchCupidArrow(){
           onComplete: () => {
             // Reveal Continue button and unlock Page 2 ONLY AFTER the full heart impact finishes
             completeChapter('chapter1');
-            if (heartGroup) heartGroup.classList.remove('is-hit');
-            if (pulseGlow) pulseGlow.classList.remove('is-hit');
           }
         })
           .to(heartGroup, {
-            scale: 1.28,
+            scale: 1.35,
+            duration: 0.15,
+            ease: 'back.out(3)',
+            transformOrigin: '50% 50%',
+            svgOrigin: '170 82'
+          })
+          .to(heartGroup, {
+            scale: 0.92,
             duration: 0.16,
-            ease: 'back.out(2)',
-            transformOrigin: '170px 82px'
-          })
-          .to(heartGroup, {
-            scale: 0.95,
-            duration: 0.18,
             ease: 'power2.inOut',
-            transformOrigin: '170px 82px'
+            transformOrigin: '50% 50%',
+            svgOrigin: '170 82'
           })
           .to(heartGroup, {
-            scale: 1.06,
-            duration: 0.2,
-            ease: 'sine.inOut',
-            transformOrigin: '170px 82px'
+            scale: 1.15,
+            duration: 0.18,
+            ease: 'power1.out',
+            transformOrigin: '50% 50%',
+            svgOrigin: '170 82'
           })
           .to(heartGroup, {
             scale: 1,
             duration: 0.35,
-            ease: 'elastic.out(1, 0.45)',
-            transformOrigin: '170px 82px'
+            ease: 'elastic.out(1.2, 0.45)',
+            transformOrigin: '50% 50%',
+            svgOrigin: '170 82'
           });
       } else {
         completeChapter('chapter1');
@@ -974,10 +985,10 @@ function launchCupidArrow(){
       // 5. Emit small pink and golden heart particles & radial sparkle effect
       if (particlesContainer){
         particlesContainer.innerHTML = '';
-        const particleCount = 16;
+        const particleCount = 22;
         for (let i = 0; i < particleCount; i++){
           const angle = (i / particleCount) * Math.PI * 2 + (Math.random() - 0.5) * 0.35;
-          const dist = 38 + Math.random() * 58;
+          const dist = 42 + Math.random() * 68;
           const isGold = i % 2 === 0;
           const color = isGold ? (Math.random() > 0.5 ? '#ffd56b' : '#ffea9f') : (Math.random() > 0.5 ? '#ff6b95' : '#ea285f');
           
@@ -990,7 +1001,7 @@ function launchCupidArrow(){
           } else {
             // Sparkle Circle Particle
             el = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-            el.setAttribute('r', (Math.random() * 1.8 + 1.8).toFixed(1));
+            el.setAttribute('r', (Math.random() * 2.2 + 2.0).toFixed(1));
             el.setAttribute('fill', color);
           }
 
@@ -1003,9 +1014,9 @@ function launchCupidArrow(){
             {
               x: targetX,
               y: targetY,
-              scale: Math.random() * 0.6 + 0.8,
+              scale: Math.random() * 0.6 + 0.9,
               opacity: 0,
-              duration: 0.55 + Math.random() * 0.25,
+              duration: 0.6 + Math.random() * 0.3,
               ease: 'power2.out',
               onComplete: () => {
                 if (el.parentNode) el.remove();
@@ -1018,8 +1029,8 @@ function launchCupidArrow(){
       // 6. Glowing shockwave behind heart
       if (pulseGlow){
         gsap.fromTo(pulseGlow,
-          { scale: 0.85, opacity: 0.25 },
-          { scale: 1.55, opacity: 0.95, duration: 0.4, yoyo: true, repeat: 1, ease: 'power2.out' }
+          { scale: 0.85, opacity: 0.35 },
+          { scale: 1.75, opacity: 0.95, duration: 0.45, yoyo: true, repeat: 1, ease: 'power2.out' }
         );
       }
 
@@ -1027,7 +1038,7 @@ function launchCupidArrow(){
       if (centerpiece){
         const rect = centerpiece.getBoundingClientRect();
         const burstX = rect.left + rect.width * 0.5;
-        const burstY = rect.top + rect.height * 0.22;
+        const burstY = rect.top + rect.height * 0.19;
         spawnCelebrationBurst(burstX, burstY);
       }
 
@@ -1570,8 +1581,10 @@ function initCakeCutting(){
       }
     }
 
-    // Complete Page 2 task and unlock Page 3 (chapter2: A Beautiful Beginning)
-    completeChapter('chapterCake');
+    // Reveal Continue button and unlock Page 3 ONLY AFTER cut and message animation finish
+    setTimeout(() => {
+      completeChapter('chapterCake');
+    }, 750);
   }
 
   function resetCake(){
@@ -1941,12 +1954,19 @@ if (lightbox){
 }
 
 /* ============================================================
-   CHAPTER 4: WORDS FROM THE HEART (Personal Heartfelt Letter)
+   CHAPTER 4: WORDS FROM THE HEART (Interactive Envelope & Letter)
    ============================================================ */
 let isLetterRead = false;
+let isEnvelopeOpened = false;
 let wasMusicPlayingBeforeLetter = false;
 
 function initChapter4(){
+  const envelopeArea = $('envelopeArea');
+  const envelopeCard = $('envelopeCard');
+  const envelopeFlap = $('envelopeFlap');
+  const letterCard = $('personalLetterCard');
+  const endSentinel = $('letterEndSentinel');
+
   const salutation = $('letterSalutation');
   if (salutation && BIRTHDAY_CONFIG.letter.salutation){
     salutation.textContent = BIRTHDAY_CONFIG.letter.salutation;
@@ -1959,16 +1979,66 @@ function initChapter4(){
       .join('');
   }
 
+  // Envelope tap-to-open interaction
+  function openEnvelope(){
+    if (isEnvelopeOpened) return;
+    isEnvelopeOpened = true;
+
+    if (envelopeCard){
+      const rect = envelopeCard.getBoundingClientRect();
+      spawnCelebrationBurst(rect.left + rect.width * 0.5, rect.top + rect.height * 0.5);
+    }
+
+    if (window.gsap && envelopeFlap){
+      gsap.timeline()
+        .to(envelopeFlap, {
+          rotateX: -170,
+          duration: 0.45,
+          ease: 'power2.inOut',
+          transformOrigin: 'top center'
+        })
+        .to(envelopeArea, {
+          opacity: 0,
+          scale: 0.94,
+          y: -14,
+          duration: 0.35,
+          ease: 'power2.in',
+          onComplete: () => {
+            if (envelopeArea) envelopeArea.style.display = 'none';
+            if (letterCard){
+              letterCard.style.display = 'block';
+              gsap.fromTo(letterCard,
+                { opacity: 0, y: 28, scale: 0.96 },
+                { opacity: 1, y: 0, scale: 1, duration: 0.65, ease: 'back.out(1.3)' }
+              );
+            }
+          }
+        });
+    } else {
+      if (envelopeArea) envelopeArea.style.display = 'none';
+      if (letterCard) letterCard.style.display = 'block';
+    }
+  }
+
+  if (envelopeCard){
+    envelopeCard.addEventListener('click', openEnvelope);
+    envelopeCard.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' '){
+        e.preventDefault();
+        openEnvelope();
+      }
+    });
+  }
+
   // Observe end of letter sentinel to verify reading to the actual end
-  const endSentinel = $('letterEndSentinel');
   if (endSentinel && 'IntersectionObserver' in window){
     const letterObserver = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
         if (entry.isIntersecting){
-          // Short reading-completion delay before unlocking Continue
+          // Reading completion unlocks Continue
           setTimeout(() => {
             completeChapter('chapter4');
-          }, 1200);
+          }, 800);
           letterObserver.disconnect();
         }
       });
@@ -1976,7 +2046,6 @@ function initChapter4(){
     letterObserver.observe(endSentinel);
   }
 
-  const letterCard = $('personalLetterCard');
   if (letterCard){
     letterCard.addEventListener('click', () => {
       completeChapter('chapter4');

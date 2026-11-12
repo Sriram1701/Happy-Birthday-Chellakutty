@@ -95,6 +95,8 @@
             
             <!-- Soft pulsing radial glow behind the heart -->
             <div class="cupid-pulse-glow" id="cupidPulseGlow" aria-hidden="true"></div>
+            <!-- High-impact expanding shockwave halo on collision -->
+            <div class="cupid-impact-halo" id="cupidImpactHalo" aria-hidden="true"></div>
 
             <svg class="cupid-svg" id="cupidSvg" viewBox="0 0 340 450" aria-hidden="true">
               <defs>
@@ -104,6 +106,14 @@
                   <stop offset="40%" stop-color="#ea285f" />
                   <stop offset="85%" stop-color="#ba1243" />
                   <stop offset="100%" stop-color="#8a0c32" />
+                </radialGradient>
+
+                <!-- Bright Pink-White Impact Flash Gradient -->
+                <radialGradient id="cupidFlashGrad" cx="50%" cy="40%" r="65%">
+                  <stop offset="0%" stop-color="#ffffff" stop-opacity="1" />
+                  <stop offset="40%" stop-color="#ffffff" stop-opacity="0.95" />
+                  <stop offset="70%" stop-color="#ffb3c7" stop-opacity="0.8" />
+                  <stop offset="100%" stop-color="#ff4071" stop-opacity="0.4" />
                 </radialGradient>
 
                 <!-- Heart Gloss / Sheen Gradient -->
@@ -164,7 +174,7 @@
                 <!-- Heart Flash Overlay -->
                 <path id="cupidHeartFlash"
                       d="M 170 162 C 122 122 78 86 78 48 C 78 20 98 4 126 4 C 144 4 156 14 170 26 C 184 14 196 4 214 4 C 242 4 262 20 262 48 C 262 86 218 122 170 162 Z"
-                      fill="#ffffff" opacity="0" pointer-events="none" />
+                      fill="url(#cupidFlashGrad)" opacity="0" pointer-events="none" />
               </g>
 
               <!-- Small Pink & Golden Heart Particles & Radial Sparks Container -->
@@ -215,7 +225,7 @@
           <!-- Bottom Navigation Action (Gated until arrow pierces heart) -->
           <div class="minimal-homepage__action">
             <button class="nav-btn nav-btn--continue is-gated" id="ch1NextBtn" type="button" aria-label="Continue">
-              <span>Continue &rarr;</span>
+              <span>Continue &darr;</span>
             </button>
           </div>
         </div>
@@ -701,7 +711,7 @@
             <span>↺ Cut Again</span>
           </button>
           <button class="nav-btn nav-btn--continue is-gated" id="cakeNextBtn" type="button" aria-label="Continue">
-            <span>Continue &rarr;</span>
+            <span>Continue &darr;</span>
           </button>
         </div>
       </div>
@@ -758,10 +768,10 @@
               <div class="book-page__content">
                 <div class="story-stream" id="storyStream">
                   <p class="story-line story-line--1" id="storyLine1">
-                    &ldquo;Every beautiful story begins somewhere...&rdquo;
+                    &ldquo;Celebrating a moment, a special journey, and an unforgettable soul.&rdquo;
                   </p>
                   <p class="story-line story-line--2" id="storyLine2">
-                    &ldquo;And some souls bring unforgettable light, grace, and warmth into this world.&rdquo;
+                    &ldquo;Being beautiful is not just how you look, but how you make everyone around you feel.&rdquo;
                   </p>
                   <p class="story-line story-line--3 story-line--highlight" id="storyLine3">
                     &ldquo;Today is all about celebrating you, Ranjeetha Sri &hearts;&rdquo;
@@ -1110,11 +1120,26 @@
       <div class="chapter-inner chapter-inner--center letter-section-inner">
         <header class="chapter-badge">
           <span class="chapter-name">Words From The Heart</span>
-          <p class="chapter-task-hint">Read the personal letter to the end &hearts;</p>
+          <p class="chapter-task-hint">Tap the wax seal to open your letter &hearts;</p>
         </header>
 
-        <!-- Full-Width Warm Ivory Personal Letter Card (Natural reading layout, zero scrollbars) -->
-        <article class="personal-letter-card" id="personalLetterCard" aria-label="Personal Birthday Letter to Ranjeetha Sri">
+        <!-- Closed Wax-Sealed Envelope Container -->
+        <div class="envelope-area" id="envelopeArea">
+          <div class="envelope-card" id="envelopeCard" role="button" tabindex="0" aria-label="Open your birthday letter">
+            <div class="envelope-flap" id="envelopeFlap">
+              <div class="envelope-seal" id="envelopeSeal">
+                <span class="seal-heart-icon">&hearts;</span>
+              </div>
+            </div>
+            <div class="envelope-front">
+              <p class="envelope-recipient" id="envelopeRecipient">For Ranjeetha Sri (Gundu ❤️)</p>
+              <p class="envelope-hint" id="envelopeHint">Open your letter ❤️</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Full-Width Warm Ivory Personal Letter Card (Revealed when envelope is opened) -->
+        <article class="personal-letter-card" id="personalLetterCard" aria-label="Personal Birthday Letter to Ranjeetha Sri" style="display: none;">
           <!-- Elegant Top Wax Stamp Accent -->
           <div class="letter-stationery-top" aria-hidden="true">
             <span class="letter-wax-stamp">&hearts;</span>

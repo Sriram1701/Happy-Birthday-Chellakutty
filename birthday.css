@@ -489,13 +489,14 @@ body.film-body{
 .chapter-actions{
   display: flex !important;
   align-items: center !important;
-  justify-content: flex-start !important; /* Left-aligned */
+  justify-content: center !important; /* Horizontally centered */
   gap: 10px !important;
   margin-top: 24px !important;
   margin-bottom: 12px !important;
   width: 100% !important;
   box-sizing: border-box !important;
   padding: 0 4px !important;
+  text-align: center !important;
 }
 
 /* Section-specific max-width matching the section's card/content */
@@ -503,12 +504,14 @@ body.film-body{
   max-width: 680px;
   margin-left: auto !important;
   margin-right: auto !important;
+  justify-content: center !important;
 }
 
 .chapter-actions--ch3{
   max-width: 1080px;
   margin-left: auto !important;
   margin-right: auto !important;
+  justify-content: center !important;
 }
 
 .chapter-actions--ch4,
@@ -516,12 +519,14 @@ body.film-body{
   max-width: 660px;
   margin-left: auto !important;
   margin-right: auto !important;
+  justify-content: center !important;
 }
 
 .chapter-actions--ch5{
   max-width: 880px;
   margin-left: auto !important;
   margin-right: auto !important;
+  justify-content: center !important;
 }
 
 .chapter-actions--ch6{
@@ -530,6 +535,7 @@ body.film-body{
   margin-right: auto !important;
   margin-top: 0 !important;
   margin-bottom: 14px !important;
+  justify-content: center !important;
 }
 
 /* Base Compact Button (Applied to .nav-btn, .chapter-cta-btn, .chapter-nav-btn) */
@@ -799,6 +805,22 @@ body.film-body{
   }
 }
 
+/* High-impact expanding shockwave halo on arrow impact */
+.cupid-impact-halo {
+  position: absolute;
+  top: 19%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.2);
+  width: 140px;
+  height: 140px;
+  border-radius: 50%;
+  background: radial-gradient(circle, #ffffff 0%, rgba(255, 179, 199, 0.9) 35%, rgba(234, 40, 95, 0.6) 65%, transparent 75%);
+  box-shadow: 0 0 35px rgba(255, 64, 113, 0.8), 0 0 70px rgba(255, 255, 255, 0.9);
+  pointer-events: none;
+  opacity: 0;
+  z-index: 5;
+}
+
 .cupid-svg {
   width: 100%;
   height: 100%;
@@ -860,9 +882,11 @@ body.film-body{
 
 .minimal-homepage__action {
   margin-top: clamp(10px, 2.5vh, 20px);
-  display: flex;
-  justify-content: flex-start;
-  width: 100%;
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  width: 100% !important;
+  text-align: center !important;
 }
 
 .hero{
@@ -1284,12 +1308,13 @@ body.film-body{
 }
 
 .chapter-actions--cake-bottom{
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  gap: 12px;
-  width: 100%;
-  margin-top: 8px;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 12px !important;
+  width: 100% !important;
+  margin-top: 16px !important;
+  text-align: center !important;
 }
 
 #cakeReplayBtn:not(.is-active){
@@ -1782,6 +1807,98 @@ body.film-body{
   flex-direction: column;
   align-items: center;
   margin: 0 auto;
+}
+
+/* Wax Sealed Envelope Container */
+.envelope-area {
+  position: relative;
+  width: min(92vw, 440px);
+  min-height: 280px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 20px auto 14px;
+  perspective: 1000px;
+}
+
+/* Closed Envelope State */
+.envelope-card {
+  width: min(86vw, 420px);
+  aspect-ratio: 16 / 11;
+  background: radial-gradient(circle at 50% 40%, #fffcfa, #faeedf 75%, #ebd9c3 100%);
+  border-radius: 12px;
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.65), 0 5px 15px rgba(0, 0, 0, 0.3);
+  position: relative;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 24px;
+  text-align: center;
+  border: 1px solid rgba(255, 255, 255, 0.85);
+  transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.4s ease;
+  overflow: visible;
+}
+
+.envelope-card:hover {
+  transform: translateY(-6px) scale(1.02);
+  box-shadow: 0 30px 70px rgba(216, 30, 87, 0.35), 0 8px 25px rgba(0, 0, 0, 0.4);
+}
+
+.envelope-flap {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 55%;
+  background: linear-gradient(180deg, #f7ebd9 0%, #faefe2 100%);
+  clip-path: polygon(0 0, 100% 0, 50% 100%);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  padding-bottom: 8px;
+  transform-origin: top center;
+  z-index: 2;
+}
+
+.envelope-seal {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%, #e62e5c, #a80f3a);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 6px 18px rgba(168, 15, 58, 0.55), inset 0 2px 4px rgba(255, 255, 255, 0.4);
+  border: 2px solid rgba(255, 255, 255, 0.7);
+  transform: translateY(18px);
+  animation: sealPulse 2.5s infinite;
+}
+
+@keyframes sealPulse {
+  0%, 100% { transform: translateY(18px) scale(1); }
+  50% { transform: translateY(18px) scale(1.1); box-shadow: 0 8px 24px rgba(216, 30, 87, 0.8); }
+}
+
+.seal-heart-icon { font-size: 18px; }
+
+.envelope-recipient {
+  font-family: "Fraunces", Georgia, serif;
+  font-weight: 700;
+  font-size: clamp(18px, 4vw, 24px);
+  color: #401524;
+  margin-bottom: 4px;
+}
+
+.envelope-hint {
+  font-family: "Montserrat", sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #a8425d;
 }
 
 /* Warm Ivory / Pure White Personal Letter Card */
@@ -2719,16 +2836,17 @@ body.film-body{
     line-height: 1.5 !important;
   }
 
-  /* Chapter Action Buttons Mobile (Compact Left-Aligned) */
+  /* Chapter Action Buttons Mobile (Compact Centered) */
   .chapter-actions{
     flex-direction: row !important;
-    justify-content: flex-start !important;
+    justify-content: center !important;
     align-items: center !important;
     width: 100% !important;
     max-width: 100% !important;
-    margin: 18px 0 12px !important;
+    margin: 18px auto 12px !important;
     gap: 8px !important;
     padding: 0 4px !important;
+    text-align: center !important;
   }
   .nav-btn,
   .chapter-cta-btn,

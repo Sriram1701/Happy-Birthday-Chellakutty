@@ -15,9 +15,9 @@ export const BIRTHDAY_CONFIG = {
   // CHAPTER 2: A BEAUTIFUL BEGINNING (Memory Book Messages)
   // -------------------------------------------------------------
   beginningStory: [
-    "Every beautiful story begins somewhere...",
-    "And some souls bring unforgettable light, grace, and warmth into this world.",
-    "Today is all about celebrating you, Ranjeetha Sri."
+    "Celebrating a moment, a special journey, and an unforgettable soul.",
+    "Being beautiful is not just how you look, but how you make everyone around you feel.",
+    "Today is all about celebrating you, Ranjeetha Sri ❤️"
   ],
 
   // -------------------------------------------------------------
