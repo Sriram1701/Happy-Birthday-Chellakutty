@@ -1246,17 +1246,114 @@ function enterChapter6(){
   if (wSub)     wSub.textContent     = BIRTHDAY_CONFIG.finale.subText;
 }
 
-const replayAllBtn = $('replayAllBtn');
-if (replayAllBtn){
-  replayAllBtn.addEventListener('click', () => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+/* ============================================================
+   PLAYFUL LOVE QUESTION INTERACTION (Chapter 6 Grand Finale)
+   ============================================================ */
+function initLoveQuestion(){
+  const btnYes      = $('btnYes');
+  const btnNo       = $('btnNo');
+  const promptArea  = $('lovePromptArea');
+  const finalReveal = $('loveFinalReveal');
+  const replayBtn   = $('replayAllBtn');
+
+  if (!btnYes || !btnNo) return;
+
+  // Pre-calculated safe playful dodging offsets (px) so YES never overlaps NO or text
+  const DODGE_OFFSETS = [
+    { x: -55, y: -36 },
+    { x: -65, y: 28 },
+    { x: 16,  y: -44 },
+    { x: -35, y: -48 },
+    { x: -60, y: 0 },
+    { x: 22,  y: 38 },
+    { x: -20, y: 44 },
+    { x: -75, y: -18 },
+  ];
+  let currentDodgeIdx = -1;
+
+  function dodgeYes(e){
+    if (e && (e.type === 'touchstart' || e.type === 'pointerdown')){
+      if (e.cancelable) e.preventDefault();
+    }
+    let nextIdx;
+    do {
+      nextIdx = Math.floor(Math.random() * DODGE_OFFSETS.length);
+    } while (nextIdx === currentDodgeIdx && DODGE_OFFSETS.length > 1);
+
+    currentDodgeIdx = nextIdx;
+    const offset = DODGE_OFFSETS[nextIdx];
+
+    if (window.gsap){
+      gsap.to(btnYes, {
+        x: offset.x,
+        y: offset.y,
+        duration: 0.26,
+        ease: 'power2.out',
+      });
+    } else {
+      btnYes.style.transform = `translate(${offset.x}px, ${offset.y}px)`;
+    }
+  }
+
+  // Pointer hover on desktop
+  btnYes.addEventListener('pointerenter', dodgeYes);
+  btnYes.addEventListener('mouseenter', dodgeYes);
+  // Touch / pointer interaction on mobile
+  btnYes.addEventListener('touchstart', dodgeYes, { passive: false });
+  btnYes.addEventListener('pointerdown', dodgeYes);
+
+  // If user somehow clicks YES
+  btnYes.addEventListener('click', (e) => {
+    e.preventDefault();
+    triggerFinalLoveReveal();
   });
+
+  // When NO is clicked
+  btnNo.addEventListener('click', () => {
+    triggerFinalLoveReveal();
+  });
+
+  function triggerFinalLoveReveal(){
+    spawnCelebrationBurst();
+    setTimeout(spawnCelebrationBurst, 400);
+
+    if (window.gsap && promptArea && finalReveal){
+      gsap.to(promptArea, {
+        opacity: 0,
+        y: -10,
+        duration: 0.35,
+        ease: 'power2.in',
+        onComplete: () => {
+          promptArea.hidden = true;
+          finalReveal.hidden = false;
+          finalReveal.removeAttribute('hidden');
+          gsap.fromTo(finalReveal,
+            { opacity: 0, y: 16, scale: 0.95 },
+            { opacity: 1, y: 0, scale: 1, duration: 0.6, ease: 'back.out(1.4)' }
+          );
+        }
+      });
+    } else {
+      if (promptArea) promptArea.hidden = true;
+      if (finalReveal){
+        finalReveal.hidden = false;
+        finalReveal.removeAttribute('hidden');
+      }
+    }
+  }
+
+  if (replayBtn){
+    replayBtn.addEventListener('click', () => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  }
 }
 
 // Initialize all sections for seamless continuous vertical scrolling
 initChapter3();
 initChapter4();
 initChapter5();
+initLoveQuestion();
 
 const continuousScrollObserver = new IntersectionObserver((entries) => {
   entries.forEach((entry) => {
@@ -1278,13 +1375,10 @@ const continuousScrollObserver = new IntersectionObserver((entries) => {
 /* ============================================================
    CONFETTI & CELEBRATION LOVE BURST
    ============================================================ */
-const celebrateBtn   = $('celebrateBtn');
-const celebrateCount = $('celebrateCount');
 const confettiCanvas = $('confettiCanvas');
 let confettiCtx      = confettiCanvas ? confettiCanvas.getContext('2d') : null;
 let confettiParticles = [];
 let confettiRAF      = 0;
-let wishesCount      = 0;
 
 function resizeConfetti(){
   if (!confettiCanvas) return;
@@ -1298,24 +1392,24 @@ const CONFETTI_COLORS = ['#ff5f86', '#ffd0e0', '#ffcf6a', '#e8a23d', '#ffffff', 
 
 function spawnCelebrationBurst(){
   if (!confettiCtx) return;
-  const count = 52;
-  const startX = window.innerWidth * 0.78;
-  const startY = window.innerHeight * 0.88;
+  const count = 56;
+  const startX = window.innerWidth * 0.5;
+  const startY = window.innerHeight * 0.55;
 
   for (let i = 0; i < count; i++){
-    const angle = rand(Math.PI * 0.9, Math.PI * 2.1);
-    const speed = rand(10, 28);
+    const angle = rand(0, Math.PI * 2);
+    const speed = rand(8, 26);
     confettiParticles.push({
-      x: startX + rand(-50, 50),
+      x: startX + rand(-40, 40),
       y: startY + rand(-30, 30),
       vx: Math.cos(angle) * speed,
-      vy: Math.sin(angle) * speed - 8,
+      vy: Math.sin(angle) * speed - 6,
       size: rand(6, 15),
       color: pick(CONFETTI_COLORS),
       rot: rand(0, 6.28),
       vrot: rand(-0.15, 0.15),
-      shape: Math.random() < 0.45 ? 'heart' : 'petal',
-      life: rand(2.0, 3.4),
+      shape: Math.random() < 0.5 ? 'heart' : 'petal',
+      life: rand(2.2, 3.6),
       age: 0,
     });
   }
@@ -1362,16 +1456,6 @@ function renderConfetti(){
   } else {
     confettiRAF = 0;
   }
-}
-
-if (celebrateBtn){
-  celebrateBtn.addEventListener('click', () => {
-    wishesCount++;
-    if (celebrateCount){
-      celebrateCount.textContent = `${wishesCount} ${wishesCount === 1 ? 'wish' : 'wishes'} sent ♥`;
-    }
-    spawnCelebrationBurst();
-  });
 }
 
 /* ============================================================
@@ -1519,8 +1603,9 @@ initYouTubePlayer();
    ============================================================ */
 function resize(){
   dpr = Math.min(window.devicePixelRatio || 1, 2);
-  W = window.innerWidth;
-  H = window.innerHeight;
+  const stage = $('treeStage');
+  W = stage && stage.clientWidth ? stage.clientWidth : window.innerWidth;
+  H = stage && stage.clientHeight ? stage.clientHeight : Math.min(window.innerHeight * 0.48, 420);
   canvas.width = Math.round(W * dpr);
   canvas.height = Math.round(H * dpr);
   ctx.setTransform(dpr, 0, 0, dpr, 0, 0);

@@ -358,23 +358,31 @@
     </section>
 
     <!-- ==========================================================
-         CHAPTER 5: WISHES (Personal Heartfelt Wishes)
+         CHAPTER 5: WISHES BEYOND WORDS
+         (Deep Celestial Night Sky + Floating Sequential Wishes)
          ========================================================== -->
-    <section class="chapter chapter--5" id="chapter5" aria-label="Wishes for Ranjeetha Sri">
+    <section class="chapter chapter--5" id="chapter5" aria-label="Chapter 5: Wishes Beyond Words">
       <div class="celestial-sky" id="celestialSky" aria-hidden="true">
         <div class="stars-cluster stars-cluster--1"></div>
         <div class="stars-cluster stars-cluster--2"></div>
+        <div class="nebula-dust"></div>
       </div>
 
-      <div class="chapter-inner chapter-inner--center wishes-container-inner">
-        <!-- Minimal Clean Date Tag -->
-        <span class="wishes-date-tag">12 November 2004</span>
+      <div class="chapter-inner chapter-inner--center">
+        <header class="chapter-badge">
+          <span class="chapter-name">Wishes Beyond Words</span>
+        </header>
 
-        <!-- Clean Main Heading: Wishes -->
-        <h2 class="wishes-headline">Wishes</h2>
-        <p class="wishes-subhead">A few simple wishes from my heart for you</p>
+        <div class="birthday-date-pill" id="birthdayDatePill">
+          <span class="star-sparkle">✦</span>
+          <span>12 November 2004</span>
+          <span class="star-sparkle">✦</span>
+        </div>
 
-        <!-- Fully Responsive Floating Wish Cards Container -->
+        <h2 class="wishes-headline">Wishes Sent To The Stars</h2>
+        <p class="wishes-subhead">Dedicated with all our hearts to Ranjeetha &mdash; heartfelt wishes floating under the velvet midnight sky.</p>
+
+        <!-- Sequential Floating Wish Cards Container -->
         <div class="wishes-grid" id="wishesGrid">
           <!-- Populated dynamically via birthday.config.js -->
         </div>
@@ -390,34 +398,54 @@
 
     <!-- ==========================================================
          CHAPTER 6: THE GRAND FINALE
-         (Magical Glowing Heart Blossom Tree + Confetti + Replay)
+         (Blossom Tree + Birthday Wish + Playful Love Question)
          ========================================================== -->
     <section class="chapter chapter--6" id="chapter6" aria-label="Chapter 6: The Grand Finale">
-      <!-- The Blossom Tree Canvas Engine -->
-      <canvas id="tree" class="tree" aria-label="A blossom tree blooms into a heart of lit petals" role="img"></canvas>
-
-      <!-- Hand-lettered Finale Wish Message -->
-      <div class="wish" id="wish" aria-hidden="true">
-        <p class="wish__eyebrow" id="wEyebrow">make a wish on this special day&hellip;</p>
-        <div class="wish__heroWrap"><h1 class="wish__hero" id="wHero">Happy Birthday, Ranjeetha Sri ❤️</h1></div>
-        <span class="wish__rule" id="wRule"></span>
-        <p class="wish__sub" id="wSub">Always Special, Gundu ❤️</p>
+      <!-- 1. Blossom Tree Stage Container (Clean centered frame) -->
+      <div class="tree-stage" id="treeStage">
+        <canvas id="tree" class="tree" aria-label="A blossom tree blooms into a heart of lit petals" role="img"></canvas>
       </div>
 
-      <!-- Finale Controls & Celebration Toolbar -->
-      <div class="finale-bar" id="finaleBar">
-        <button class="celebrate-btn" id="celebrateBtn" type="button" aria-label="Send birthday love and confetti">
-          <span class="celebrate-btn__icon">♥</span>
-          <span>Send Birthday Love &amp; Confetti</span>
-        </button>
-        <span class="celebrate-count" id="celebrateCount">0 wishes sent ♥</span>
+      <!-- 2, 3, 4. Birthday Wish Message Block (in natural document flow) -->
+      <div class="finale-wish-wrap" id="wish">
+        <p class="finale-eyebrow" id="wEyebrow">make a wish on this special day&hellip;</p>
+        <h1 class="finale-headline" id="wHero">Happy Birthday, Ranjeetha Sri ❤️</h1>
+        <div class="finale-divider" id="wRule" aria-hidden="true">
+          <span class="finale-divider__line"></span>
+          <span class="finale-divider__heart">♥</span>
+          <span class="finale-divider__line"></span>
+        </div>
+        <p class="finale-subtext" id="wSub">Always Special, Gundu ❤️</p>
+      </div>
 
-        <button class="replay-all-btn" id="replayAllBtn" type="button" aria-label="Replay Experience">
-          <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
-            <path d="M12 5V2L7 6l5 4V7a5 5 0 1 1-5 5H5a7 7 0 1 0 7-7z" />
-          </svg>
-          <span>Replay Experience</span>
-        </button>
+      <!-- 5, 6. Playful Love Question Section -->
+      <div class="love-question-card" id="loveQuestionCard">
+        <div class="love-question-prompt" id="lovePromptArea">
+          <h2 class="love-question-title">One last question... Do you love me? ❤️</h2>
+          <div class="love-buttons-area" id="loveButtonsArea">
+            <button class="love-btn love-btn--yes" id="btnYes" type="button" aria-label="Yes, I love you">
+              YES ❤️
+            </button>
+            <button class="love-btn love-btn--no" id="btnNo" type="button" aria-label="No">
+              NO 🙈
+            </button>
+          </div>
+        </div>
+
+        <!-- Hidden initially, revealed when NO is clicked -->
+        <div class="love-final-reveal" id="loveFinalReveal" hidden>
+          <div class="love-final-heart" aria-hidden="true">💖</div>
+          <h3 class="love-final-title">I love you anyway! ❤️</h3>
+          <p class="love-final-subtitle">Once again, Happy Birthday Ranjeetha Sri! ❤️</p>
+          <div class="love-final-actions">
+            <button class="replay-all-btn" id="replayAllBtn" type="button" aria-label="Replay Experience">
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
+                <path d="M12 5V2L7 6l5 4V7a5 5 0 1 1-5 5H5a7 7 0 1 0 7-7z" />
+              </svg>
+              <span>Replay Experience</span>
+            </button>
+          </div>
+        </div>
       </div>
     </section>
 

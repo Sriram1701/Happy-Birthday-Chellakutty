@@ -1528,19 +1528,14 @@ body.film-body{
 }
 
 /* ============================================================
-   CHAPTER 5: WISHES (Personal Heartfelt Wishes)
+   CHAPTER 5: WISHES BEYOND WORDS (Celestial Wishes)
    ============================================================ */
 .chapter--5{
   background: radial-gradient(120% 120% at 50% 10%, #150310 0%, #0c0209 50%, #050104 100%);
-  display: flex !important;
-  flex-direction: column;
-  align-items: center;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  padding: 80px 20px 90px;
   justify-content: flex-start;
-  padding: clamp(50px, 7vh, 85px) clamp(16px, 4vw, 24px) clamp(60px, 8vh, 95px);
-  width: 100%;
-  box-sizing: border-box;
-  overflow-x: hidden;
-  position: relative;
 }
 
 .celestial-sky{
@@ -1559,90 +1554,78 @@ body.film-body{
   opacity: 0.7;
 }
 
-.wishes-container-inner{
-  width: 100%;
-  max-width: 860px;
-  margin: 0 auto;
-  padding: 0;
-  box-sizing: border-box;
-  display: flex;
-  flex-direction: column;
+.birthday-date-pill{
+  display: inline-flex;
   align-items: center;
-  overflow: visible;
-}
-
-.wishes-date-tag{
-  display: inline-block;
+  gap: 10px;
+  margin: 12px auto 16px;
+  padding: 6px 20px;
+  background: rgba(255, 215, 225, 0.12);
+  border: 1px solid rgba(255, 190, 215, 0.35);
+  border-radius: 999px;
   font-family: "Montserrat", sans-serif;
-  font-size: 11px;
+  font-size: 11.5px;
   font-weight: 600;
   letter-spacing: 0.16em;
   text-transform: uppercase;
-  color: #f3a6be;
-  margin-bottom: 10px;
-  text-align: center;
+  color: #ffd0de;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.35), 0 0 14px rgba(232, 162, 61, 0.22);
+  backdrop-filter: blur(10px);
+}
+.birthday-date-pill .star-sparkle{
+  color: #f7ce72;
+  font-size: 11px;
 }
 
 .wishes-headline{
   font-family: "Fraunces", Georgia, serif;
   font-weight: 700;
-  font-size: clamp(2.2rem, 6vw, 3.2rem);
+  font-size: clamp(32px, 5.2vw, 54px);
   color: #fff9f5;
-  margin: 0 0 8px;
-  text-align: center;
+  margin-bottom: 8px;
 }
-
 .wishes-subhead{
-  font-family: "Cormorant Garamond", Georgia, serif;
-  font-style: italic;
-  font-size: clamp(15px, 3.5vw, 18.5px);
-  color: #f7cbd7;
-  max-width: 580px;
-  line-height: 1.5;
-  margin: 0 auto clamp(24px, 4vh, 36px);
-  text-align: center;
+  font-size: clamp(15px, 2.2vw, 18px);
+  color: #e5bdc8;
+  max-width: 620px;
+  line-height: 1.55;
+  margin-bottom: 40px;
 }
 
-/* Wishes Cards Grid (Zero Overflow, Fully Responsive) */
+/* Wishes Cards Grid */
 .wishes-grid{
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 340px), 1fr));
-  gap: clamp(16px, 3vw, 22px);
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 22px;
+  max-width: 1000px;
   width: 100%;
-  max-width: 860px;
-  box-sizing: border-box;
-  margin: 0 auto;
 }
 
 .wish-card{
-  background: rgba(36, 10, 24, 0.72);
-  border: 1px solid rgba(255, 180, 205, 0.25);
-  border-radius: 16px;
-  padding: clamp(20px, 4vw, 28px) clamp(18px, 3.5vw, 24px);
+  background: rgba(36, 10, 24, 0.65);
+  border: 1px solid rgba(255, 180, 205, 0.22);
+  border-radius: 12px;
+  padding: 28px 22px;
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
   transition: all 0.4s var(--ease-spring);
   text-align: left;
   display: flex;
   flex-direction: column;
-  gap: 10px;
-  width: 100%;
-  box-sizing: border-box;
-  overflow-wrap: break-word;
-  word-break: break-word;
+  gap: 8px;
 }
 
 .wish-card:hover{
-  transform: translateY(-6px) scale(1.015);
+  transform: translateY(-8px) scale(1.02);
   border-color: rgba(255, 210, 230, 0.55);
   box-shadow: 0 18px 45px -8px rgba(216, 30, 87, 0.45);
-  background: rgba(50, 14, 34, 0.85);
+  background: rgba(50, 14, 34, 0.8);
 }
 
 .wish-icon{
   font-size: 24px;
-  margin-bottom: 2px;
+  margin-bottom: 4px;
   display: inline-block;
 }
 
@@ -1654,163 +1637,270 @@ body.film-body{
 }
 
 .wish-text{
-  font-size: 15px;
-  line-height: 1.62;
+  font-size: 15.5px;
+  line-height: 1.6;
   color: #eed6df;
   font-style: italic;
-  margin: 0;
 }
 
 /* ============================================================
-   CHAPTER 6: THE GRAND FINALE (Heart Blossom Tree + Finale Bar)
+   CHAPTER 6: THE GRAND FINALE
+   (Heart Blossom Tree + Birthday Wish + Playful Love Question)
    ============================================================ */
 .chapter--6{
-  background: #12060c;
+  background: linear-gradient(180deg, #fffcf7 0%, #fdeee2 30%, #f7d3c0 70%, #ecc0ad 100%);
+  min-height: 100vh;
+  height: auto;
+  overflow-x: hidden;
+  overflow-y: visible;
+  display: flex !important;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  padding: clamp(24px, 4vh, 48px) 16px clamp(60px, 8vh, 100px);
+  box-sizing: border-box;
+  position: relative;
+}
+
+/* Tree Stage Container (Clean block centered in document flow) */
+.tree-stage{
+  width: 100%;
+  max-width: 540px;
+  height: clamp(300px, 46vh, 420px);
+  position: relative;
+  margin: 0 auto;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 12px 36px rgba(186, 18, 67, 0.08);
+}
+
+.tree-stage .tree{
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
   display: block;
 }
 
-.tree{
-  position: absolute; inset: 0;
-  width: 100%; height: 100%;
-  display: block;
+/* Birthday Wish Message Block (in normal document flow) */
+.finale-wish-wrap{
+  text-align: center;
+  margin-top: 24px;
+  max-width: 600px;
+  width: 100%;
+  padding: 0 12px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  opacity: 0;
+  transform: translateY(18px);
+  transition: opacity 1s ease, transform 1s var(--ease-out);
+}
+
+.finale-wish-wrap.is-in{
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.finale-eyebrow{
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-style: italic;
+  font-weight: 600;
+  font-size: clamp(14px, 3.4vw, 20px);
+  letter-spacing: 0.05em;
+  color: #9c4f63;
+  margin-bottom: 4px;
+}
+
+.finale-headline{
+  font-family: "Great Vibes", cursive;
+  font-weight: 400;
+  font-size: clamp(38px, 9vw, 68px);
+  line-height: 1.1;
+  margin: 4px 0 8px;
+  background: linear-gradient(180deg, #e85a83 0%, #c41f52 50%, #9c0f42 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  filter: drop-shadow(0 2px 8px rgba(186, 18, 67, 0.25));
+}
+
+.finale-divider{
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 4px 0 8px;
+}
+
+.finale-divider__line{
+  width: clamp(40px, 10vw, 80px);
+  height: 1.5px;
+  background: linear-gradient(90deg, transparent, #e85a83, transparent);
+}
+
+.finale-divider__heart{
+  color: #ea285f;
+  font-size: 14px;
+}
+
+.finale-subtext{
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-size: clamp(17px, 4.2vw, 24px);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: #6e273b;
+  margin: 0;
+}
+
+/* Playful Love Question Card */
+.love-question-card{
+  margin-top: 36px;
+  width: 100%;
+  max-width: 480px;
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1.5px solid rgba(255, 180, 205, 0.6);
+  border-radius: 24px;
+  padding: clamp(24px, 5vw, 32px) clamp(18px, 4vw, 28px);
+  box-shadow: 0 16px 40px rgba(186, 18, 67, 0.12);
+  text-align: center;
+  box-sizing: border-box;
+  position: relative;
+}
+
+.love-question-title{
+  font-family: "Fraunces", Georgia, serif;
+  font-size: clamp(20px, 5vw, 26px);
+  font-weight: 700;
+  color: #4a1525;
+  margin: 0 0 24px 0;
+  line-height: 1.35;
+}
+
+.love-buttons-area{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+  position: relative;
+  min-height: 60px;
+}
+
+.love-btn{
+  font-family: "Montserrat", sans-serif;
+  font-weight: 700;
+  font-size: 16px;
+  letter-spacing: 0.04em;
+  padding: 13px 32px;
+  border-radius: 999px;
+  border: none;
+  cursor: pointer;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+}
+
+.love-btn--yes{
+  background: linear-gradient(135deg, #ff4d79 0%, #d81e57 100%);
+  color: #ffffff;
+  box-shadow: 0 8px 22px rgba(216, 30, 87, 0.35);
+  position: relative;
+  z-index: 2;
+  will-change: transform;
+}
+
+.love-btn--no{
+  background: #f6e8ee;
+  color: #5a2032;
+  border: 1.5px solid rgba(216, 30, 87, 0.25);
+  position: relative;
   z-index: 1;
 }
 
-.wish{
-  position: absolute;
-  left: 5.5%; bottom: 10%;
-  max-width: 48%;
-  z-index: 6;
-  pointer-events: none;
-  color: var(--ink);
-  visibility: hidden;
+.love-btn--no:hover{
+  background: #edd2df;
+  transform: scale(1.04);
 }
-.wish.is-in{ visibility: visible; }
-.wish::before{
-  content: ""; position: absolute; inset: -18% -24% -24% -16%;
-  background: radial-gradient(84% 98% at 34% 52%, rgba(255,250,243,.94), rgba(255,250,243,.6) 48%, rgba(255,250,243,0) 80%);
-  z-index: -1; opacity: 0; transition: opacity 1s ease;
-}
-.wish.is-in::before{ opacity: 1; }
-.wish__eyebrow{
-  font-family: "Cormorant Garamond", Georgia, serif;
-  font-style: italic; font-weight: 600;
-  font-size: clamp(13px, 3.2vw, 24px);
-  letter-spacing: .05em; color: #9c4f63;
-  text-shadow: 0 1px 2px #fff8f1, 0 0 8px rgba(255,248,241,.95);
-}
-.wish__heroWrap{ position: relative; display: inline-block; }
-.wish__heroWrap::before{
-  content: ""; position: absolute; left: -12%; right: -12%; top: -26%; bottom: -22%;
-  background: radial-gradient(60% 70% at 46% 52%, rgba(255,214,168,.5), rgba(255,150,150,.2) 52%, transparent 74%);
-  filter: blur(14px); z-index: -1; opacity: 0; pointer-events: none;
-}
-.wish__heroWrap::after{
-  content: "\2726";
-  position: absolute; right: -1%; top: -14%;
-  font-size: clamp(15px, 3.6vw, 32px);
-  color: #ffe1a0; text-shadow: 0 0 12px rgba(255,205,120,.95);
-  opacity: 0; pointer-events: none;
-}
-.wish__hero{
-  font-family: "Great Vibes", cursive; font-weight: 400;
-  font-size: clamp(40px, 9.6vw, 86px);
-  line-height: .98; margin: -.02em 0 .06em;
-  background: linear-gradient(180deg, #e85a83 0%, #c41f52 50%, #9c0f42 100%);
-  -webkit-background-clip: text; background-clip: text; color: transparent;
-  filter: drop-shadow(0 1px 1px rgba(255,252,248,.98)) drop-shadow(0 2px 6px rgba(130,18,55,.45));
-  clip-path: inset(0 100% -28% -10%);
-  transform-origin: 8% 60%;
-}
-.wish__rule{
-  display: block; width: clamp(46px, 13vw, 110px); height: 2px;
-  margin: .12em 0 .48em;
-  background: linear-gradient(90deg, var(--gold-2), rgba(232,162,61,0));
-  box-shadow: 0 0 8px rgba(255,247,240,.9);
-  transform-origin: left center;
-}
-.wish__sub{
-  font-family: "Cormorant Garamond", Georgia, serif;
-  font-weight: 600; font-size: clamp(12px, 2.9vw, 20px);
-  letter-spacing: .03em; color: #6e3f4a;
-  text-shadow: 0 1px 2px #fff8f1, 0 0 8px rgba(255,248,241,.98);
-}
-.wish__eyebrow, .wish__rule, .wish__sub{
-  opacity: 0; transform: translateY(12px); filter: blur(5px);
-  transition: opacity .8s ease, transform .9s var(--ease-out), filter .8s ease;
-}
-.wish.is-in .wish__eyebrow,
-.wish.is-in .wish__sub{ opacity: 1; transform: translateY(0); filter: blur(0); }
-.wish.is-in .wish__rule{ opacity: 1; transform: translateY(0) scaleX(1); transition-delay: 1.35s; }
-.wish.is-in .wish__sub{ transition-delay: 1.55s; }
-.wish.is-in .wish__hero{
-  animation: write 1.2s cubic-bezier(.62,.04,.24,1) .35s forwards,
-             wishBreath 4s ease-in-out 1.9s infinite;
-}
-@keyframes wishBreath{ 0%,100%{ transform: scale(1); } 50%{ transform: scale(1.02); } }
-@keyframes write{ from{ clip-path: inset(0 100% -28% -10%); } to{ clip-path: inset(0 -10% -28% -10%); } }
 
-/* Finale Controls & Celebration Toolbar */
-.finale-bar{
-  position: absolute;
-  right: 24px;
-  bottom: 22px;
-  z-index: 10;
+/* Hidden Reveal State */
+.love-final-reveal{
   display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: 14px;
-  pointer-events: auto;
+  gap: 12px;
+  animation: loveRevealFade 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
-.celebrate-btn{
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  padding: 12px 24px;
-  border-radius: 999px;
-  background: linear-gradient(135deg, #d81e57, #ff6f97);
-  color: #fff;
-  border: none;
-  font-family: "Montserrat", sans-serif;
-  font-weight: 600;
-  font-size: 13px;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  cursor: pointer;
-  box-shadow: 0 8px 24px rgba(216, 30, 87, 0.45);
-  transition: all 0.3s var(--ease-spring);
+.love-final-reveal[hidden]{
+  display: none !important;
 }
-.celebrate-btn:hover{ transform: translateY(-2px) scale(1.03); }
-.celebrate-count{
-  font-size: 13.5px;
+
+@keyframes loveRevealFade{
+  from{ opacity: 0; transform: scale(0.92) translateY(12px); }
+  to{ opacity: 1; transform: scale(1) translateY(0); }
+}
+
+.love-final-heart{
+  font-size: 44px;
+  line-height: 1;
+  animation: heartPulse 1.8s ease-in-out infinite;
+}
+
+@keyframes heartPulse{
+  0%, 100%{ transform: scale(1); }
+  50%{ transform: scale(1.18); }
+}
+
+.love-final-title{
+  font-family: "Fraunces", Georgia, serif;
+  font-size: clamp(22px, 5.5vw, 30px);
+  font-weight: 700;
+  color: #d81e57;
+  margin: 0;
+  line-height: 1.25;
+}
+
+.love-final-subtitle{
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-size: clamp(18px, 4.5vw, 24px);
   font-style: italic;
-  color: #ffb8cc;
-  white-space: nowrap;
+  font-weight: 600;
+  color: #551c2c;
+  margin: 0;
+  line-height: 1.35;
+}
+
+.love-final-actions{
+  margin-top: 16px;
 }
 
 .replay-all-btn{
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  padding: 11px 20px;
+  padding: 12px 24px;
   border-radius: 999px;
   font-family: "Montserrat", sans-serif;
   font-weight: 600;
-  font-size: 12px;
+  font-size: 13px;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: #8a4a5a;
-  background: rgba(255, 248, 242, 0.88);
+  background: rgba(255, 248, 242, 0.95);
   border: 1px solid rgba(150, 60, 80, 0.25);
-  box-shadow: 0 6px 20px -8px rgba(120, 20, 50, 0.4);
+  box-shadow: 0 6px 20px -8px rgba(120, 20, 50, 0.3);
   backdrop-filter: blur(8px);
   cursor: pointer;
   transition: all 0.25s ease;
 }
+
 .replay-all-btn:hover{
-  background: #fff;
+  background: #ffffff;
   color: #6e1030;
   transform: translateY(-2px);
+  box-shadow: 0 10px 24px -6px rgba(120, 20, 50, 0.4);
 }
 
 .finale-nav{
@@ -1998,38 +2088,15 @@ body.film-body{
     margin: 12px auto 0;
   }
 
-  /* Chapter 5 Wishes Mobile (Zero Horizontal Overflow) */
-  .chapter--5{
-    padding: clamp(40px, 6vh, 60px) 14px clamp(50px, 7vh, 80px) !important;
-  }
-  .wishes-container-inner{
-    width: 100% !important;
-    padding: 0 !important;
-  }
-  .wishes-headline{
-    font-size: clamp(26px, 7.5vw, 36px) !important;
-    padding: 0 !important;
-    margin-bottom: 6px !important;
-  }
-  .wishes-subhead{
-    font-size: 14.5px !important;
-    padding: 0 8px !important;
-    margin-bottom: 22px !important;
-  }
+  /* Chapter 5 Wishes */
+  .birthday-date-pill{ margin: 8px auto 12px; font-size: 10.5px; padding: 5px 16px; }
+  .wishes-headline{ font-size: clamp(24px, 6vw, 36px); padding: 0 16px; }
+  .wishes-subhead{ font-size: 14px; padding: 0 16px; }
   .wishes-grid{
-    grid-template-columns: 1fr !important;
-    width: 100% !important;
-    max-width: 100% !important;
-    margin: 0 !important;
-    padding: 0 !important;
-    box-sizing: border-box !important;
-    gap: 14px !important;
-  }
-  .wish-card{
-    width: 100% !important;
-    max-width: 100% !important;
-    box-sizing: border-box !important;
-    padding: 20px 18px !important;
+    grid-template-columns: 1fr;
+    width: min(92vw, 440px);
+    margin: 0 auto;
+    gap: 16px;
   }
 
   /* Chapter Action Buttons Mobile Stacking */
@@ -2050,16 +2117,39 @@ body.film-body{
   .music-widget__info{ display: none; }
   .chapter-dot{ width: 24px; height: 24px; font-size: 10.5px; }
 
-  /* Chapter 6 Grand Finale */
-  .wish{ max-width: 88%; left: 6%; bottom: 12%; }
-  .wish__hero{ font-size: clamp(34px, 9vw, 56px); }
-  .finale-bar{
-    left: 14px;
-    right: 14px;
-    align-items: center;
-    bottom: max(14px, env(safe-area-inset-bottom, 14px));
-    gap: 10px;
+  /* Chapter 6 Grand Finale Mobile */
+  .chapter--6{
+    padding: 20px 12px 60px !important;
   }
-  .celebrate-btn{ width: 100%; justify-content: center; min-height: 48px; }
-  .replay-all-btn{ width: 100%; justify-content: center; min-height: 44px; }
+  .tree-stage{
+    height: clamp(280px, 44vh, 360px);
+    border-radius: 16px;
+  }
+  .finale-wish-wrap{
+    margin-top: 18px;
+    padding: 0 8px;
+  }
+  .love-question-card{
+    margin-top: 24px;
+    padding: 22px 14px;
+    border-radius: 20px;
+    width: 100%;
+  }
+  .love-question-title{
+    font-size: clamp(19px, 5.2vw, 22px);
+    margin-bottom: 20px;
+  }
+  .love-buttons-area{
+    gap: 16px;
+  }
+  .love-btn{
+    padding: 12px 24px;
+    font-size: 15px;
+  }
+  .love-final-title{
+    font-size: clamp(20px, 5.8vw, 26px);
+  }
+  .love-final-subtitle{
+    font-size: clamp(16px, 4.6vw, 20px);
+  }
 }
