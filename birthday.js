@@ -1590,7 +1590,7 @@ function initChapter3(){
     <article class="polaroid-card" data-index="${idx}" data-stage="${item.stageKey || ''}" tabindex="0" role="button" aria-label="Open ${item.title}">
       <div class="polaroid-tape" aria-hidden="true"></div>
       <div class="polaroid-photo">
-        <img src="./images/${item.filename}" alt="${item.title}" loading="lazy" style="${item.objectPosition ? `object-position: ${item.objectPosition};` : ''}" />
+        <img src="./images/${item.filename}" alt="${item.title}" loading="lazy" onerror="if(!this.dataset.retry){this.dataset.retry='1';this.src='./public/images/${item.filename}';}" style="${item.objectPosition ? `object-position: ${item.objectPosition};` : ''}" />
       </div>
       <div class="polaroid-caption">
         <div style="display:flex; align-items:center; justify-content:space-between; gap:8px; margin-bottom:6px;">
@@ -1658,6 +1658,12 @@ function updateLightboxContent(idx){
 
   if (lightboxImg){
     lightboxImg.src = `./images/${item.filename}`;
+    lightboxImg.onerror = () => {
+      if (!lightboxImg.dataset.retry) {
+        lightboxImg.dataset.retry = '1';
+        lightboxImg.src = `./public/images/${item.filename}`;
+      }
+    };
     lightboxImg.alt = `${item.title} - Memory ${item.id}`;
   }
   if (lightboxBadge) lightboxBadge.textContent = `${item.stage} • Memory ${item.id} of ${BIRTHDAY_CONFIG.photos.length}`;
