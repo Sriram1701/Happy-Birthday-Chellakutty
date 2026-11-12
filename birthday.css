@@ -189,28 +189,48 @@ body.film-body{
   box-shadow: 0 2px 10px rgba(216, 30, 87, 0.5);
   position: relative;
   overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .music-widget__play-btn:hover{ transform: scale(1.08); }
 .music-widget__play-btn:active{ transform: scale(0.95); }
 
-.music-icon{ display: flex; align-items: center; justify-content: center; }
+.music-icon{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+}
+
+.music-icon svg{
+  display: block;
+}
+
+.music-icon--play svg{
+  transform: translateX(1px);
+}
 
 .music-equalizer{
   display: none;
   align-items: flex-end;
+  justify-content: center;
   gap: 2.5px;
   height: 14px;
+  width: 100%;
+  margin: auto;
 }
 
 .music-widget.is-playing .music-icon{ display: none; }
 .music-widget.is-playing .music-equalizer{ display: flex; }
 
 .eq-bar{
-  width: 3px;
+  width: 2.8px;
   background: #fff;
-  border-radius: 1px;
-  animation: eqBounce 1.2s ease-in-out infinite alternate;
+  border-radius: 1.5px;
+  animation: eqBounce 1.1s ease-in-out infinite alternate;
 }
 
 .eq-bar-1{ height: 6px; animation-delay: 0.1s; }
@@ -221,6 +241,18 @@ body.film-body{
   0%{ height: 3px; }
   50%{ height: 13px; }
   100%{ height: 7px; }
+}
+
+@keyframes musicPulseMobile{
+  0%{
+    box-shadow: 0 0 0 0 rgba(230, 35, 91, 0.5), 0 4px 16px rgba(216, 30, 87, 0.4);
+  }
+  70%{
+    box-shadow: 0 0 0 7px rgba(230, 35, 91, 0), 0 4px 16px rgba(216, 30, 87, 0.4);
+  }
+  100%{
+    box-shadow: 0 0 0 0 rgba(230, 35, 91, 0), 0 4px 16px rgba(216, 30, 87, 0.4);
+  }
 }
 
 .music-widget__info{
@@ -2528,8 +2560,48 @@ body.film-body{
     font-size: 12.5px !important;
   }
 
-  /* Music Widget Mobile */
-  .music-widget__info{ display: none; }
+  /* Music Widget Mobile - Ultra Clean Floating Circle */
+  .music-widget{
+    top: max(10px, env(safe-area-inset-top, 10px)) !important;
+    right: max(12px, env(safe-area-inset-right, 12px)) !important;
+    z-index: 1000 !important;
+  }
+  .music-widget__pill{
+    padding: 0 !important;
+    width: 38px !important;
+    height: 38px !important;
+    min-width: 38px !important;
+    border-radius: 50% !important;
+    background: linear-gradient(135deg, #e6235b 0%, #ba1044 100%) !important;
+    border: 1.5px solid rgba(255, 255, 255, 0.35) !important;
+    box-shadow: 0 4px 16px rgba(216, 30, 87, 0.42), 0 2px 6px rgba(0, 0, 0, 0.25) !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 0 !important;
+    transition: transform 0.2s ease, box-shadow 0.25s ease !important;
+  }
+  .music-widget__pill:active{
+    transform: scale(0.92) !important;
+  }
+  .music-widget__info{
+    display: none !important;
+  }
+  .music-widget__play-btn{
+    width: 100% !important;
+    height: 100% !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    border-radius: 50% !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    padding: 0 !important;
+  }
+  .music-widget.is-playing .music-widget__pill{
+    box-shadow: 0 0 0 0 rgba(230, 35, 91, 0.5), 0 4px 16px rgba(216, 30, 87, 0.48) !important;
+    animation: musicPulseMobile 2s ease-in-out infinite !important;
+  }
   .chapter-dot{ width: 24px; height: 24px; font-size: 10.5px; }
 
   /* Chapter 6 Grand Finale Mobile */
