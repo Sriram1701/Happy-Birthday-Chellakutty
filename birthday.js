@@ -13,6 +13,8 @@
 import _gsap from 'gsap';
 const gsap = (typeof window !== 'undefined' && window.gsap) ? window.gsap : _gsap;
 import { BIRTHDAY_CONFIG } from './birthday.config.js';
+import birthdaySongTrimmedUrl from './assets/music/birthday-song-trimmed.mp3';
+import birthdaySongUrl from './assets/music/birthday-song.mp3';
 
 /* Pen-stroke plugin for GSAP */
 if (gsap && gsap.registerPlugin){
@@ -2472,8 +2474,8 @@ const musicLabel   = $('musicLabel');
 const musicSub     = $('musicSub');
 const bgAudio      = $('bgAudio');
 const audioSourceCandidates = [
-  './assets/music/birthday-song-trimmed.mp3',
-  './assets/music/birthday-song.mp3',
+  birthdaySongTrimmedUrl,
+  birthdaySongUrl,
   './music/song.mp3'
 ];
 
