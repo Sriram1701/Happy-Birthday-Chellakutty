@@ -862,192 +862,144 @@ function initCupidCenterpiece(){
   const arrowCarrier = $('cupidArrowCarrier');
   const heartGroup = $('cupidHeartGroup');
   const pulseGlow = $('cupidPulseGlow');
-  const bowString = $('cupidBowString');
-  const instruction = $('cupidInstruction');
   const ch1NextBtn = $('ch1NextBtn');
   if (!centerpiece || !arrowCarrier || !heartGroup) return;
 
-  let isPulling = false;
+  let isAnimating = false;
   let hasHit = false;
+  let isDragging = false;
   let dragStartX = 0;
   let dragStartY = 0;
-  let pullDistance = 0;
-  let hasMoved = false;
+  let pullDist = 0;
 
-  // Initial ready state: Arrow resting on bowstring waiting to be pulled
-  gsap.set(arrowCarrier, { x: 0, y: 0, opacity: 1 });
-  if (bowString) bowString.setAttribute('d', 'M 24 14 L 28 52 L 114 150');
+  function playPierce(forceReplay = false){
+    if (isAnimating) return;
+    if (hasHit && !forceReplay) return;
+    isAnimating = true;
 
-  function updateString(dx, dy){
-    if (!bowString) return;
-    const nockX = 28 + dx;
-    const nockY = 52 + dy;
-    bowString.setAttribute('d', `M 24 14 L ${nockX} ${nockY} L 114 150`);
-  }
+    // Reset arrow back to pre-launch trajectory
+    gsap.killTweensOf(arrowCarrier);
+    gsap.killTweensOf(heartGroup);
+    if (pulseGlow) gsap.killTweensOf(pulseGlow);
 
-  function fireArrow(){
-    if (hasHit) return;
-    hasHit = true;
-    isPulling = false;
+    gsap.set(arrowCarrier, { x: -240, y: -150, opacity: 0 });
 
-    // Bowstring snaps forward
-    if (bowString){
-      gsap.to(bowString, {
-        duration: 0.1,
-        onUpdate: () => {
-          bowString.setAttribute('d', 'M 24 14 L 38 60 L 114 150');
-        },
-        onComplete: () => {
-          bowString.setAttribute('d', 'M 24 14 L 28 52 L 114 150');
-        }
-      });
-    }
-
-    // Launch arrow forward through the heart
-    gsap.to(arrowCarrier, {
-      x: 0,
-      y: 0,
-      duration: 0.28,
-      ease: 'power3.in',
+    const tl = gsap.timeline({
       onComplete: () => {
-        // Impact recoil on heart
-        gsap.timeline()
-          .to(heartGroup, {
-            scale: 1.18,
-            duration: 0.18,
-            ease: 'back.out(2)',
-            transformOrigin: '170px 140px'
-          })
-          .to(heartGroup, {
-            scale: 1,
-            duration: 0.45,
-            ease: 'elastic.out(1, 0.5)',
-            transformOrigin: '170px 140px'
-          });
-
-        if (pulseGlow){
-          gsap.fromTo(pulseGlow,
-            { scale: 0.8, opacity: 0.3 },
-            { scale: 1.4, opacity: 0.95, duration: 0.45, yoyo: true, repeat: 1, ease: 'power2.out' }
-          );
-        }
-
-        // Celebration sparkles / hearts around impact center
-        const rect = centerpiece.getBoundingClientRect();
-        const burstX = rect.left + rect.width * 0.5;
-        const burstY = rect.top + rect.height * 0.48;
-        spawnCelebrationBurst(burstX, burstY);
-
-        if (instruction){
-          instruction.innerHTML = '✨ Target hit! Happy Birthday Ranjeetha Sri! ❤️';
-          gsap.fromTo(instruction, { scale: 0.95 }, { scale: 1, duration: 0.35, ease: 'back.out(2)' });
-        }
-
-        // Reveal Continue button immediately after hit animation
+        isAnimating = false;
+        hasHit = true;
         completeChapter(1);
         tryPlayMusic();
       }
     });
+
+    // Arrow swooshes in smoothly and pierces through the heart
+    tl.to(arrowCarrier, {
+      opacity: 1,
+      duration: 0.15,
+      ease: 'power1.out'
+    }, 0.1)
+    .to(arrowCarrier, {
+      x: 0,
+      y: 0,
+      duration: 0.65,
+      ease: 'power3.inOut'
+    }, 0.1)
+    // Heart recoil on impact
+    .to(heartGroup, {
+      scale: 1.18,
+      duration: 0.18,
+      ease: 'back.out(2)',
+      transformOrigin: '170px 140px'
+    }, 0.58)
+    .to(heartGroup, {
+      scale: 1,
+      duration: 0.5,
+      ease: 'elastic.out(1, 0.45)',
+      transformOrigin: '170px 140px'
+    }, 0.76);
+
+    // Pulse glow on impact
+    if (pulseGlow){
+      tl.fromTo(pulseGlow,
+        { scale: 0.8, opacity: 0.2 },
+        { scale: 1.45, opacity: 0.95, duration: 0.4, yoyo: true, repeat: 1, ease: 'power2.out' },
+        0.58
+      );
+    }
+
+    // Sparkles & celebration burst at pierce point
+    tl.add(() => {
+      const rect = centerpiece.getBoundingClientRect();
+      const burstX = rect.left + rect.width * 0.5;
+      const burstY = rect.top + rect.height * 0.48;
+      spawnCelebrationBurst(burstX, burstY);
+    }, 0.65);
   }
 
-  function autoShoot(){
-    if (hasHit) return;
-    // Animate arrow pulling back smoothly then releasing forward
-    gsap.to(arrowCarrier, {
-      x: -48,
-      y: -30,
-      duration: 0.35,
-      ease: 'power2.out',
-      onUpdate: () => {
-        const curX = gsap.getProperty(arrowCarrier, 'x');
-        const curY = gsap.getProperty(arrowCarrier, 'y');
-        updateString(curX, curY);
-      },
-      onComplete: () => {
-        fireArrow();
-      }
-    });
-  }
+  // Automatic entrance animation on page load or chapter enter
+  setTimeout(() => {
+    playPierce(false);
+  }, 400);
 
-  // Pointer drag events on arrowCarrier / centerpiece
+  // Drag-and-release support on arrow
+  arrowCarrier.style.cursor = 'grab';
+  arrowCarrier.style.touchAction = 'none';
+
   arrowCarrier.addEventListener('pointerdown', (e) => {
-    if (hasHit) return;
-    isPulling = true;
-    hasMoved = false;
+    if (isAnimating) return;
+    isDragging = true;
     dragStartX = e.clientX;
     dragStartY = e.clientY;
-    try {
-      arrowCarrier.setPointerCapture(e.pointerId);
-    } catch (_) {}
+    pullDist = 0;
+    try { arrowCarrier.setPointerCapture(e.pointerId); } catch (_) {}
   });
 
   window.addEventListener('pointermove', (e) => {
-    if (!isPulling || hasHit) return;
-    const deltaX = e.clientX - dragStartX;
-    const deltaY = e.clientY - dragStartY;
-
-    if (Math.hypot(deltaX, deltaY) > 5) hasMoved = true;
-
-    // Arrow vector is (0.85, 0.53). Backward pull is (-0.85, -0.53).
-    const pull = Math.max(0, Math.min(65, -(deltaX * 0.85 + deltaY * 0.53)));
-    pullDistance = pull;
-
-    const dx = -pull * 0.85;
-    const dy = -pull * 0.53;
-
-    gsap.set(arrowCarrier, { x: dx, y: dy });
-    updateString(dx, dy);
-
-    if (instruction && pull > 10){
-      instruction.innerHTML = 'Release now to shoot! 🎯';
-    }
+    if (!isDragging) return;
+    const dx = e.clientX - dragStartX;
+    const dy = e.clientY - dragStartY;
+    // Arrow angle is ~32 deg: vector (-0.85, -0.53)
+    const pull = Math.max(0, Math.min(80, -(dx * 0.85 + dy * 0.53)));
+    pullDist = pull;
+    gsap.set(arrowCarrier, { x: -pull * 0.85, y: -pull * 0.53 });
   });
 
-  function onPointerEnd(e){
-    if (!isPulling) return;
-    isPulling = false;
+  function onPointerUp(e){
+    if (!isDragging) return;
+    isDragging = false;
     try {
       if (arrowCarrier.hasPointerCapture && arrowCarrier.hasPointerCapture(e.pointerId)){
         arrowCarrier.releasePointerCapture(e.pointerId);
       }
     } catch (_) {}
 
-    if (!hasHit){
-      if (pullDistance >= 22){
-        fireArrow();
-      } else if (!hasMoved || pullDistance < 10){
-        autoShoot();
-      } else {
-        gsap.to(arrowCarrier, {
-          x: 0,
-          y: 0,
-          duration: 0.28,
-          ease: 'elastic.out(1, 0.4)',
-          onUpdate: () => {
-            const cur = gsap.getProperty(arrowCarrier, 'x');
-            updateString(cur, cur * (0.53 / 0.85));
-          },
-          onComplete: () => {
-            updateString(0, 0);
-            if (instruction){
-              instruction.innerHTML = 'Pull the arrow back &amp; release to strike the heart! 🏹';
-            }
-          }
-        });
-        pullDistance = 0;
-      }
+    if (pullDist > 15){
+      playPierce(true);
+    } else {
+      gsap.to(arrowCarrier, { x: 0, y: 0, duration: 0.25, ease: 'power2.out' });
     }
   }
 
-  window.addEventListener('pointerup', onPointerEnd);
-  window.addEventListener('pointercancel', onPointerEnd);
+  window.addEventListener('pointerup', onPointerUp);
+  window.addEventListener('pointercancel', onPointerUp);
 
-  // Centerpiece tap fallback
-  centerpiece.addEventListener('click', () => {
-    if (!hasHit && !hasMoved){
-      autoShoot();
-    }
-  });
+  // Tap / click on centerpiece to trigger or replay
+  if (!centerpiece.dataset.hasCupidListener){
+    centerpiece.dataset.hasCupidListener = 'true';
+    centerpiece.style.cursor = 'pointer';
+    centerpiece.addEventListener('click', (e) => {
+      if (!isDragging && pullDist < 10){
+        playPierce(true);
+      }
+    });
+    centerpiece.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' '){
+        e.preventDefault();
+        playPierce(true);
+      }
+    });
+  }
 }
 
 function enterChapter1(){
