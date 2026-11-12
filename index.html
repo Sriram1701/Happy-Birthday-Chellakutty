@@ -81,9 +81,12 @@
             <p class="minimal-homepage__name">Ranjeetha Sri</p>
           </header>
 
+          <!-- Clear User Guidance -->
+          <p class="cupid-instruction" id="cupidInstruction">Pull the arrow back &amp; release to strike the heart! 🏹</p>
+
           <!-- The Centerpiece: Single Pink/Red Glowing Heart Pierced by Golden Cupid Arrow -->
-          <div class="cupid-centerpiece" id="cupidCenterpiece" role="button" tabindex="0"
-               aria-label="Cupid's golden arrow smoothly piercing through the glowing heart. Tap to replay animation.">
+          <div class="cupid-centerpiece" id="cupidCenterpiece" role="region"
+               aria-label="Interactive Cupid Bow and Arrow. Pull the arrow back and release to strike the heart.">
             
             <!-- Soft pulsing radial glow behind the heart -->
             <div class="cupid-pulse-glow" id="cupidPulseGlow" aria-hidden="true"></div>
@@ -129,6 +132,16 @@
                 </filter>
               </defs>
 
+              <!-- Golden Cupid Bow & Bowstring -->
+              <g class="cupid-bow-group" id="cupidBowGroup">
+                <path d="M 24 14 Q 74 48 88 90 Q 98 120 114 150" fill="none" stroke="url(#cupidGoldGrad)" stroke-width="4.5" stroke-linecap="round" />
+                <path d="M 24 14 Q 74 48 88 90 Q 98 120 114 150" fill="none" stroke="#ffffff" stroke-width="1.2" stroke-linecap="round" opacity="0.8" />
+                <circle cx="24" cy="14" r="3.5" fill="#f5c252" stroke="#b87b14" stroke-width="0.8" />
+                <circle cx="114" cy="150" r="3.5" fill="#f5c252" stroke="#b87b14" stroke-width="0.8" />
+                <!-- Dynamic Bowstring (Follows arrow nock) -->
+                <path id="cupidBowString" d="M 24 14 L 28 52 L 114 150" fill="none" stroke="rgba(255, 240, 200, 0.95)" stroke-width="1.8" />
+              </g>
+
               <!-- Central Beautiful Glowing Heart -->
               <g class="cupid-heart-group" id="cupidHeartGroup" filter="url(#cupidHeartShadow)">
                 <path class="cupid-heart-path"
@@ -143,9 +156,12 @@
                 <ellipse cx="125" cy="85" rx="22" ry="13" transform="rotate(-30 125 85)" fill="#ffffff" opacity="0.4" />
               </g>
 
-              <!-- Golden Cupid Arrow (Piercing Through the Heart) -->
-              <g class="cupid-arrow-carrier" id="cupidArrowCarrier" filter="url(#cupidGoldGlow)">
-                <!-- Back Half of Arrow (Feather & Entry Shaft - Entering Heart) -->
+              <!-- Golden Cupid Arrow (Interactive Drag & Release) -->
+              <g class="cupid-arrow-carrier" id="cupidArrowCarrier" filter="url(#cupidGoldGlow)" style="cursor: grab; touch-action: none;">
+                <!-- Invisible Large Touch Grab Zone for Mobile -->
+                <circle cx="36" cy="58" r="48" fill="transparent" />
+
+                <!-- Back Half of Arrow (Feather & Entry Shaft) -->
                 <g class="cupid-arrow-back" id="cupidArrowBack">
                   <line x1="28" y1="52" x2="152" y2="128" stroke="url(#cupidGoldGrad)" stroke-width="4.5" stroke-linecap="round" />
                   <line x1="28" y1="52" x2="152" y2="128" stroke="#ffffff" stroke-width="1.2" stroke-linecap="round" opacity="0.8" />
@@ -156,7 +172,7 @@
                   <circle cx="26" cy="51" r="3" fill="url(#cupidGoldGrad)" />
                 </g>
 
-                <!-- Front Half of Arrow (Emerging Shaft & Golden Arrowhead - Piercing Out) -->
+                <!-- Front Half of Arrow (Emerging Shaft & Golden Arrowhead) -->
                 <g class="cupid-arrow-front" id="cupidArrowFront">
                   <line x1="188" y1="150" x2="282" y2="208" stroke="url(#cupidGoldGrad)" stroke-width="4.5" stroke-linecap="round" />
                   <line x1="188" y1="150" x2="282" y2="208" stroke="#ffffff" stroke-width="1.2" stroke-linecap="round" opacity="0.8" />
@@ -496,7 +512,7 @@
             <span>&larr; Back</span>
           </button>
           <button class="nav-btn nav-btn--continue is-gated" id="ch2NextBtn" type="button" aria-label="Continue">
-            <span>Continue &darr;</span>
+            <span>I've Read It &ndash; Continue &darr;</span>
           </button>
         </div>
       </div>
@@ -546,7 +562,7 @@
             <span>&larr; Back</span>
           </button>
           <button class="nav-btn nav-btn--continue is-gated" id="ch3NextBtn" type="button" aria-label="Continue">
-            <span>Continue &darr;</span>
+            <span>I've Seen Them All &ndash; Continue &darr;</span>
           </button>
         </div>
       </div>
@@ -607,7 +623,7 @@
             <span>&larr; Back</span>
           </button>
           <button class="nav-btn nav-btn--continue is-gated" id="ch4NextBtn" type="button" aria-label="Continue">
-            <span>Continue &darr;</span>
+            <span>I've Read It &ndash; Continue &darr;</span>
           </button>
         </div>
       </div>
