@@ -1707,59 +1707,59 @@ function initCakeCutting(){
 /* ============================================================
    PAGE 3: A BEAUTIFUL BEGINNING (Magical Memory Book)
    ============================================================ */
+let chapter2HasEntered = false;
+
 function enterChapter2(){
   const l1 = $('storyLine1'), l2 = $('storyLine2'), l3 = $('storyLine3');
   const msgs = BIRTHDAY_CONFIG.beginningStory;
-  if (l1 && msgs[0]) l1.textContent = `“${msgs[0]}”`;
-  if (l2 && msgs[1]) l2.textContent = `“${msgs[1]}”`;
-  if (l3 && msgs[2]) l3.textContent = `“${msgs[2]}”`;
+  if (l1 && msgs[0]) l1.innerHTML = `&ldquo;${msgs[0]}&rdquo;`;
+  if (l2 && msgs[1]) l2.innerHTML = `&ldquo;${msgs[1]}&rdquo;`;
+  if (l3 && msgs[2]) l3.innerHTML = `&ldquo;${msgs[2]}&rdquo;`;
 
-  [l1, l2, l3].forEach((el) => { if (el) el.classList.remove('is-revealed'); });
-
-  let allLinesRevealed = false;
-
-  // Reveal sequential greeting messages completely
-  setTimeout(() => { if (l1) l1.classList.add('is-revealed'); }, 500);
-  setTimeout(() => { if (l2) l2.classList.add('is-revealed'); }, 1800);
-  setTimeout(() => {
-    if (l3) l3.classList.add('is-revealed');
-    allLinesRevealed = true;
-    const confirmWrap = $('storyConfirmWrap');
-    if (confirmWrap){
-      confirmWrap.style.display = 'block';
-      if (window.gsap){
-        gsap.fromTo(confirmWrap, { opacity: 0, y: 10 }, { opacity: 1, y: 0, duration: 0.5 });
+  if (chapter2HasEntered){
+    [l1, l2, l3].forEach((el) => {
+      if (el){
+        el.classList.add('is-revealed');
+        el.style.opacity = '1';
+        el.style.transform = 'translateY(0)';
       }
-    }
-    // Automatically complete Chapter 2 and unlock Chapter 3 (Memories Gallery) so it is never gated or hidden
+    });
     completeChapter('chapter2');
-  }, 3200);
+    return;
+  }
+  chapter2HasEntered = true;
 
-  function confirmStoryRead(){
-    if (!allLinesRevealed){
-      [l1, l2, l3].forEach((el) => { if (el) el.classList.add('is-revealed'); });
-      allLinesRevealed = true;
-    }
-    const confirmBtn = $('storyConfirmBtn');
-    if (confirmBtn){
-      confirmBtn.innerHTML = '<span>Cherished with love ✨</span>';
-      confirmBtn.disabled = true;
-    }
-    // Only after full message is revealed and confirmed
+  if (window.gsap && l1 && l2 && l3){
+    gsap.fromTo([l1, l2, l3],
+      { opacity: 0, y: 14 },
+      {
+        opacity: 1,
+        y: 0,
+        duration: 0.8,
+        stagger: 0.85,
+        ease: 'power2.out',
+        onComplete: () => {
+          [l1, l2, l3].forEach(el => el.classList.add('is-revealed'));
+          completeChapter('chapter2');
+        }
+      }
+    );
+  } else {
+    [l1, l2, l3].forEach((el) => {
+      if (el){
+        el.classList.add('is-revealed');
+        el.style.opacity = '1';
+        el.style.transform = 'translateY(0)';
+      }
+    });
     completeChapter('chapter2');
   }
 
-  const confirmBtn = $('storyConfirmBtn');
-  if (confirmBtn){
-    confirmBtn.addEventListener('click', confirmStoryRead);
-  }
-
-  // Tapping the memory book also confirms reading
+  // Tapping the memory book also confirms reading and ensures Continue button is unlocked
   const book = $('memoryBook');
   if (book){
-    book.addEventListener('click', (e) => {
-      if (e.target.closest('#storyConfirmBtn')) return;
-      confirmStoryRead();
+    book.addEventListener('click', () => {
+      completeChapter('chapter2');
     });
   }
 

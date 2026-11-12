@@ -1543,8 +1543,8 @@ body.film-body{
   font-size: clamp(17px, 2.3vw, 20px);
   line-height: 1.5;
   color: #552535;
-  opacity: 0;
-  transform: translateY(14px);
+  opacity: 1; /* Guaranteed visible fallback so book page is never blank */
+  transform: translateY(0);
   transition: opacity 0.8s ease, transform 0.8s var(--ease-out);
 }
 
