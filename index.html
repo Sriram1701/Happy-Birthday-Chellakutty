@@ -135,7 +135,18 @@
                 <filter id="cupidGoldGlow" x="-20%" y="-20%" width="140%" height="140%">
                   <feDropShadow dx="0" dy="2" stdDeviation="4" flood-color="rgba(226, 166, 40, 0.45)" />
                 </filter>
+
+                <!-- Soft Expanding Radial Impact Burst Gradient -->
+                <radialGradient id="cupidImpactBurstGrad" cx="50%" cy="50%" r="50%">
+                  <stop offset="0%" stop-color="#ffffff" stop-opacity="1" />
+                  <stop offset="25%" stop-color="#ff9ebb" stop-opacity="0.85" />
+                  <stop offset="60%" stop-color="#ea285f" stop-opacity="0.4" />
+                  <stop offset="100%" stop-color="#ba1243" stop-opacity="0" />
+                </radialGradient>
               </defs>
+
+              <!-- Soft expanding circular light burst behind the heart -->
+              <circle id="cupidImpactBurst" cx="170" cy="82" r="12" fill="url(#cupidImpactBurstGrad)" opacity="0" pointer-events="none" />
 
               <!-- 1. Central Beautiful Glowing Target Heart (Upper Portion) -->
               <g class="cupid-heart-group" id="cupidHeartGroup" filter="url(#cupidHeartShadow)">
@@ -149,7 +160,15 @@
 
                 <!-- Curved Soft Highlight -->
                 <ellipse cx="132" cy="40" rx="17" ry="9" transform="rotate(-30 132 40)" fill="#ffffff" opacity="0.4" />
+
+                <!-- Heart Flash Overlay -->
+                <path id="cupidHeartFlash"
+                      d="M 170 162 C 122 122 78 86 78 48 C 78 20 98 4 126 4 C 144 4 156 14 170 26 C 184 14 196 4 214 4 C 242 4 262 20 262 48 C 262 86 218 122 170 162 Z"
+                      fill="#ffffff" opacity="0" pointer-events="none" />
               </g>
+
+              <!-- Small Pink & Golden Heart Particles & Radial Sparks Container -->
+              <g id="cupidImpactParticles" pointer-events="none"></g>
 
               <!-- 2. Golden Cupid Bow Frame (Moved Lower Down with Wide Gap Below Heart) -->
               <g class="cupid-bow-frame" id="cupidBowFrame">
@@ -718,15 +737,15 @@
                 <!-- Light Theme Polaroid Photo Collage -->
                 <div class="book-collage" aria-label="Photo collage of Ranjeetha Sri">
                   <div class="book-collage__card book-collage__card--left" title="Ranjeetha Sri">
-                    <img src="./images/Polish_20241106_191645053.jpg?v=2" alt="Ranjeetha Sri" loading="eager" decoding="async" onerror="if(!this.dataset.retry){this.dataset.retry='1';this.src='./public/images/Polish_20241106_191645053.jpg?v=2';}else if(this.dataset.retry==='1'){this.dataset.retry='2';this.src='https://raw.githubusercontent.com/Sriram1701/Happy-Birthday-Chellakutty/main/images/Polish_20241106_191645053.jpg';}" />
+                    <img src="./images/Polish_20241106_191645053.jpg?v=2" alt="Ranjeetha Sri" loading="eager" decoding="async" onerror="window.handlePhotoError(this, 'Polish_20241106_191645053.jpg')" />
                   </div>
                   <div class="book-collage__card book-collage__card--center" title="Laughter in Four Frames">
                     <div class="book-collage__tape" aria-hidden="true"></div>
-                    <img src="./images/Polish_20241106_192708490.jpg?v=2" alt="Ranjeetha Sri Collage" loading="eager" decoding="async" onerror="if(!this.dataset.retry){this.dataset.retry='1';this.src='./public/images/Polish_20241106_192708490.jpg?v=2';}else if(this.dataset.retry==='1'){this.dataset.retry='2';this.src='https://raw.githubusercontent.com/Sriram1701/Happy-Birthday-Chellakutty/main/images/Polish_20241106_192708490.jpg';}" />
+                    <img src="./images/Polish_20241106_192708490.jpg?v=2" alt="Ranjeetha Sri Collage" loading="eager" decoding="async" onerror="window.handlePhotoError(this, 'Polish_20241106_192708490.jpg')" />
                     <span class="book-collage__handwriting">Always Smiling ♥</span>
                   </div>
                   <div class="book-collage__card book-collage__card--right" title="Ranjeetha Sri">
-                    <img src="./images/IMG-20261108-WA0056.jpg?v=2" alt="Ranjeetha Sri" loading="eager" decoding="async" onerror="if(!this.dataset.retry){this.dataset.retry='1';this.src='./public/images/IMG-20261108-WA0056.jpg?v=2';}else if(this.dataset.retry==='1'){this.dataset.retry='2';this.src='https://raw.githubusercontent.com/Sriram1701/Happy-Birthday-Chellakutty/main/images/IMG-20261108-WA0056.jpg';}" />
+                    <img src="./images/IMG-20261108-WA0056.jpg?v=2" alt="Ranjeetha Sri" loading="eager" decoding="async" onerror="window.handlePhotoError(this, 'IMG-20261108-WA0056.jpg')" />
                   </div>
                 </div>
 
@@ -775,7 +794,7 @@
          PAGE 4: LITTLE MOMENTS, BIG MEMORIES
          (19 Polaroid Photo Gallery + Fullscreen Lightbox)
          ========================================================== -->
-    <section class="chapter chapter--3 is-locked" id="chapter3" aria-label="Chapter 3: Little Moments, Big Memories">
+    <section class="chapter chapter--3" id="chapter3" aria-label="Chapter 3: Little Moments, Big Memories">
       <div class="fairy-lights" aria-hidden="true">
         <span class="light-bulb b1"></span>
         <span class="light-bulb b2"></span>
@@ -801,9 +820,274 @@
           </div>
         </header>
 
-        <!-- Dynamic 19 Polaroid Cards Container -->
+        <!-- Dynamic 19 Polaroid Cards Container (Pre-rendered for guaranteed visibility) -->
         <div class="polaroid-grid" id="polaroidGrid">
-          <!-- Populated dynamically via birthday.config.js -->
+          <article class="polaroid-card" data-index="0" data-stage="childhood" tabindex="0" role="button" aria-label="Open Where It All Began">
+            <div class="polaroid-tape" aria-hidden="true"></div>
+            <div class="polaroid-photo">
+              <img src="./images/Polish_20230830_000008761-transformed.jpeg?v=2" alt="Where It All Began" loading="eager" decoding="async" onerror="window.handlePhotoError(this, 'Polish_20230830_000008761-transformed.jpeg')" style="object-position: center 20%;" />
+            </div>
+            <div class="polaroid-caption">
+              <div style="display:flex; align-items:center; justify-content:space-between; gap:8px; margin-bottom:6px;">
+                <span class="polaroid-num" style="margin-bottom:0;">Memory #01</span>
+                <span class="polaroid-stage-tag" style="margin-bottom:0;">Childhood Memories</span>
+              </div>
+              <h3 class="polaroid-title">Where It All Began</h3>
+              <p class="polaroid-desc">An innocent smile and a tender beginning, cradled in loving hands and surrounded by blessings.</p>
+            </div>
+          </article>
+          <article class="polaroid-card" data-index="1" data-stage="school" tabindex="0" role="button" aria-label="Open School Days & Bright Dreams">
+            <div class="polaroid-tape" aria-hidden="true"></div>
+            <div class="polaroid-photo">
+              <img src="./images/Polish_20230405_120203101_enhanced.jpg?v=2" alt="School Days & Bright Dreams" loading="eager" decoding="async" onerror="window.handlePhotoError(this, 'Polish_20230405_120203101_enhanced.jpg')" style="object-position: center 25%;" />
+            </div>
+            <div class="polaroid-caption">
+              <div style="display:flex; align-items:center; justify-content:space-between; gap:8px; margin-bottom:6px;">
+                <span class="polaroid-num" style="margin-bottom:0;">Memory #02</span>
+                <span class="polaroid-stage-tag" style="margin-bottom:0;">School Days</span>
+              </div>
+              <h3 class="polaroid-title">School Days & Bright Dreams</h3>
+              <p class="polaroid-desc">Ribbons in braided hair, school uniform, and eyes full of wonder, innocence, and determination.</p>
+            </div>
+          </article>
+          <article class="polaroid-card" data-index="2" data-stage="growing" tabindex="0" role="button" aria-label="Open Stepping into Youth">
+            <div class="polaroid-tape" aria-hidden="true"></div>
+            <div class="polaroid-photo">
+              <img src="./images/IMG-20220724-WA0009.jpg?v=2" alt="Stepping into Youth" loading="eager" decoding="async" onerror="window.handlePhotoError(this, 'IMG-20220724-WA0009.jpg')" style="object-position: center 5%;" />
+            </div>
+            <div class="polaroid-caption">
+              <div style="display:flex; align-items:center; justify-content:space-between; gap:8px; margin-bottom:6px;">
+                <span class="polaroid-num" style="margin-bottom:0;">Memory #03</span>
+                <span class="polaroid-stage-tag" style="margin-bottom:0;">Growing Up</span>
+              </div>
+              <h3 class="polaroid-title">Stepping into Youth</h3>
+              <p class="polaroid-desc">Gentle days of growing up, learning life's lessons, and stepping forward with quiet grace.</p>
+            </div>
+          </article>
+          <article class="polaroid-card" data-index="3" data-stage="moments" tabindex="0" role="button" aria-label="Open Traditional Elegance">
+            <div class="polaroid-tape" aria-hidden="true"></div>
+            <div class="polaroid-photo">
+              <img src="./images/Screenshot_2024-08-16-19-11-12-719_com.whatsapp.jpg?v=2" alt="Traditional Elegance" loading="eager" decoding="async" onerror="window.handlePhotoError(this, 'Screenshot_2024-08-16-19-11-12-719_com.whatsapp.jpg')" style="object-position: center 8%;" />
+            </div>
+            <div class="polaroid-caption">
+              <div style="display:flex; align-items:center; justify-content:space-between; gap:8px; margin-bottom:6px;">
+                <span class="polaroid-num" style="margin-bottom:0;">Memory #04</span>
+                <span class="polaroid-stage-tag" style="margin-bottom:0;">Beautiful Moments</span>
+              </div>
+              <h3 class="polaroid-title">Traditional Elegance</h3>
+              <p class="polaroid-desc">Draped in festive silk and golden jewelry, radiating timeless charm, poise, and tradition.</p>
+            </div>
+          </article>
+          <article class="polaroid-card" data-index="4" data-stage="moments" tabindex="0" role="button" aria-label="Open Sunlit Serenity">
+            <div class="polaroid-tape" aria-hidden="true"></div>
+            <div class="polaroid-photo">
+              <img src="./images/IMG-20241102-WA0008.jpg?v=2" alt="Sunlit Serenity" loading="eager" decoding="async" onerror="window.handlePhotoError(this, 'IMG-20241102-WA0008.jpg')" style="object-position: center 22%;" />
+            </div>
+            <div class="polaroid-caption">
+              <div style="display:flex; align-items:center; justify-content:space-between; gap:8px; margin-bottom:6px;">
+                <span class="polaroid-num" style="margin-bottom:0;">Memory #05</span>
+                <span class="polaroid-stage-tag" style="margin-bottom:0;">Beautiful Moments</span>
+              </div>
+              <h3 class="polaroid-title">Sunlit Serenity</h3>
+              <p class="polaroid-desc">Standing beneath the trees in natural sunlight, glowing with effortless grace and tranquility.</p>
+            </div>
+          </article>
+          <article class="polaroid-card" data-index="5" data-stage="moments" tabindex="0" role="button" aria-label="Open Playful Glimpses">
+            <div class="polaroid-tape" aria-hidden="true"></div>
+            <div class="polaroid-photo">
+              <img src="./images/IMG-20241102-WA0010.jpg?v=2" alt="Playful Glimpses" loading="eager" decoding="async" onerror="window.handlePhotoError(this, 'IMG-20241102-WA0010.jpg')" style="object-position: center 20%;" />
+            </div>
+            <div class="polaroid-caption">
+              <div style="display:flex; align-items:center; justify-content:space-between; gap:8px; margin-bottom:6px;">
+                <span class="polaroid-num" style="margin-bottom:0;">Memory #06</span>
+                <span class="polaroid-stage-tag" style="margin-bottom:0;">Beautiful Moments</span>
+              </div>
+              <h3 class="polaroid-title">Playful Glimpses</h3>
+              <p class="polaroid-desc">A candid spark of mischief and a sweet, spontaneous smile that brightens any day.</p>
+            </div>
+          </article>
+          <article class="polaroid-card" data-index="6" data-stage="moments" tabindex="0" role="button" aria-label="Open Poise & Harmony">
+            <div class="polaroid-tape" aria-hidden="true"></div>
+            <div class="polaroid-photo">
+              <img src="./images/Polish_20241106_191645053.jpg?v=2" alt="Poise & Harmony" loading="lazy" decoding="async" onerror="window.handlePhotoError(this, 'Polish_20241106_191645053.jpg')" style="object-position: center 10%;" />
+            </div>
+            <div class="polaroid-caption">
+              <div style="display:flex; align-items:center; justify-content:space-between; gap:8px; margin-bottom:6px;">
+                <span class="polaroid-num" style="margin-bottom:0;">Memory #07</span>
+                <span class="polaroid-stage-tag" style="margin-bottom:0;">Beautiful Moments</span>
+              </div>
+              <h3 class="polaroid-title">Poise & Harmony</h3>
+              <p class="polaroid-desc">Carrying gentle composure and effortless charm in the softest shade of sky blue.</p>
+            </div>
+          </article>
+          <article class="polaroid-card" data-index="7" data-stage="moments" tabindex="0" role="button" aria-label="Open Laughter in Four Frames">
+            <div class="polaroid-tape" aria-hidden="true"></div>
+            <div class="polaroid-photo">
+              <img src="./images/Polish_20241106_192708490.jpg?v=2" alt="Laughter in Four Frames" loading="lazy" decoding="async" onerror="window.handlePhotoError(this, 'Polish_20241106_192708490.jpg')" style="object-position: center center;" />
+            </div>
+            <div class="polaroid-caption">
+              <div style="display:flex; align-items:center; justify-content:space-between; gap:8px; margin-bottom:6px;">
+                <span class="polaroid-num" style="margin-bottom:0;">Memory #08</span>
+                <span class="polaroid-stage-tag" style="margin-bottom:0;">Beautiful Moments</span>
+              </div>
+              <h3 class="polaroid-title">Laughter in Four Frames</h3>
+              <p class="polaroid-desc">Countless expressions of pure joy, lighthearted fun, and contagious smiles.</p>
+            </div>
+          </article>
+          <article class="polaroid-card" data-index="8" data-stage="moments" tabindex="0" role="button" aria-label="Open Festive Crimson Glow">
+            <div class="polaroid-tape" aria-hidden="true"></div>
+            <div class="polaroid-photo">
+              <img src="./images/919597230798_status_41201d1aa7b74f3fa00c9a34a21454a2.jpg?v=2" alt="Festive Crimson Glow" loading="lazy" decoding="async" onerror="window.handlePhotoError(this, '919597230798_status_41201d1aa7b74f3fa00c9a34a21454a2.jpg')" style="object-position: center 8%;" />
+            </div>
+            <div class="polaroid-caption">
+              <div style="display:flex; align-items:center; justify-content:space-between; gap:8px; margin-bottom:6px;">
+                <span class="polaroid-num" style="margin-bottom:0;">Memory #09</span>
+                <span class="polaroid-stage-tag" style="margin-bottom:0;">Beautiful Moments</span>
+              </div>
+              <h3 class="polaroid-title">Festive Crimson Glow</h3>
+              <p class="polaroid-desc">Vibrant in red, celebrating life's special occasions with radiance and warmth.</p>
+            </div>
+          </article>
+          <article class="polaroid-card" data-index="9" data-stage="moments" tabindex="0" role="button" aria-label="Open Pastel Grace">
+            <div class="polaroid-tape" aria-hidden="true"></div>
+            <div class="polaroid-photo">
+              <img src="./images/IMG-20250723-WA0031.jpg?v=2" alt="Pastel Grace" loading="lazy" decoding="async" onerror="window.handlePhotoError(this, 'IMG-20250723-WA0031.jpg')" style="object-position: center 12%;" />
+            </div>
+            <div class="polaroid-caption">
+              <div style="display:flex; align-items:center; justify-content:space-between; gap:8px; margin-bottom:6px;">
+                <span class="polaroid-num" style="margin-bottom:0;">Memory #10</span>
+                <span class="polaroid-stage-tag" style="margin-bottom:0;">Beautiful Moments</span>
+              </div>
+              <h3 class="polaroid-title">Pastel Grace</h3>
+              <p class="polaroid-desc">Soft elegance and gentle beauty, reflecting a serene and kind-hearted personality.</p>
+            </div>
+          </article>
+          <article class="polaroid-card" data-index="10" data-stage="moments" tabindex="0" role="button" aria-label="Open Golden Hour Glow">
+            <div class="polaroid-tape" aria-hidden="true"></div>
+            <div class="polaroid-photo">
+              <img src="./images/IMG-20260113-WA0015.jpg?v=2" alt="Golden Hour Glow" loading="lazy" decoding="async" onerror="window.handlePhotoError(this, 'IMG-20260113-WA0015.jpg')" style="object-position: center 30%;" />
+            </div>
+            <div class="polaroid-caption">
+              <div style="display:flex; align-items:center; justify-content:space-between; gap:8px; margin-bottom:6px;">
+                <span class="polaroid-num" style="margin-bottom:0;">Memory #11</span>
+                <span class="polaroid-stage-tag" style="margin-bottom:0;">Beautiful Moments</span>
+              </div>
+              <h3 class="polaroid-title">Golden Hour Glow</h3>
+              <p class="polaroid-desc">Flowers in hair, draped in evening colors, catching the golden rays of the setting sun.</p>
+            </div>
+          </article>
+          <article class="polaroid-card" data-index="11" data-stage="moments" tabindex="0" role="button" aria-label="Open Poetic Grace">
+            <div class="polaroid-tape" aria-hidden="true"></div>
+            <div class="polaroid-photo">
+              <img src="./images/IMG-20260113-WA0016.jpg?v=2" alt="Poetic Grace" loading="lazy" decoding="async" onerror="window.handlePhotoError(this, 'IMG-20260113-WA0016.jpg')" style="object-position: center 30%;" />
+            </div>
+            <div class="polaroid-caption">
+              <div style="display:flex; align-items:center; justify-content:space-between; gap:8px; margin-bottom:6px;">
+                <span class="polaroid-num" style="margin-bottom:0;">Memory #12</span>
+                <span class="polaroid-stage-tag" style="margin-bottom:0;">Beautiful Moments</span>
+              </div>
+              <h3 class="polaroid-title">Poetic Grace</h3>
+              <p class="polaroid-desc">A quiet, thoughtful moment of beauty, moving through the journey with natural poise.</p>
+            </div>
+          </article>
+          <article class="polaroid-card" data-index="12" data-stage="moments" tabindex="0" role="button" aria-label="Open Bright as Sunshine">
+            <div class="polaroid-tape" aria-hidden="true"></div>
+            <div class="polaroid-photo">
+              <img src="./images/IMG-20260612-WA0079.jpg?v=2" alt="Bright as Sunshine" loading="lazy" decoding="async" onerror="window.handlePhotoError(this, 'IMG-20260612-WA0079.jpg')" style="object-position: center center;" />
+            </div>
+            <div class="polaroid-caption">
+              <div style="display:flex; align-items:center; justify-content:space-between; gap:8px; margin-bottom:6px;">
+                <span class="polaroid-num" style="margin-bottom:0;">Memory #13</span>
+                <span class="polaroid-stage-tag" style="margin-bottom:0;">Beautiful Moments</span>
+              </div>
+              <h3 class="polaroid-title">Bright as Sunshine</h3>
+              <p class="polaroid-desc">A radiant, confident smile and sparkling eyes that bring warmth to everyone around.</p>
+            </div>
+          </article>
+          <article class="polaroid-card" data-index="13" data-stage="moments" tabindex="0" role="button" aria-label="Open Joy & Celebration">
+            <div class="polaroid-tape" aria-hidden="true"></div>
+            <div class="polaroid-photo">
+              <img src="./images/IMG-20260815-WA0021.jpg?v=2" alt="Joy & Celebration" loading="lazy" decoding="async" onerror="window.handlePhotoError(this, 'IMG-20260815-WA0021.jpg')" style="object-position: center 25%;" />
+            </div>
+            <div class="polaroid-caption">
+              <div style="display:flex; align-items:center; justify-content:space-between; gap:8px; margin-bottom:6px;">
+                <span class="polaroid-num" style="margin-bottom:0;">Memory #14</span>
+                <span class="polaroid-stage-tag" style="margin-bottom:0;">Beautiful Moments</span>
+              </div>
+              <h3 class="polaroid-title">Joy & Celebration</h3>
+              <p class="polaroid-desc">Surrounded by festive warmth and flower garlands, making memories to treasure forever.</p>
+            </div>
+          </article>
+          <article class="polaroid-card" data-index="14" data-stage="recent" tabindex="0" role="button" aria-label="Open A Radiant Smile">
+            <div class="polaroid-tape" aria-hidden="true"></div>
+            <div class="polaroid-photo">
+              <img src="./images/IMG-20261108-WA0056.jpg?v=2" alt="A Radiant Smile" loading="lazy" decoding="async" onerror="window.handlePhotoError(this, 'IMG-20261108-WA0056.jpg')" style="object-position: center 18%;" />
+            </div>
+            <div class="polaroid-caption">
+              <div style="display:flex; align-items:center; justify-content:space-between; gap:8px; margin-bottom:6px;">
+                <span class="polaroid-num" style="margin-bottom:0;">Memory #15</span>
+                <span class="polaroid-stage-tag" style="margin-bottom:0;">Recent Memories</span>
+              </div>
+              <h3 class="polaroid-title">A Radiant Smile</h3>
+              <p class="polaroid-desc">Dressed in embroidered white, glowing with mature confidence, serenity, and joy.</p>
+            </div>
+          </article>
+          <article class="polaroid-card" data-index="15" data-stage="recent" tabindex="0" role="button" aria-label="Open Candid Reflection">
+            <div class="polaroid-tape" aria-hidden="true"></div>
+            <div class="polaroid-photo">
+              <img src="./images/IMG-20261108-WA0057.jpg?v=2" alt="Candid Reflection" loading="lazy" decoding="async" onerror="window.handlePhotoError(this, 'IMG-20261108-WA0057.jpg')" style="object-position: center 15%;" />
+            </div>
+            <div class="polaroid-caption">
+              <div style="display:flex; align-items:center; justify-content:space-between; gap:8px; margin-bottom:6px;">
+                <span class="polaroid-num" style="margin-bottom:0;">Memory #16</span>
+                <span class="polaroid-stage-tag" style="margin-bottom:0;">Recent Memories</span>
+              </div>
+              <h3 class="polaroid-title">Candid Reflection</h3>
+              <p class="polaroid-desc">A sweet, pensive look that reflects a kind heart full of dreams, wisdom, and gratitude.</p>
+            </div>
+          </article>
+          <article class="polaroid-card" data-index="16" data-stage="recent" tabindex="0" role="button" aria-label="Open The Journey Continues">
+            <div class="polaroid-tape" aria-hidden="true"></div>
+            <div class="polaroid-photo">
+              <img src="./images/IMG-20261108-WA0059.jpg?v=2" alt="The Journey Continues" loading="lazy" decoding="async" onerror="window.handlePhotoError(this, 'IMG-20261108-WA0059.jpg')" style="object-position: center 15%;" />
+            </div>
+            <div class="polaroid-caption">
+              <div style="display:flex; align-items:center; justify-content:space-between; gap:8px; margin-bottom:6px;">
+                <span class="polaroid-num" style="margin-bottom:0;">Memory #17</span>
+                <span class="polaroid-stage-tag" style="margin-bottom:0;">Recent Memories</span>
+              </div>
+              <h3 class="polaroid-title">The Journey Continues</h3>
+              <p class="polaroid-desc">Ready for another wonderful year ahead, shining brighter and more beautiful than ever.</p>
+            </div>
+          </article>
+          <article class="polaroid-card" data-index="17" data-stage="recent" tabindex="0" role="button" aria-label="Open Festive Radiance">
+            <div class="polaroid-tape" aria-hidden="true"></div>
+            <div class="polaroid-photo">
+              <img src="./images/Ranjeetha_Yellow_Shawl.jpg?v=2" alt="Festive Radiance" loading="lazy" decoding="async" onerror="window.handlePhotoError(this, 'Ranjeetha_Yellow_Shawl.jpg')" style="object-position: center 18%;" />
+            </div>
+            <div class="polaroid-caption">
+              <div style="display:flex; align-items:center; justify-content:space-between; gap:8px; margin-bottom:6px;">
+                <span class="polaroid-num" style="margin-bottom:0;">Memory #18</span>
+                <span class="polaroid-stage-tag" style="margin-bottom:0;">Recent Memories</span>
+              </div>
+              <h3 class="polaroid-title">Festive Radiance</h3>
+              <p class="polaroid-desc">Glowing in traditional elegance with an effortless smile and festive grace.</p>
+            </div>
+          </article>
+          <article class="polaroid-card" data-index="18" data-stage="recent" tabindex="0" role="button" aria-label="Open Graceful Moments">
+            <div class="polaroid-tape" aria-hidden="true"></div>
+            <div class="polaroid-photo">
+              <img src="./images/Ranjeetha_Purple_Kurti.jpg?v=2" alt="Graceful Moments" loading="lazy" decoding="async" onerror="window.handlePhotoError(this, 'Ranjeetha_Purple_Kurti.jpg')" style="object-position: 55% 12%;" />
+            </div>
+            <div class="polaroid-caption">
+              <div style="display:flex; align-items:center; justify-content:space-between; gap:8px; margin-bottom:6px;">
+                <span class="polaroid-num" style="margin-bottom:0;">Memory #19</span>
+                <span class="polaroid-stage-tag" style="margin-bottom:0;">Recent Memories</span>
+              </div>
+              <h3 class="polaroid-title">Graceful Moments</h3>
+              <p class="polaroid-desc">Captured in a quiet, beautiful moment — radiating warmth, elegance, and charm.</p>
+            </div>
+          </article>
         </div>
 
         <!-- Navigation Actions (Left-aligned compact) -->

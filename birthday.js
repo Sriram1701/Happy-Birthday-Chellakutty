@@ -909,23 +909,61 @@ function launchCupidArrow(){
       cupidIsFlying = false;
       cupidHasHit = true;
 
-      // Heart impact recoil & elastic bounce
+      const heartFlash = $('cupidHeartFlash');
+      const impactBurst = $('cupidImpactBurst');
+      const particlesContainer = $('cupidImpactParticles');
+
+      // 1. Temporarily pause CSS keyframe beats so GSAP has full smooth control
+      if (heartGroup) heartGroup.classList.add('is-hit');
+      if (pulseGlow) pulseGlow.classList.add('is-hit');
+
+      // 2. Heart brief bright pink-white flash
+      if (heartFlash){
+        gsap.fromTo(heartFlash,
+          { opacity: 0.92 },
+          { opacity: 0, duration: 0.42, ease: 'power2.out' }
+        );
+      }
+
+      // 3. Soft expanding circular light burst behind the heart
+      if (impactBurst){
+        gsap.fromTo(impactBurst,
+          { attr: { r: 12 }, opacity: 0.95 },
+          { attr: { r: 130 }, opacity: 0, duration: 0.65, ease: 'power2.out' }
+        );
+      }
+
+      // 4. Smooth heart pulse & recoil animation
       if (heartGroup){
         gsap.timeline({
           onComplete: () => {
-            // Reveal Continue button and unlock Page 2 ONLY AFTER the full heart impact animation finishes
+            // Reveal Continue button and unlock Page 2 ONLY AFTER the full heart impact finishes
             completeChapter('chapter1');
+            if (heartGroup) heartGroup.classList.remove('is-hit');
+            if (pulseGlow) pulseGlow.classList.remove('is-hit');
           }
         })
           .to(heartGroup, {
-            scale: 1.25,
+            scale: 1.28,
             duration: 0.16,
             ease: 'back.out(2)',
             transformOrigin: '170px 82px'
           })
           .to(heartGroup, {
+            scale: 0.95,
+            duration: 0.18,
+            ease: 'power2.inOut',
+            transformOrigin: '170px 82px'
+          })
+          .to(heartGroup, {
+            scale: 1.06,
+            duration: 0.2,
+            ease: 'sine.inOut',
+            transformOrigin: '170px 82px'
+          })
+          .to(heartGroup, {
             scale: 1,
-            duration: 0.55,
+            duration: 0.35,
             ease: 'elastic.out(1, 0.45)',
             transformOrigin: '170px 82px'
           });
@@ -933,7 +971,51 @@ function launchCupidArrow(){
         completeChapter('chapter1');
       }
 
-      // Glowing shockwave behind heart
+      // 5. Emit small pink and golden heart particles & radial sparkle effect
+      if (particlesContainer){
+        particlesContainer.innerHTML = '';
+        const particleCount = 16;
+        for (let i = 0; i < particleCount; i++){
+          const angle = (i / particleCount) * Math.PI * 2 + (Math.random() - 0.5) * 0.35;
+          const dist = 38 + Math.random() * 58;
+          const isGold = i % 2 === 0;
+          const color = isGold ? (Math.random() > 0.5 ? '#ffd56b' : '#ffea9f') : (Math.random() > 0.5 ? '#ff6b95' : '#ea285f');
+          
+          let el;
+          if (i % 3 === 0){
+            // Mini Heart Particle
+            el = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+            el.setAttribute('d', 'M 0 3 C 0 1 -2 0 -3 1 C -4 3 -3 5 0 8 C 3 5 4 3 3 1 C 2 0 0 1 0 3 Z');
+            el.setAttribute('fill', color);
+          } else {
+            // Sparkle Circle Particle
+            el = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+            el.setAttribute('r', (Math.random() * 1.8 + 1.8).toFixed(1));
+            el.setAttribute('fill', color);
+          }
+
+          particlesContainer.appendChild(el);
+          const targetX = 170 + Math.cos(angle) * dist;
+          const targetY = 82 + Math.sin(angle) * dist;
+
+          gsap.fromTo(el,
+            { x: 170, y: 82, scale: 0.4, opacity: 1 },
+            {
+              x: targetX,
+              y: targetY,
+              scale: Math.random() * 0.6 + 0.8,
+              opacity: 0,
+              duration: 0.55 + Math.random() * 0.25,
+              ease: 'power2.out',
+              onComplete: () => {
+                if (el.parentNode) el.remove();
+              }
+            }
+          );
+        }
+      }
+
+      // 6. Glowing shockwave behind heart
       if (pulseGlow){
         gsap.fromTo(pulseGlow,
           { scale: 0.85, opacity: 0.25 },
@@ -989,6 +1071,24 @@ function resetCupidArrow(){
   cupidCurrentPull = 0;
   const arrowCarrier = $('cupidArrowCarrier');
   const instruction = $('cupidInstruction');
+  const heartGroup = $('cupidHeartGroup');
+  const pulseGlow = $('cupidPulseGlow');
+  const heartFlash = $('cupidHeartFlash');
+  const impactBurst = $('cupidImpactBurst');
+  const particlesContainer = $('cupidImpactParticles');
+
+  if (heartGroup) {
+    heartGroup.classList.remove('is-hit');
+    gsap.set(heartGroup, { scale: 1 });
+  }
+  if (pulseGlow) {
+    pulseGlow.classList.remove('is-hit');
+    gsap.set(pulseGlow, { scale: 1, opacity: 0.6 });
+  }
+  if (heartFlash) gsap.set(heartFlash, { opacity: 0 });
+  if (impactBurst) gsap.set(impactBurst, { opacity: 0 });
+  if (particlesContainer) particlesContainer.innerHTML = '';
+
   if (arrowCarrier){
     gsap.killTweensOf(arrowCarrier);
     gsap.to(arrowCarrier, { y: 0, duration: 0.35, ease: 'power2.out' });
@@ -1042,6 +1142,11 @@ function initCupidCenterpiece(){
     pullStartTime = Date.now();
     currentPull = 0;
     arrowCarrier.style.cursor = 'grabbing';
+    try {
+      if (e.pointerId && centerpiece.setPointerCapture){
+        centerpiece.setPointerCapture(e.pointerId);
+      }
+    } catch (_) {}
   }
 
   function handleMove(e){
@@ -1070,6 +1175,12 @@ function initCupidCenterpiece(){
     if (!isPulling) return;
     isPulling = false;
     arrowCarrier.style.cursor = 'grab';
+
+    try {
+      if (e.pointerId && centerpiece.hasPointerCapture && centerpiece.hasPointerCapture(e.pointerId)){
+        centerpiece.releasePointerCapture(e.pointerId);
+      }
+    } catch (_) {}
 
     if (cupidHasHit || cupidIsFlying) return;
 
@@ -1186,6 +1297,7 @@ function unlockPage(pageId){
   const el = $(pageId);
   if (el){
     el.classList.remove('is-locked');
+    el.style.display = '';
   }
   // Initialize target page when unlocked
   if (pageId === 'chapterCake') enterChapterCake();
@@ -1200,7 +1312,11 @@ function navigateToPage(targetPageId){
   unlockPage(targetPageId);
   const targetEl = $(targetPageId);
   if (targetEl){
-    targetEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    requestAnimationFrame(() => {
+      setTimeout(() => {
+        targetEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 40);
+    });
   }
 }
 
@@ -1215,30 +1331,30 @@ function completeChapter(stepKey){
     nextPageId = 'chapterCake';
     completedPages.add(1);
     completedPages.add('chapter1');
-  } else if (stepKey === 2 || stepKey === 'cake' || stepKey === 'chapterCake'){
+  } else if (stepKey === 'cake' || stepKey === 'chapterCake'){
     btnId = 'cakeNextBtn';
     nextPageId = 'chapter2';
-    completedPages.add(2);
+    completedPages.add('cake');
     completedPages.add('chapterCake');
-  } else if (stepKey === 3 || stepKey === 'chapter2'){
+  } else if (stepKey === 2 || stepKey === 'chapter2'){
     btnId = 'ch2NextBtn';
     nextPageId = 'chapter3';
-    completedPages.add(3);
+    completedPages.add(2);
     completedPages.add('chapter2');
-  } else if (stepKey === 4 || stepKey === 'chapter3'){
+  } else if (stepKey === 3 || stepKey === 'chapter3'){
     btnId = 'ch3NextBtn';
     nextPageId = 'chapter4';
-    completedPages.add(4);
+    completedPages.add(3);
     completedPages.add('chapter3');
-  } else if (stepKey === 5 || stepKey === 'chapter4'){
+  } else if (stepKey === 4 || stepKey === 'chapter4'){
     btnId = 'ch4NextBtn';
     nextPageId = 'chapter5';
-    completedPages.add(5);
+    completedPages.add(4);
     completedPages.add('chapter4');
-  } else if (stepKey === 6 || stepKey === 'chapter5'){
+  } else if (stepKey === 5 || stepKey === 'chapter5'){
     btnId = 'ch5NextBtn';
     nextPageId = 'chapter6';
-    completedPages.add(6);
+    completedPages.add(5);
     completedPages.add('chapter5');
   }
 
@@ -1602,6 +1718,8 @@ function enterChapter2(){
         gsap.fromTo(confirmWrap, { opacity: 0, y: 10 }, { opacity: 1, y: 0, duration: 0.5 });
       }
     }
+    // Automatically complete Chapter 2 and unlock Chapter 3 (Memories Gallery) so it is never gated or hidden
+    completeChapter('chapter2');
   }, 3200);
 
   function confirmStoryRead(){
@@ -1661,9 +1779,12 @@ window.handlePhotoError = function(img, filename) {
   if (!img) return;
   if (!img.dataset.retryCount) {
     img.dataset.retryCount = '1';
-    img.src = `./public/images/${filename}?v=2`;
+    img.src = `images/${filename}`;
   } else if (img.dataset.retryCount === '1') {
     img.dataset.retryCount = '2';
+    img.src = `./images/${filename}`;
+  } else if (img.dataset.retryCount === '2') {
+    img.dataset.retryCount = '3';
     img.src = `https://raw.githubusercontent.com/Sriram1701/Happy-Birthday-Chellakutty/main/images/${filename}`;
   }
 };
@@ -1678,22 +1799,25 @@ function initChapter3(){
   const grid = $('polaroidGrid');
   if (!grid) return;
 
-  grid.innerHTML = BIRTHDAY_CONFIG.photos.map((item, idx) => `
-    <article class="polaroid-card" data-index="${idx}" data-stage="${item.stageKey || ''}" tabindex="0" role="button" aria-label="Open ${item.title}">
-      <div class="polaroid-tape" aria-hidden="true"></div>
-      <div class="polaroid-photo">
-        <img src="./images/${item.filename}?v=2" alt="${item.title}" loading="${idx < 6 ? 'eager' : 'lazy'}" decoding="async" onerror="window.handlePhotoError(this, '${item.filename}')" style="${item.objectPosition ? `object-position: ${item.objectPosition};` : ''}" />
-      </div>
-      <div class="polaroid-caption">
-        <div style="display:flex; align-items:center; justify-content:space-between; gap:8px; margin-bottom:6px;">
-          <span class="polaroid-num" style="margin-bottom:0;">Memory #${item.id < 10 ? '0' + item.id : item.id}</span>
-          <span class="polaroid-stage-tag" style="margin-bottom:0;">${item.stage}</span>
+  // If grid is not pre-populated in HTML, dynamically render all 19 cards
+  if (grid.children.length === 0){
+    grid.innerHTML = BIRTHDAY_CONFIG.photos.map((item, idx) => `
+      <article class="polaroid-card" data-index="${idx}" data-stage="${item.stageKey || ''}" tabindex="0" role="button" aria-label="Open ${item.title}">
+        <div class="polaroid-tape" aria-hidden="true"></div>
+        <div class="polaroid-photo">
+          <img src="./images/${item.filename}?v=2" alt="${item.title}" loading="${idx < 6 ? 'eager' : 'lazy'}" decoding="async" onerror="window.handlePhotoError(this, '${item.filename}')" style="${item.objectPosition ? `object-position: ${item.objectPosition};` : ''}" />
         </div>
-        <h3 class="polaroid-title">${item.title}</h3>
-        <p class="polaroid-desc">${item.caption}</p>
-      </div>
-    </article>
-  `).join('');
+        <div class="polaroid-caption">
+          <div style="display:flex; align-items:center; justify-content:space-between; gap:8px; margin-bottom:6px;">
+            <span class="polaroid-num" style="margin-bottom:0;">Memory #${item.id < 10 ? '0' + item.id : item.id}</span>
+            <span class="polaroid-stage-tag" style="margin-bottom:0;">${item.stage}</span>
+          </div>
+          <h3 class="polaroid-title">${item.title}</h3>
+          <p class="polaroid-desc">${item.caption}</p>
+        </div>
+      </article>
+    `).join('');
+  }
 
   grid.querySelectorAll('.polaroid-card').forEach((card) => {
     const idx = parseInt(card.getAttribute('data-index'), 10);
@@ -1844,12 +1968,19 @@ function initChapter4(){
           // Short reading-completion delay before unlocking Continue
           setTimeout(() => {
             completeChapter('chapter4');
-          }, 1800);
+          }, 1200);
           letterObserver.disconnect();
         }
       });
     }, { threshold: 0.1 });
     letterObserver.observe(endSentinel);
+  }
+
+  const letterCard = $('personalLetterCard');
+  if (letterCard){
+    letterCard.addEventListener('click', () => {
+      completeChapter('chapter4');
+    });
   }
 }
 
@@ -1902,13 +2033,17 @@ function initChapter5(){
           if (entry.isIntersecting){
             setTimeout(() => {
               completeChapter('chapter5');
-            }, 1000);
+            }, 800);
             wishesEndObserver.disconnect();
           }
         });
       }, { threshold: 0.1 });
       wishesEndObserver.observe(endSentinel);
     }
+
+    grid.addEventListener('click', () => {
+      completeChapter('chapter5');
+    });
   }
 }
 

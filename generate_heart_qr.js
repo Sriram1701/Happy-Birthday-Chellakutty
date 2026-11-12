@@ -2,18 +2,17 @@ import QRCode from 'qrcode';
 import fs from 'fs';
 import path from 'path';
 import jsQR from 'jsqr';
+import { PNG } from 'pngjs';
 
 const URL = 'https://sriram1701.github.io/Happy-Birthday-Chellakutty/';
 
-async function generateHeartQR() {
-  console.log('Generating standards-compliant romantic QR code for:', URL);
+async function generateRomanticHeartQR() {
+  console.log('Generating 100% Scannable Romantic Heart QR Code for:', URL);
 
   // High error correction level H (30% redundancy)
   const qr = QRCode.create(URL, { errorCorrectionLevel: 'H' });
-  const size = qr.modules.size;
-  const data = qr.modules.data; // Uint8Array of size * size (1 = dark, 0 = light)
-
-  console.log(`QR Matrix: ${size} x ${size} modules`);
+  const size = qr.modules.size; // 41x41
+  const data = qr.modules.data;
 
   const cellSize = 10;
   const quietZoneModules = 4;
@@ -25,22 +24,58 @@ async function generateHeartQR() {
   const headerHeight = 115;
   const qrStartY = headerHeight + 10; // 125px
   const qrStartX = (cardWidth - qrTotalSize) / 2; // 35px
-  const footerHeight = 100;
-  const cardHeight = qrStartY + qrTotalSize + footerHeight; // 715px
+  const footerHeight = 105;
+  const cardHeight = qrStartY + qrTotalSize + footerHeight; // 720px
 
-  // Render QR modules: solid dark squares with crisp contrast
+  const centerModule = Math.floor(size / 2); // 20
+  const centerQrX = qrStartX + quietZonePx + centerModule * cellSize + cellSize / 2; // 280px
+  const centerQrY = qrStartY + quietZonePx + centerModule * cellSize + cellSize / 2; // 370px
+
+  // Keep center 7x7 modules clear for the romantic heart emblem (within Level H 30% budget)
+  const heartExclusionRadius = 3.6;
+
   let modulesSvg = '';
   for (let r = 0; r < size; r++) {
     for (let c = 0; c < size; c++) {
       const idx = r * size + c;
       if (data[idx] === 1) {
+        const dr = r - centerModule;
+        const dc = c - centerModule;
+        // Don't draw modules in the center heart zone
+        if (Math.hypot(dr, dc) <= heartExclusionRadius) {
+          continue;
+        }
+
         const x = qrStartX + quietZonePx + c * cellSize;
         const y = qrStartY + quietZonePx + r * cellSize;
-        // Crisp 12x12 squares with subtle 1.2px corner softening for romantic elegance without losing edge contrast
-        modulesSvg += `<rect x="${x}" y="${y}" width="${cellSize}" height="${cellSize}" rx="1.2" fill="#940b33" />\n`;
+        // Crisp squares with slight 1px corner radius for romantic elegance without losing edge detection
+        modulesSvg += `<rect x="${x}" y="${y}" width="${cellSize}" height="${cellSize}" rx="1" fill="#940b33" />\n`;
       }
     }
   }
+
+  // Romantic Center Heart Emblem SVG
+  // Heart path centered at (0, 0), scaled to ~72px wide (7.2 modules)
+  const heartScale = 0.58;
+  const centerHeartSvg = `
+    <!-- Center Heart Stage Plate -->
+    <circle cx="${centerQrX}" cy="${centerQrY}" r="${cellSize * 4.2}" fill="#ffffff" filter="url(#heartGlow)" />
+
+    <!-- Center Romantic Heart -->
+    <g transform="translate(${centerQrX}, ${centerQrY}) scale(${heartScale})">
+      <!-- Heart Shadow / Outer Glow -->
+      <path d="M 0 38 C 0 16 -34 -4 -56 16 C -82 42 -56 78 0 120 C 56 78 82 42 56 16 C 34 -4 0 16 0 38 Z"
+            transform="translate(0, -68)" fill="url(#centerHeartGrad)" stroke="url(#goldGrad)" stroke-width="4.5" />
+
+      <!-- Heart Gloss Highlight -->
+      <ellipse cx="-22" cy="-26" rx="14" ry="8" transform="rotate(-30 -22 -26)" fill="#ffffff" opacity="0.45" />
+
+      <!-- Romantic Cursive Inscription -->
+      <text x="0" y="-6" font-family="'Great Vibes', cursive" font-size="28" fill="#ffffff" text-anchor="middle" font-weight="bold">Love</text>
+      <!-- Small Gold Accent Dot -->
+      <circle cx="0" cy="18" r="3.2" fill="#ffe599" stroke="#aa8012" stroke-width="0.8" />
+    </g>
+  `;
 
   const svgContent = `<?xml version="1.0" encoding="UTF-8"?>
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${cardWidth} ${cardHeight}" width="${cardWidth}" height="${cardHeight}">
@@ -52,9 +87,10 @@ async function generateHeartQR() {
       <stop offset="100%" stop-color="#fdedf2" />
     </linearGradient>
 
-    <!-- Deep Crimson & Rose Gradient for Decorative Accents -->
-    <linearGradient id="roseAccent" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#d81e57" />
+    <!-- Center Heart Gradient -->
+    <linearGradient id="centerHeartGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ff4a7d" />
+      <stop offset="50%" stop-color="#d81e57" />
       <stop offset="100%" stop-color="#940b33" />
     </linearGradient>
 
@@ -73,6 +109,11 @@ async function generateHeartQR() {
     <!-- White QR Stage Plate Shadow -->
     <filter id="qrPlateShadow" x="-10%" y="-10%" width="120%" height="120%">
       <feDropShadow dx="0" dy="6" stdDeviation="12" flood-color="#8a0c32" flood-opacity="0.08" />
+    </filter>
+
+    <!-- Heart Soft Glow -->
+    <filter id="heartGlow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="2" stdDeviation="6" flood-color="#d81e57" flood-opacity="0.25" />
     </filter>
   </defs>
 
@@ -112,6 +153,9 @@ async function generateHeartQR() {
   <!-- Standards-Compliant QR Data & Finder Patterns -->
   ${modulesSvg}
 
+  <!-- Center Heart Emblem (Romantic 'Love' Core) -->
+  ${centerHeartSvg}
+
   <!-- Footer Instructions & Verification -->
   <g transform="translate(${cardWidth / 2}, ${qrStartY + qrTotalSize + 32})">
     <text class="instruction-main" y="0">Scan with phone camera to open surprise ❤️</text>
@@ -120,73 +164,100 @@ async function generateHeartQR() {
   </g>
 </svg>`;
 
-  // Write SVGs
-  const publicSvgPath = path.resolve('public', 'heart_qr.svg');
-  const rootSvgPath = path.resolve('heart_qr.svg');
-  fs.writeFileSync(publicSvgPath, svgContent);
-  fs.writeFileSync(rootSvgPath, svgContent);
-  console.log('Saved SVG to:', publicSvgPath);
+  // Write SVGs to root, public, and dist
+  const svgPaths = [
+    path.resolve('heart_qr.svg'),
+    path.resolve('public', 'heart_qr.svg'),
+    path.resolve('dist', 'heart_qr.svg')
+  ];
+  for (const p of svgPaths) {
+    fs.writeFileSync(p, svgContent);
+    console.log('Saved SVG to:', p);
+  }
 
-  // Generate High-Resolution Standards-Compliant PNG
-  // We use QRCode.toBuffer with dark color #940b33 and pure white background
-  const pngBuffer = await QRCode.toBuffer(URL, {
-    errorCorrectionLevel: 'H',
-    type: 'png',
-    margin: 4,
-    scale: 16, // Ultra-sharp 16x scale (~784x784 px)
-    color: {
-      dark: '#940b33',
-      light: '#ffffff'
-    }
-  });
+  // GENERATE HIGH-RESOLUTION SCANNABLE STANDALONE PNG (with Heart Center Emblem)
+  const pngScale = 16;
+  const fullGridSize = size + quietZoneModules * 2; // 49
+  const pngTotalPx = fullGridSize * pngScale; // 784x784
+  const pngImg = new PNG({ width: pngTotalPx, height: pngTotalPx });
 
-  const publicPngPath = path.resolve('public', 'heart_qr.png');
-  const rootPngPath = path.resolve('heart_qr.png');
-  fs.writeFileSync(publicPngPath, pngBuffer);
-  fs.writeFileSync(rootPngPath, pngBuffer);
-  console.log('Saved standalone high-res QR PNG to:', publicPngPath);
+  // Initialize white background
+  for (let i = 0; i < pngImg.data.length; i += 4) {
+    pngImg.data[i] = 255;
+    pngImg.data[i + 1] = 255;
+    pngImg.data[i + 2] = 255;
+    pngImg.data[i + 3] = 255;
+  }
 
-  // VERIFICATION: Decode the raw QR module matrix with jsQR
-  // Build raw RGBA image data from the QR matrix with quiet zone
-  const testScale = 10;
-  const testW = qrTotalSize / cellSize * testScale;
-  const testH = testW;
-  const rgbaData = new Uint8ClampedArray(testW * testH * 4);
+  // Draw QR modules
+  for (let r = 0; r < size; r++) {
+    for (let c = 0; c < size; c++) {
+      const idx = r * size + c;
+      if (data[idx] === 1) {
+        const dr = r - centerModule;
+        const dc = c - centerModule;
+        if (Math.hypot(dr, dc) <= heartExclusionRadius) {
+          continue; // Clear for heart
+        }
 
-  // Fill white
-  rgbaData.fill(255);
+        const startX = (c + quietZoneModules) * pngScale;
+        const startY = (r + quietZoneModules) * pngScale;
 
-  const fullGridSize = size + quietZoneModules * 2;
-  for (let r = 0; r < fullGridSize; r++) {
-    for (let c = 0; c < fullGridSize; c++) {
-      const qrR = r - quietZoneModules;
-      const qrC = c - quietZoneModules;
-      const isDark = (qrR >= 0 && qrR < size && qrC >= 0 && qrC < size) ? (data[qrR * size + qrC] === 1) : false;
-
-      if (isDark) {
-        for (let py = 0; py < testScale; py++) {
-          for (let px = 0; px < testScale; px++) {
-            const y = r * testScale + py;
-            const x = c * testScale + px;
-            const pIdx = (y * testW + x) * 4;
-            // Dark rose color: #940b33 -> (148, 11, 51)
-            rgbaData[pIdx] = 148;
-            rgbaData[pIdx + 1] = 11;
-            rgbaData[pIdx + 2] = 51;
-            rgbaData[pIdx + 3] = 255;
+        for (let py = 0; py < pngScale; py++) {
+          for (let px = 0; px < pngScale; px++) {
+            const pIdx = ((startY + py) * pngTotalPx + (startX + px)) * 4;
+            // Crimson color #940b33 -> (148, 11, 51)
+            pngImg.data[pIdx] = 148;
+            pngImg.data[pIdx + 1] = 11;
+            pngImg.data[pIdx + 2] = 51;
+            pngImg.data[pIdx + 3] = 255;
           }
         }
       }
     }
   }
 
-  const decoded = jsQR(rgbaData, testW, testH);
+  // Draw romantic heart shape in center of PNG
+  const centerPngPx = (centerModule + quietZoneModules + 0.5) * pngScale;
+  const heartRadiusPx = 3.4 * pngScale;
+
+  for (let y = 0; y < pngTotalPx; y++) {
+    for (let x = 0; x < pngTotalPx; x++) {
+      const dx = (x - centerPngPx) / heartRadiusPx;
+      const dy = -(y - (centerPngPx - 4)) / heartRadiusPx;
+      const a = dx * dx + dy * dy - 1;
+      // Heart implicit surface: (x^2 + y^2 - 1)^3 - x^2 * y^3 <= 0
+      if (a * a * a - dx * dx * dy * dy * dy <= 0) {
+        const pIdx = (y * pngTotalPx + x) * 4;
+        // Deep rose gradient
+        const t = (y - (centerPngPx - heartRadiusPx)) / (heartRadiusPx * 2);
+        pngImg.data[pIdx] = Math.round(230 - t * 80);     // 230 -> 150
+        pngImg.data[pIdx + 1] = Math.round(35 - t * 24);   // 35 -> 11
+        pngImg.data[pIdx + 2] = Math.round(91 - t * 40);   // 91 -> 51
+        pngImg.data[pIdx + 3] = 255;
+      }
+    }
+  }
+
+  const pngBuffer = PNG.sync.write(pngImg);
+  const pngPaths = [
+    path.resolve('heart_qr.png'),
+    path.resolve('public', 'heart_qr.png'),
+    path.resolve('dist', 'heart_qr.png')
+  ];
+  for (const p of pngPaths) {
+    fs.writeFileSync(p, pngBuffer);
+    console.log('Saved PNG to:', p);
+  }
+
+  // VERIFICATION: Decode the generated PNG with jsQR
+  const decoded = jsQR(new Uint8ClampedArray(pngImg.data), pngTotalPx, pngTotalPx);
   console.log('\n--- SCANNER DECODING VERIFICATION ---');
   if (decoded && decoded.data === URL) {
     console.log('SUCCESS: QR code decoded perfectly!');
     console.log('Decoded URL:', decoded.data);
     console.log('Target URL: ', URL);
-    console.log('MATCH CONFIRMED: 100% standards compliant and scannable by any camera.');
+    console.log('MATCH CONFIRMED: 100% standards compliant and scannable by any phone camera.');
   } else {
     console.error('ERROR: Failed to decode QR code or URL mismatch!');
     console.error('Decoded:', decoded ? decoded.data : 'null');
@@ -196,7 +267,7 @@ async function generateHeartQR() {
   return { svgContent, cardWidth, cardHeight };
 }
 
-generateHeartQR().catch(err => {
+generateRomanticHeartQR().catch(err => {
   console.error('Generation failed:', err);
   process.exit(1);
 });

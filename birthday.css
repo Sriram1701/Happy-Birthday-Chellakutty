@@ -346,7 +346,7 @@ body.film-body{
 
 /* Sequential gated locking: Future chapters remain hidden until unlocked */
 .chapter.is-locked{
-  display: none !important;
+  display: none;
 }
 
 /* Friendly task hint styling across chapters */
@@ -810,6 +810,15 @@ body.film-body{
 .cupid-heart-group {
   transform-origin: 170px 82px;
   animation: heartGentleBeat 2.6s ease-in-out infinite;
+}
+
+/* When heart is struck by arrow, pause CSS keyframe so GSAP impact recoil and pulse execute smoothly */
+.cupid-heart-group.is-hit {
+  animation: none !important;
+}
+
+.cupid-pulse-glow.is-hit {
+  animation: none !important;
 }
 
 @keyframes heartGentleBeat {
