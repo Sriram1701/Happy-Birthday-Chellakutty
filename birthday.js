@@ -956,6 +956,10 @@ function unlockChapter(num){
   if (num > highestUnlockedChapter){
     highestUnlockedChapter = num;
   }
+  const cakeEl = $('chapterCake');
+  if (cakeEl && highestUnlockedChapter >= 1){
+    cakeEl.classList.remove('is-locked');
+  }
   for (let i = 1; i <= 6; i++){
     const chap = $(`chapter${i}`);
     if (chap){
@@ -988,7 +992,10 @@ function completeChapter(num){
     }
   }
   // Ensure next chapter is un-locked in DOM
-  if (num + 1 <= 6){
+  if (num === 1){
+    const cakeEl = $('chapterCake');
+    if (cakeEl) cakeEl.classList.remove('is-locked');
+  } else if (num + 1 <= 6){
     const nextChap = $(`chapter${num + 1}`);
     if (nextChap) nextChap.classList.remove('is-locked');
   }
@@ -1019,6 +1026,206 @@ function onBackFrom(currentNum){
 }
 
 /* ============================================================
+   PAGE 2: BIRTHDAY CAKE CUTTING ANIMATION
+   ============================================================ */
+let isCakeCut = false;
+let isDraggingKnife = false;
+let knifeDragStartY = 0;
+let knifeCurrentY = 0;
+let knifeHasMoved = false;
+
+function initCakeCutting(){
+  const knifeRig = $('knifeRig');
+  const cakeStage = $('cakeStage');
+  const cakeHalfLeft = $('cakeHalfLeft');
+  const cakeHalfRight = $('cakeHalfRight');
+  const leftCutFace = $('leftCutFace');
+  const rightCutFace = $('rightCutFace');
+  const cakeInstruction = $('cakeInstruction');
+  const cakeSliceGuide = $('cakeSliceGuide');
+  const cakeNextBtn = $('cakeNextBtn');
+  const cakeReplayBtn = $('cakeReplayBtn');
+
+  if (!knifeRig || !cakeStage) return;
+
+  function performCut(){
+    if (isCakeCut) return;
+    isCakeCut = true;
+    isDraggingKnife = false;
+
+    // Plunge knife down smoothly through the cake
+    if (window.gsap){
+      gsap.to(knifeRig, {
+        y: 110,
+        duration: 0.45,
+        ease: 'power2.inOut',
+        onComplete: () => {
+          gsap.to(knifeRig, { y: 65, opacity: 0.8, duration: 0.7, ease: 'power2.out' });
+        }
+      });
+
+      // Animate cake halves parting smoothly
+      gsap.to(cakeHalfLeft, {
+        x: -30,
+        rotation: -2.5,
+        duration: 0.9,
+        ease: 'power2.out'
+      });
+      gsap.to(cakeHalfRight, {
+        x: 30,
+        rotation: 2.5,
+        duration: 0.9,
+        ease: 'power2.out'
+      });
+
+      // Reveal inner moist cake & strawberry cream layers
+      if (leftCutFace && rightCutFace){
+        gsap.to([leftCutFace, rightCutFace], { opacity: 1, duration: 0.4, delay: 0.1 });
+      }
+
+      if (cakeSliceGuide){
+        gsap.to(cakeSliceGuide, { opacity: 0, duration: 0.3, onComplete: () => { cakeSliceGuide.style.display = 'none'; } });
+      }
+    } else {
+      knifeRig.style.transform = 'translateY(65px)';
+      if (cakeHalfLeft) cakeHalfLeft.style.transform = 'translateX(-30px)';
+      if (cakeHalfRight) cakeHalfRight.style.transform = 'translateX(30px)';
+      if (leftCutFace) leftCutFace.style.opacity = '1';
+      if (rightCutFace) rightCutFace.style.opacity = '1';
+      if (cakeSliceGuide) cakeSliceGuide.style.display = 'none';
+    }
+
+    // Celebration message
+    if (cakeInstruction){
+      cakeInstruction.innerHTML = '✨ Sweet &amp; delicious! Happy Birthday Ranjeetha Sri! 🎂✨';
+      if (window.gsap){
+        gsap.fromTo(cakeInstruction, { scale: 0.95 }, { scale: 1, duration: 0.4, ease: 'back.out(2)' });
+      }
+    }
+
+    // Celebration burst around the cake
+    const rect = cakeStage.getBoundingClientRect();
+    const burstX = rect.left + rect.width * 0.5;
+    const burstY = rect.top + rect.height * 0.55;
+    spawnCelebrationBurst(burstX, burstY);
+
+    // Show replay button
+    if (cakeReplayBtn){
+      cakeReplayBtn.style.display = 'inline-flex';
+      if (window.gsap){
+        gsap.fromTo(cakeReplayBtn, { opacity: 0, scale: 0.9 }, { opacity: 1, scale: 1, duration: 0.4, ease: 'power2.out' });
+      }
+    }
+
+    // Unlock Continue button
+    if (cakeNextBtn){
+      cakeNextBtn.classList.remove('is-gated');
+      if (window.gsap){
+        gsap.fromTo(cakeNextBtn,
+          { opacity: 0, y: 12, scale: 0.95 },
+          { opacity: 1, y: 0, scale: 1, duration: 0.45, ease: 'back.out(1.5)' }
+        );
+      }
+    }
+
+    // Unlock Chapter 2
+    unlockChapter(2);
+  }
+
+  function resetCake(){
+    isCakeCut = false;
+    knifeCurrentY = 0;
+    knifeHasMoved = false;
+
+    if (window.gsap){
+      gsap.to(cakeHalfLeft, { x: 0, rotation: 0, duration: 0.5, ease: 'power2.inOut' });
+      gsap.to(cakeHalfRight, { x: 0, rotation: 0, duration: 0.5, ease: 'power2.inOut' });
+      if (leftCutFace && rightCutFace){
+        gsap.to([leftCutFace, rightCutFace], { opacity: 0, duration: 0.3 });
+      }
+      gsap.to(knifeRig, { y: 0, opacity: 1, duration: 0.5, ease: 'power2.out' });
+      if (cakeSliceGuide){
+        cakeSliceGuide.style.display = 'flex';
+        gsap.to(cakeSliceGuide, { opacity: 0.85, duration: 0.4 });
+      }
+    } else {
+      if (cakeHalfLeft) cakeHalfLeft.style.transform = '';
+      if (cakeHalfRight) cakeHalfRight.style.transform = '';
+      knifeRig.style.transform = '';
+      if (cakeSliceGuide) cakeSliceGuide.style.display = 'flex';
+    }
+
+    if (cakeInstruction){
+      cakeInstruction.innerHTML = 'Drag the knife down to cut the cake';
+    }
+  }
+
+  // Pointer drag interaction
+  knifeRig.addEventListener('pointerdown', (e) => {
+    if (isCakeCut) return;
+    isDraggingKnife = true;
+    knifeHasMoved = false;
+    knifeDragStartY = e.clientY - knifeCurrentY;
+    try {
+      knifeRig.setPointerCapture(e.pointerId);
+    } catch (_) {}
+  });
+
+  window.addEventListener('pointermove', (e) => {
+    if (!isDraggingKnife || isCakeCut) return;
+    const dy = e.clientY - knifeDragStartY;
+    if (Math.abs(dy) > 4) knifeHasMoved = true;
+    knifeCurrentY = Math.max(0, Math.min(dy, 115));
+    if (window.gsap){
+      gsap.set(knifeRig, { y: knifeCurrentY });
+    } else {
+      knifeRig.style.transform = `translateY(${knifeCurrentY}px)`;
+    }
+
+    if (knifeCurrentY >= 80){
+      performCut();
+    }
+  });
+
+  function onPointerEnd(e){
+    if (!isDraggingKnife) return;
+    isDraggingKnife = false;
+    try {
+      if (knifeRig.hasPointerCapture && knifeRig.hasPointerCapture(e.pointerId)){
+        knifeRig.releasePointerCapture(e.pointerId);
+      }
+    } catch (_) {}
+
+    if (!isCakeCut){
+      if (!knifeHasMoved || knifeCurrentY < 18){
+        performCut();
+      } else {
+        if (window.gsap){
+          gsap.to(knifeRig, { y: 0, duration: 0.35, ease: 'power2.out' });
+        } else {
+          knifeRig.style.transform = '';
+        }
+        knifeCurrentY = 0;
+      }
+    }
+  }
+
+  window.addEventListener('pointerup', onPointerEnd);
+  window.addEventListener('pointercancel', onPointerEnd);
+
+  // Click on stage fallback
+  cakeStage.addEventListener('click', () => {
+    if (!isCakeCut && !knifeHasMoved){
+      performCut();
+    }
+  });
+
+  if (cakeReplayBtn){
+    cakeReplayBtn.addEventListener('click', resetCake);
+  }
+}
+
+/* ============================================================
    CHAPTER 2: A BEAUTIFUL BEGINNING
    ============================================================ */
 function enterChapter2(){
@@ -1045,6 +1252,16 @@ function enterChapter2(){
       completeChapter(2);
     }, { once: true });
   }
+
+  // Allow tapping any collage photo to bring it forward
+  const collageCards = document.querySelectorAll('.book-collage__card');
+  collageCards.forEach((card) => {
+    card.addEventListener('click', (e) => {
+      e.stopPropagation();
+      collageCards.forEach(c => c.style.zIndex = '1');
+      card.style.zIndex = '12';
+    });
+  });
 }
 
 /* ============================================================
@@ -1303,10 +1520,47 @@ function enterChapter5(){
    NAVIGATION BUTTON ATTACHMENTS (All Chapters)
    ============================================================ */
 const ch1NextBtn = $('ch1NextBtn');
-if (ch1NextBtn) ch1NextBtn.addEventListener('click', () => onContinueFrom(1));
+if (ch1NextBtn){
+  ch1NextBtn.addEventListener('click', () => {
+    const cakeEl = $('chapterCake');
+    if (cakeEl){
+      cakeEl.classList.remove('is-locked');
+      cakeEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    } else {
+      onContinueFrom(1);
+    }
+  });
+}
+
+const cakePrevBtn = $('cakePrevBtn');
+if (cakePrevBtn){
+  cakePrevBtn.addEventListener('click', () => {
+    const ch1 = $('chapter1');
+    if (ch1) ch1.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+}
+
+const cakeNextBtn = $('cakeNextBtn');
+if (cakeNextBtn){
+  cakeNextBtn.addEventListener('click', () => {
+    unlockChapter(2);
+    setTimeout(() => {
+      scrollToChapter(2);
+    }, 40);
+  });
+}
 
 const ch2PrevBtn = $('ch2PrevBtn');
-if (ch2PrevBtn) ch2PrevBtn.addEventListener('click', () => onBackFrom(2));
+if (ch2PrevBtn){
+  ch2PrevBtn.addEventListener('click', () => {
+    const cakeEl = $('chapterCake');
+    if (cakeEl){
+      cakeEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    } else {
+      onBackFrom(2);
+    }
+  });
+}
 
 const ch2NextBtn = $('ch2NextBtn');
 if (ch2NextBtn) ch2NextBtn.addEventListener('click', () => onContinueFrom(2));
@@ -1462,6 +1716,7 @@ function initLoveQuestion(){
 }
 
 // Initialize all sections for seamless continuous vertical scrolling
+initCakeCutting();
 initChapter3();
 initChapter4();
 initChapter5();
@@ -1502,11 +1757,11 @@ resizeConfetti();
 
 const CONFETTI_COLORS = ['#ff5f86', '#ffd0e0', '#ffcf6a', '#e8a23d', '#ffffff', '#e23b67', '#ff8fae'];
 
-function spawnCelebrationBurst(){
+function spawnCelebrationBurst(customX, customY){
   if (!confettiCtx) return;
   const count = 56;
-  const startX = window.innerWidth * 0.5;
-  const startY = window.innerHeight * 0.55;
+  const startX = typeof customX === 'number' ? customX : window.innerWidth * 0.5;
+  const startY = typeof customY === 'number' ? customY : window.innerHeight * 0.55;
 
   for (let i = 0; i < count; i++){
     const angle = rand(0, Math.PI * 2);

@@ -185,6 +185,247 @@
     </section>
 
     <!-- ==========================================================
+         PAGE 2: BIRTHDAY CAKE CUTTING ANIMATION
+         (Interactive cake slicing with animated hand & knife)
+         ========================================================== -->
+    <section class="chapter chapter--cake is-locked" id="chapterCake" aria-label="Birthday Cake Cutting">
+      <div class="chapter-backdrop" aria-hidden="true">
+        <div class="glow-orb glow-orb--left"></div>
+        <div class="glow-orb glow-orb--right"></div>
+      </div>
+
+      <div class="chapter-inner chapter-inner--center cake-section-inner">
+        <!-- Top Navigation Action: Back to Invitation -->
+        <div class="chapter-actions chapter-actions--cake-top">
+          <button class="nav-btn nav-btn--back" id="cakePrevBtn" type="button" aria-label="Back">
+            <span>&larr; Back</span>
+          </button>
+        </div>
+
+        <header class="cake-header">
+          <h2 class="cake-title">Let's Cut the Cake! 🎂</h2>
+          <p class="cake-instruction" id="cakeInstruction">Drag the knife down to cut the cake</p>
+        </header>
+
+        <!-- Interactive Cake Cutting Area -->
+        <div class="cake-stage" id="cakeStage" role="region" aria-label="Interactive Cake Cutting">
+          <!-- Guide pulse indicator -->
+          <div class="cake-slice-guide" id="cakeSliceGuide" aria-hidden="true">
+            <span class="slice-guide-line"></span>
+            <span class="slice-guide-chevron">&#x25BC;</span>
+          </div>
+
+          <!-- SVG Cake & Knife Artboard -->
+          <svg class="cake-svg" id="cakeSvg" viewBox="0 0 380 340" aria-hidden="true">
+            <defs>
+              <!-- Cake Frosting Gradient (Soft Blush Cream) -->
+              <linearGradient id="cakeFrostingGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" stop-color="#fff5f7" />
+                <stop offset="35%" stop-color="#fedce5" />
+                <stop offset="70%" stop-color="#f8b6c8" />
+                <stop offset="100%" stop-color="#e991a9" />
+              </linearGradient>
+
+              <!-- Top Surface Gradient -->
+              <linearGradient id="cakeTopGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                <stop offset="0%" stop-color="#ffffff" />
+                <stop offset="60%" stop-color="#ffeef3" />
+                <stop offset="100%" stop-color="#fad4df" />
+              </linearGradient>
+
+              <!-- Cake Inner Sponge Cake Gradient -->
+              <linearGradient id="cakeSpongeGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                <stop offset="0%" stop-color="#fae3c2" />
+                <stop offset="100%" stop-color="#f2c896" />
+              </linearGradient>
+
+              <!-- Cake Cream Filling Gradient -->
+              <linearGradient id="cakeCreamGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                <stop offset="0%" stop-color="#ff7b9f" />
+                <stop offset="100%" stop-color="#d81e57" />
+              </linearGradient>
+
+              <!-- Cake Stand Rose-Gold Gradient -->
+              <linearGradient id="cakeStandGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" stop-color="#d8a47f" />
+                <stop offset="30%" stop-color="#fae3d2" />
+                <stop offset="70%" stop-color="#e5b08b" />
+                <stop offset="100%" stop-color="#b67a54" />
+              </linearGradient>
+
+              <!-- Candle Wax Gradient -->
+              <linearGradient id="candleGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" stop-color="#ffe4ec" />
+                <stop offset="50%" stop-color="#ffffff" />
+                <stop offset="100%" stop-color="#ff9ab5" />
+              </linearGradient>
+
+              <!-- Candle Flame Radial Gradient -->
+              <radialGradient id="flameGrad" cx="50%" cy="65%" r="50%">
+                <stop offset="0%" stop-color="#ffffff" />
+                <stop offset="35%" stop-color="#ffe600" />
+                <stop offset="75%" stop-color="#ff6b08" />
+                <stop offset="100%" stop-color="rgba(255, 30, 0, 0)" />
+              </radialGradient>
+
+              <!-- Knife Blade Steel Gradient -->
+              <linearGradient id="bladeGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" stop-color="#f0f4f8" />
+                <stop offset="30%" stop-color="#ffffff" />
+                <stop offset="70%" stop-color="#cbd5e1" />
+                <stop offset="100%" stop-color="#94a3b8" />
+              </linearGradient>
+
+              <!-- Knife Handle Rose-Gold -->
+              <linearGradient id="handleGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" stop-color="#cf7a90" />
+                <stop offset="40%" stop-color="#f5b8c7" />
+                <stop offset="100%" stop-color="#963c52" />
+              </linearGradient>
+
+              <!-- Hand Skin Tone Gradient -->
+              <linearGradient id="skinGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#ffeedf" />
+                <stop offset="60%" stop-color="#f6cfbe" />
+                <stop offset="100%" stop-color="#e2ab95" />
+              </linearGradient>
+            </defs>
+
+            <!-- 1. Pedestal Stand & Base Shadow -->
+            <g id="cakeStandGroup">
+              <ellipse cx="190" cy="278" rx="136" ry="16" fill="rgba(30, 6, 18, 0.45)" filter="blur(6px)" />
+              <!-- Stand Base Plate -->
+              <ellipse cx="190" cy="265" rx="124" ry="22" fill="url(#cakeStandGrad)" stroke="#8e5334" stroke-width="1.2" />
+              <ellipse cx="190" cy="262" rx="114" ry="18" fill="url(#cakeTopGrad)" opacity="0.6" />
+              <!-- Stand Stem -->
+              <path d="M 174 266 Q 170 290 156 304 L 224 304 Q 210 290 206 266 Z" fill="url(#cakeStandGrad)" />
+              <ellipse cx="190" cy="304" rx="42" ry="10" fill="url(#cakeStandGrad)" stroke="#8e5334" stroke-width="1" />
+            </g>
+
+            <!-- 2. Left Half of Cake (Separates left when cut) -->
+            <g class="cake-half cake-half--left" id="cakeHalfLeft">
+              <!-- Left Cylinder Body -->
+              <path d="M 76 165 C 76 195 125 240 190 240 L 190 168 C 125 168 76 138 76 165 Z" fill="url(#cakeFrostingGrad)" />
+              <!-- Left Inner Cut Cross-Section (Moist golden sponge & rich cream layers) -->
+              <g class="cake-cut-face" id="leftCutFace" opacity="0">
+                <!-- Golden Sponge Tier -->
+                <rect x="189" y="166" width="3" height="74" fill="url(#cakeSpongeGrad)" />
+                <!-- Cream Layers -->
+                <line x1="189" y1="184" x2="192" y2="184" stroke="url(#cakeCreamGrad)" stroke-width="3.5" />
+                <line x1="189" y1="204" x2="192" y2="204" stroke="url(#cakeCreamGrad)" stroke-width="3.5" />
+                <line x1="189" y1="224" x2="192" y2="224" stroke="url(#cakeCreamGrad)" stroke-width="3.5" />
+              </g>
+              <!-- Left Top Surface -->
+              <path d="M 76 165 C 76 138 125 120 190 120 L 190 168 C 125 168 76 150 76 165 Z" fill="url(#cakeTopGrad)" stroke="#f8c3d1" stroke-width="1" />
+              <!-- Frosting Piped Shell Borders Left -->
+              <ellipse cx="132" cy="168" rx="8" ry="5" fill="#ffffff" />
+              <ellipse cx="106" cy="165" rx="7" ry="4.5" fill="#fff0f4" />
+              <ellipse cx="88" cy="160" rx="6" ry="4" fill="#ffffff" />
+              <ellipse cx="160" cy="168" rx="8" ry="5" fill="#fff0f4" />
+              <!-- Left Candle -->
+              <g id="cakeCandleLeft">
+                <rect x="138" y="112" width="7" height="34" rx="2" fill="url(#candleGrad)" stroke="#d97a95" stroke-width="0.8" />
+                <line x1="141.5" y1="112" x2="141.5" y2="105" stroke="#333333" stroke-width="1.5" />
+                <!-- Flickering Flame -->
+                <path class="candle-flame candle-flame--1" d="M 141.5 88 Q 148 97 141.5 105 Q 135 97 141.5 88 Z" fill="url(#flameGrad)" />
+                <circle cx="141.5" cy="98" r="10" fill="#ffaa00" opacity="0.3" filter="blur(3px)" />
+              </g>
+              <!-- Rose-Gold Sugar Pearls -->
+              <circle cx="168" cy="154" r="4.5" fill="#ffccd8" stroke="#d45b7a" stroke-width="0.8" />
+              <circle cx="120" cy="150" r="4" fill="#ffe0b2" stroke="#d88d40" stroke-width="0.8" />
+            </g>
+
+            <!-- 3. Right Half of Cake (Separates right when cut) -->
+            <g class="cake-half cake-half--right" id="cakeHalfRight">
+              <!-- Right Cylinder Body -->
+              <path d="M 190 240 C 255 240 304 195 304 165 L 304 165 C 304 138 255 168 190 168 Z" fill="url(#cakeFrostingGrad)" />
+              <!-- Right Inner Cut Cross-Section (Moist golden sponge & rich cream layers) -->
+              <g class="cake-cut-face" id="rightCutFace" opacity="0">
+                <rect x="188" y="166" width="3" height="74" fill="url(#cakeSpongeGrad)" />
+                <!-- Cream Layers -->
+                <line x1="188" y1="184" x2="191" y2="184" stroke="url(#cakeCreamGrad)" stroke-width="3.5" />
+                <line x1="188" y1="204" x2="191" y2="204" stroke="url(#cakeCreamGrad)" stroke-width="3.5" />
+                <line x1="188" y1="224" x2="191" y2="224" stroke="url(#cakeCreamGrad)" stroke-width="3.5" />
+              </g>
+              <!-- Right Top Surface -->
+              <path d="M 190 120 C 255 120 304 138 304 165 C 304 150 255 168 190 168 Z" fill="url(#cakeTopGrad)" stroke="#f8c3d1" stroke-width="1" />
+              <!-- Frosting Piped Shell Borders Right -->
+              <ellipse cx="220" cy="168" rx="8" ry="5" fill="#ffffff" />
+              <ellipse cx="248" cy="168" rx="8" ry="5" fill="#fff0f4" />
+              <ellipse cx="274" cy="165" rx="7" ry="4.5" fill="#ffffff" />
+              <ellipse cx="292" cy="160" rx="6" ry="4" fill="#fff0f4" />
+              <!-- Right Candle -->
+              <g id="cakeCandleRight">
+                <rect x="236" y="112" width="7" height="34" rx="2" fill="url(#candleGrad)" stroke="#d97a95" stroke-width="0.8" />
+                <line x1="239.5" y1="112" x2="239.5" y2="105" stroke="#333333" stroke-width="1.5" />
+                <!-- Flickering Flame -->
+                <path class="candle-flame candle-flame--2" d="M 239.5 88 Q 246 97 239.5 105 Q 233 97 239.5 88 Z" fill="url(#flameGrad)" />
+                <circle cx="239.5" cy="98" r="10" fill="#ffaa00" opacity="0.3" filter="blur(3px)" />
+              </g>
+              <!-- Center Candle (Sits on right half edge) -->
+              <g id="cakeCandleCenter">
+                <rect x="187" y="102" width="6.5" height="36" rx="2" fill="url(#candleGrad)" stroke="#d97a95" stroke-width="0.8" />
+                <line x1="190.2" y1="102" x2="190.2" y2="95" stroke="#333333" stroke-width="1.5" />
+                <!-- Flickering Flame -->
+                <path class="candle-flame candle-flame--3" d="M 190.2 78 Q 197 87 190.2 95 Q 183.5 87 190.2 78 Z" fill="url(#flameGrad)" />
+                <circle cx="190.2" cy="88" r="12" fill="#ffaa00" opacity="0.35" filter="blur(3px)" />
+              </g>
+              <!-- Rose-Gold Sugar Pearls -->
+              <circle cx="212" cy="154" r="4.5" fill="#ffccd8" stroke="#d45b7a" stroke-width="0.8" />
+              <circle cx="260" cy="150" r="4" fill="#ffe0b2" stroke="#d88d40" stroke-width="0.8" />
+            </g>
+
+            <!-- 4. Interactive Knife & Animated Hand Carrier (Draggable vertically) -->
+            <g class="knife-rig" id="knifeRig" style="cursor: grab; touch-action: none;">
+              <!-- Invisible larger grab zone for easy mobile dragging -->
+              <rect x="150" y="-10" width="100" height="175" fill="transparent" />
+
+              <!-- Stainless Steel Blade (Points down towards center of cake) -->
+              <path d="M 189 45 L 189 155 Q 190 162 191 155 L 191 45 Z" fill="url(#bladeGrad)" stroke="#718096" stroke-width="0.6" filter="drop-shadow(0 4px 6px rgba(0,0,0,0.3))" />
+              <!-- Knife Spine & Cutting Edge Highlight -->
+              <line x1="189.5" y1="46" x2="189.5" y2="152" stroke="#ffffff" stroke-width="0.8" opacity="0.9" />
+
+              <!-- Rose-Gold Bolster / Guard -->
+              <rect x="184" y="42" width="12" height="5" rx="1.5" fill="url(#handleGrad)" stroke="#682132" stroke-width="0.6" />
+
+              <!-- Rose-Gold Handle -->
+              <rect x="186.5" y="6" width="7" height="38" rx="3" fill="url(#handleGrad)" stroke="#682132" stroke-width="0.8" />
+              <circle cx="190" cy="14" r="1.5" fill="#ffccd8" />
+              <circle cx="190" cy="25" r="1.5" fill="#ffccd8" />
+              <circle cx="190" cy="36" r="1.5" fill="#ffccd8" />
+
+              <!-- Elegant Hand Holding Knife -->
+              <g class="knife-hand" id="knifeHand">
+                <!-- Wrist & Forearm softly entering from top-right -->
+                <path d="M 240 -20 Q 220 5 198 12 L 202 38 Q 230 28 260 0 Z" fill="url(#skinGrad)" opacity="0.92" />
+                <!-- Fingers gently wrapped around handle -->
+                <rect x="183" y="14" width="15" height="6.5" rx="3" fill="url(#skinGrad)" stroke="#b87865" stroke-width="0.5" />
+                <rect x="183" y="21" width="15" height="6.5" rx="3" fill="url(#skinGrad)" stroke="#b87865" stroke-width="0.5" />
+                <rect x="183.5" y="28" width="14.5" height="6" rx="3" fill="url(#skinGrad)" stroke="#b87865" stroke-width="0.5" />
+                <rect x="184" y="34.5" width="13.5" height="5.5" rx="2.5" fill="url(#skinGrad)" stroke="#b87865" stroke-width="0.5" />
+                <path d="M 197 10 Q 192 18 193 28 Q 199 26 200 18 Z" fill="url(#skinGrad)" stroke="#b87865" stroke-width="0.5" />
+                <!-- Nail Accents -->
+                <ellipse cx="184.5" cy="17.2" rx="1.5" ry="2" fill="#ffd5df" opacity="0.8" />
+                <ellipse cx="184.5" cy="24.2" rx="1.5" ry="2" fill="#ffd5df" opacity="0.8" />
+                <ellipse cx="185" cy="31" rx="1.4" ry="1.8" fill="#ffd5df" opacity="0.8" />
+              </g>
+            </g>
+          </svg>
+        </div>
+
+        <!-- Navigation Action: Continue (Gated until cake is sliced) -->
+        <div class="chapter-actions chapter-actions--cake-bottom">
+          <button class="nav-btn nav-btn--back" id="cakeReplayBtn" type="button" aria-label="Re-slice Cake" style="display:none;">
+            <span>↺ Cut Again</span>
+          </button>
+          <button class="nav-btn nav-btn--continue is-gated" id="cakeNextBtn" type="button" aria-label="Continue">
+            <span>Continue &rarr;</span>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================================
          CHAPTER 2: A BEAUTIFUL BEGINNING
          (Magical animated memory book with sequential reveals)
          ========================================================== -->

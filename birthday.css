@@ -334,6 +334,18 @@ body.film-body{
   overflow: hidden;
 }
 
+.chapter--cake{
+  min-height: 100vh;
+  min-height: 100dvh;
+  padding: clamp(20px, 4vh, 44px) 0;
+  display: flex !important;
+  align-items: center;
+  justify-content: center !important;
+  background: linear-gradient(180deg, #fffaf7 0%, #fdf2f4 50%, #fae8eb 100%) !important;
+  position: relative;
+  overflow: hidden;
+}
+
 .chapter--2{
   background: radial-gradient(120% 120% at 50% 20%, #200717 0%, #13040e 55%, #0a0208 100%);
 }
@@ -531,8 +543,9 @@ body.film-body{
   transform: translateY(0) !important;
 }
 
-/* Light Theme Contrast for Back button on light pages (Chapters 1, 2, 4, 6) */
+/* Light Theme Contrast for Back button on light pages (Chapters 1, Cake, 2, 4, 6) */
 .chapter--1 .nav-btn--back,
+.chapter--cake .nav-btn--back,
 .chapter--2 .nav-btn--back,
 .chapter--4 .nav-btn--back,
 .chapter--6 .nav-btn--back{
@@ -543,6 +556,7 @@ body.film-body{
 }
 
 .chapter--1 .nav-btn--back:hover,
+.chapter--cake .nav-btn--back:hover,
 .chapter--2 .nav-btn--back:hover,
 .chapter--4 .nav-btn--back:hover,
 .chapter--6 .nav-btn--back:hover{
@@ -1017,32 +1031,167 @@ body.film-body{
 }
 
 /* ============================================================
+   PAGE 2: BIRTHDAY CAKE CUTTING (Interactive Hand & Knife)
+   ============================================================ */
+.cake-section-inner{
+  max-width: 520px;
+  width: 100%;
+  padding: 16px 20px 32px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  z-index: 2;
+}
+
+.chapter-actions--cake-top{
+  align-self: flex-start;
+  margin-bottom: 12px;
+}
+
+.cake-header{
+  text-align: center;
+  margin-bottom: 14px;
+}
+
+.cake-title{
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: clamp(1.8rem, 5vw, 2.35rem);
+  font-weight: 700;
+  color: #4a1324;
+  letter-spacing: -0.01em;
+  margin: 0 0 6px 0;
+  line-height: 1.2;
+}
+
+.cake-instruction{
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: clamp(0.9rem, 2.5vw, 1.05rem);
+  color: #924053;
+  font-weight: 500;
+  margin: 0;
+  letter-spacing: 0.01em;
+}
+
+.cake-stage{
+  position: relative;
+  width: 100%;
+  max-width: 380px;
+  margin: 4px auto 14px;
+  user-select: none;
+  touch-action: pan-y;
+}
+
+.cake-svg{
+  width: 100%;
+  height: auto;
+  display: block;
+  overflow: visible;
+  filter: drop-shadow(0 12px 28px rgba(186, 18, 67, 0.12));
+}
+
+/* Pulsing Guide Line Indicator */
+.cake-slice-guide{
+  position: absolute;
+  top: 18%;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  pointer-events: none;
+  opacity: 0.85;
+  animation: guidePulse 1.8s ease-in-out infinite;
+  z-index: 3;
+}
+
+.slice-guide-line{
+  width: 2px;
+  height: 48px;
+  background: linear-gradient(180deg, rgba(216, 30, 87, 0.9) 0%, rgba(216, 30, 87, 0.1) 100%);
+  border-radius: 2px;
+  border-left: 2px dashed #d81e57;
+}
+
+.slice-guide-chevron{
+  font-size: 13px;
+  color: #d81e57;
+  transform: translateY(-2px);
+}
+
+@keyframes guidePulse{
+  0%, 100%{ opacity: 0.35; transform: translate(-50%, 0); }
+  50%{ opacity: 0.95; transform: translate(-50%, 8px); }
+}
+
+/* Flickering Candles */
+@keyframes flameFlicker{
+  0%, 100%{ transform: scale(1) rotate(0deg); opacity: 0.95; }
+  25%{ transform: scale(1.08, 0.92) rotate(-2deg); opacity: 1; }
+  50%{ transform: scale(0.93, 1.07) rotate(2deg); opacity: 0.9; }
+  75%{ transform: scale(1.05, 0.96) rotate(-1deg); opacity: 0.98; }
+}
+
+.candle-flame{
+  transform-origin: center bottom;
+  animation: flameFlicker 1.4s ease-in-out infinite alternate;
+}
+.candle-flame--2{
+  animation-delay: 0.25s;
+  animation-duration: 1.6s;
+}
+.candle-flame--3{
+  animation-delay: 0.5s;
+  animation-duration: 1.3s;
+}
+
+.knife-rig{
+  cursor: grab;
+  touch-action: none;
+  transition: filter 0.2s ease;
+}
+.knife-rig:active{
+  cursor: grabbing;
+}
+
+.chapter-actions--cake-bottom{
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 12px;
+  width: 100%;
+  margin-top: 10px;
+}
+
+/* ============================================================
    CHAPTER 2: A BEAUTIFUL BEGINNING (Magical Memory Book)
    ============================================================ */
 .chapter--2{
   background: radial-gradient(120% 120% at 50% 20%, #200717 0%, #13040e 55%, #0a0208 100%);
+  padding: clamp(24px, 4vh, 48px) 16px clamp(40px, 6vh, 60px);
 }
 
 .book-stage{
   perspective: 1400px;
-  margin: 18px auto 26px;
+  margin: 10px auto 18px;
   display: flex;
   justify-content: center;
 }
 
 .memory-book{
-  width: min(88vw, 680px);
-  min-height: min(60vh, 420px);
+  width: min(92vw, 760px);
+  min-height: 440px;
   display: flex;
   background: #fdfaf5;
-  border-radius: 8px;
+  border-radius: 12px;
   box-shadow:
-    0 25px 60px rgba(0, 0, 0, 0.6),
-    0 4px 15px rgba(0, 0, 0, 0.3),
+    0 24px 60px rgba(0, 0, 0, 0.6),
+    0 4px 16px rgba(0, 0, 0, 0.3),
     inset 0 0 0 1px rgba(0, 0, 0, 0.08);
   position: relative;
   overflow: hidden;
-  border: 4px solid #3c1422;
+  border: 3px solid #3c1422;
 }
 
 /* Central Book Seam / Crease */
@@ -1058,41 +1207,45 @@ body.film-body{
 
 .book-page{
   flex: 1;
-  padding: 38px 32px;
+  padding: 30px 26px;
   position: relative;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: flex-start;
+  align-items: center;
 }
 
 .book-page--left{
   background: linear-gradient(135deg, #fffcf8 0%, #faeee0 100%);
   border-right: 1px solid rgba(0,0,0,0.06);
   text-align: center;
-  align-items: center;
 }
 
 .book-page--right{
   background: linear-gradient(135deg, #faeee0 0%, #fffcf8 100%);
   text-align: left;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 34px 30px;
 }
 
 .book-caption-tag{
   font-family: "Montserrat", sans-serif;
-  font-size: 10px;
+  font-size: 10.5px;
   font-weight: 700;
   letter-spacing: 0.2em;
   color: #ad5068;
-  margin-bottom: 8px;
+  margin-bottom: 4px;
   display: block;
 }
 
 .book-heading{
   font-family: "Fraunces", serif;
-  font-size: clamp(20px, 3.2vw, 28px);
+  font-size: clamp(22px, 3.4vw, 30px);
   font-weight: 700;
   color: #381220;
-  line-height: 1.25;
+  line-height: 1.22;
+  margin: 0;
 }
 
 .book-date-tag{
@@ -1102,7 +1255,7 @@ body.film-body{
   letter-spacing: 0.14em;
   text-transform: uppercase;
   color: #b05a74;
-  margin-top: 6px;
+  margin-top: 4px;
 }
 
 /* Chapter 2 Memory Book Photo Collage (Light Theme) */
@@ -1111,18 +1264,18 @@ body.film-body{
   display: flex;
   align-items: center;
   justify-content: center;
-  margin: 16px auto 8px;
+  margin: 14px auto 4px;
   width: 100%;
-  max-width: 290px;
-  height: 195px;
+  max-width: 330px;
+  height: 245px;
 }
 
 .book-collage__card{
   position: absolute;
   background: #ffffff;
-  padding: 5px 5px 14px 5px;
+  padding: 6px 6px 14px 6px;
   border-radius: 6px;
-  box-shadow: 0 10px 24px rgba(70, 15, 35, 0.14), 0 2px 6px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 12px 28px rgba(70, 15, 35, 0.16), 0 2px 6px rgba(0, 0, 0, 0.08);
   border: 1px solid rgba(230, 215, 205, 0.65);
   transition: transform 0.35s var(--ease-spring), box-shadow 0.3s ease, z-index 0.3s;
   cursor: pointer;
@@ -1134,29 +1287,29 @@ body.film-body{
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: center top;
-  border-radius: 3px;
+  object-position: center 12%;
+  border-radius: 4px;
 }
 
 .book-collage__card--left{
-  width: 95px;
-  height: 140px;
-  left: 10px;
-  transform: rotate(-7deg) translateY(4px);
+  width: 112px;
+  height: 165px;
+  left: 6px;
+  transform: rotate(-7deg) translateY(6px);
   z-index: 1;
 }
 
 .book-collage__card--right{
-  width: 95px;
-  height: 140px;
-  right: 10px;
-  transform: rotate(7deg) translateY(4px);
+  width: 112px;
+  height: 165px;
+  right: 6px;
+  transform: rotate(7deg) translateY(6px);
   z-index: 1;
 }
 
 .book-collage__card--center{
-  width: 118px;
-  height: 172px;
+  width: 165px;
+  height: 232px;
   z-index: 2;
   transform: rotate(0deg);
   display: flex;
@@ -1164,7 +1317,7 @@ body.film-body{
 }
 
 .book-collage__card--center img{
-  height: 135px;
+  height: 185px;
 }
 
 .book-collage__tape{
@@ -1172,18 +1325,18 @@ body.film-body{
   top: -8px;
   left: 50%;
   transform: translateX(-50%);
-  width: 44px;
-  height: 15px;
-  background: rgba(232, 162, 61, 0.5);
+  width: 48px;
+  height: 16px;
+  background: rgba(232, 162, 61, 0.6);
   border-left: 2px dashed rgba(255, 255, 255, 0.7);
   border-right: 2px dashed rgba(255, 255, 255, 0.7);
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.12);
   z-index: 5;
 }
 
 .book-collage__handwriting{
   font-family: "Great Vibes", cursive;
-  font-size: 14px;
+  font-size: 15px;
   color: #ad3357;
   text-align: center;
   margin-top: 5px;
@@ -1193,36 +1346,40 @@ body.film-body{
 
 .book-collage__card:hover{
   z-index: 10;
-  transform: scale(1.08) translateY(-4px);
-  box-shadow: 0 16px 32px rgba(120, 20, 50, 0.22), 0 4px 10px rgba(0, 0, 0, 0.1);
+  transform: scale(1.06) translateY(-4px);
+  box-shadow: 0 18px 36px rgba(120, 20, 50, 0.22), 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
 .candle-glow{
-  width: 80px; height: 80px;
+  position: absolute;
+  bottom: 8px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100px; height: 50px;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(255, 200, 120, 0.35), transparent 70%);
+  background: radial-gradient(ellipse at center, rgba(255, 200, 120, 0.28), transparent 70%);
   filter: blur(12px);
-  margin-top: 18px;
+  pointer-events: none;
   animation: candleFlicker 3s infinite alternate;
 }
 
 @keyframes candleFlicker{
-  0%{ transform: scale(0.9) translate(-2px, 2px); opacity: 0.6; }
-  50%{ transform: scale(1.1) translate(2px, -2px); opacity: 0.9; }
-  100%{ transform: scale(1) translate(0, 0); opacity: 0.75; }
+  0%{ transform: translateX(-50%) scale(0.9); opacity: 0.5; }
+  50%{ transform: translateX(-50%) scale(1.1); opacity: 0.8; }
+  100%{ transform: translateX(-50%) scale(1); opacity: 0.65; }
 }
 
 /* Sequential Story Stream */
 .story-stream{
   display: flex;
   flex-direction: column;
-  gap: 18px;
+  gap: 16px;
 }
 
 .story-line{
   font-family: "Cormorant Garamond", Georgia, serif;
   font-style: italic;
-  font-size: clamp(17px, 2.4vw, 21px);
+  font-size: clamp(17px, 2.3vw, 20px);
   line-height: 1.5;
   color: #552535;
   opacity: 0;
@@ -1244,8 +1401,8 @@ body.film-body{
 
 .book-corner-heart{
   position: absolute;
-  bottom: 14px;
-  right: 18px;
+  bottom: 12px;
+  right: 16px;
   font-size: 14px;
   color: var(--gold-2);
   opacity: 0.7;
@@ -2161,25 +2318,114 @@ body.film-body{
   .hero__eyebrow{ top: 11%; font-size: 16px; padding: 0 16px; }
   .hero__hint{ bottom: 12%; font-size: 13px; }
 
-  /* Chapter 2 Memory Book */
+  /* Chapter 2 Memory Book Mobile (Compact, Big Photo, Zero Gap) */
+  .chapter--2{
+    padding: clamp(14px, 2.5vh, 24px) 12px clamp(24px, 3.5vh, 36px) !important;
+    min-height: auto !important;
+  }
+  .chapter--2 .chapter-inner{
+    padding: 0 !important;
+    max-width: 100% !important;
+  }
+  .chapter-badge{
+    margin-bottom: 10px !important;
+  }
+  .book-stage{
+    margin: 4px auto 14px !important;
+    width: 100% !important;
+    max-width: min(94vw, 380px) !important;
+  }
   .memory-book{
-    flex-direction: column;
-    min-height: auto;
-    width: min(94vw, 380px);
-    margin: 0 auto;
+    flex-direction: column !important;
+    min-height: auto !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 auto !important;
+    border-radius: 14px !important;
+    border: 2px solid rgba(216, 30, 87, 0.28) !important;
+    box-shadow: 0 16px 36px rgba(0, 0, 0, 0.45), 0 0 18px rgba(216, 30, 87, 0.12) !important;
   }
-  .memory-book::after{ display: none; }
-  .book-page{ padding: 22px 18px; }
-  .book-page--left{ border-right: none; border-bottom: 1px solid rgba(0,0,0,0.08); }
+  .memory-book::after{
+    display: none !important;
+  }
+  .book-page{
+    flex: initial !important;
+    min-height: auto !important;
+    padding: 16px 14px 12px !important;
+    align-items: center !important;
+  }
+  .book-page--left{
+    border-right: none !important;
+    border-bottom: 1px dashed rgba(216, 30, 87, 0.22) !important;
+    padding-bottom: 14px !important;
+  }
+  .book-caption-tag{
+    margin-bottom: 4px !important;
+  }
+  .book-heading{
+    font-size: clamp(22px, 6vw, 26px) !important;
+    margin: 0 !important;
+  }
+  .book-date-tag{
+    margin-top: 4px !important;
+    margin-bottom: 4px !important;
+  }
   .book-collage{
-    max-width: 260px;
-    height: 175px;
-    margin: 12px auto 6px;
+    max-width: 320px !important;
+    height: 235px !important;
+    margin: 10px auto 4px !important;
   }
-  .book-collage__card--left{ width: 85px; height: 125px; left: 8px; }
-  .book-collage__card--right{ width: 85px; height: 125px; right: 8px; }
-  .book-collage__card--center{ width: 105px; height: 155px; }
-  .book-collage__card--center img{ height: 120px; }
+  .book-collage__card--left{
+    width: 105px !important;
+    height: 152px !important;
+    left: 4px !important;
+    transform: rotate(-6deg) translateY(6px) !important;
+  }
+  .book-collage__card--right{
+    width: 105px !important;
+    height: 152px !important;
+    right: 4px !important;
+    transform: rotate(6deg) translateY(6px) !important;
+  }
+  .book-collage__card--center{
+    width: 168px !important;
+    height: 224px !important;
+    padding: 5px 5px 12px 5px !important;
+  }
+  .book-collage__card--center img{
+    height: 178px !important;
+    border-radius: 4px !important;
+  }
+  .book-collage__handwriting{
+    font-size: 15px !important;
+    margin-top: 4px !important;
+  }
+  .candle-glow{
+    display: none !important;
+  }
+  .book-page--right{
+    padding: 16px 16px 20px !important;
+    text-align: left !important;
+    align-items: flex-start !important;
+  }
+  .story-stream{
+    gap: 12px !important;
+    width: 100% !important;
+  }
+  .story-line{
+    font-size: clamp(15.5px, 4.3vw, 17.5px) !important;
+    line-height: 1.45 !important;
+    margin: 0 !important;
+  }
+  .story-line--highlight{
+    padding-left: 10px !important;
+    border-left-width: 2px !important;
+  }
+  .chapter-actions--ch2{
+    max-width: min(94vw, 380px) !important;
+    margin: 14px auto 0 !important;
+    padding: 0 4px !important;
+  }
 
   /* Chapter 3 Photo Gallery */
   .chapter--3{ padding-top: 60px; padding-bottom: 40px; }
