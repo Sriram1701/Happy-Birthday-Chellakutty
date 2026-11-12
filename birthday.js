@@ -35,7 +35,7 @@ const $ = (id) => document.getElementById(id);
 
 /* Canvas & Finale Wish */
 const canvas = $('tree');
-const ctx    = canvas.getContext('2d');
+const ctx    = canvas ? canvas.getContext('2d') : null;
 const wishEl = $('wish');
 
 /* Act 1 Invitation Elements (Guarded for minimal redesign) */
@@ -2264,49 +2264,47 @@ function initLoveQuestion(){
 
   if (!btnYes || !btnNo) return;
 
-  // Pre-calculated safe playful dodging offsets (px) so NO playfully glides away without leaving screen
-  const DODGE_OFFSETS = [
-    { x: 55,  y: -36 },
-    { x: -50, y: -42 },
-    { x: 45,  y: 36 },
-    { x: -45, y: 38 },
-    { x: 65,  y: 8 },
-    { x: -60, y: -20 },
-    { x: 30,  y: -48 },
-    { x: -35, y: 46 },
-    { x: 52,  y: -22 },
-    { x: -48, y: 22 },
-  ];
-  let currentDodgeIdx = -1;
+  function getSafeNoPosition(){
+    const card = btnNo.closest('.love-question-card');
+    const parent = card || btnNo.parentElement;
+    if (!parent) return { x: 0, y: 0 };
+
+    const parentRect = parent.getBoundingClientRect();
+    const btnRect = btnNo.getBoundingClientRect();
+    const padding = 18;
+    const minX = padding;
+    const maxX = Math.max(padding, parentRect.width - btnRect.width - padding);
+    const minY = padding;
+    const maxY = Math.max(padding, parentRect.height - btnRect.height - padding);
+
+    const x = Math.random() * (maxX - minX) + minX;
+    const y = Math.random() * (maxY - minY) + minY;
+    return { x, y };
+  }
 
   function dodgeNo(e){
     if (e && (e.type === 'touchstart' || e.type === 'pointerdown')){
       if (e.cancelable) e.preventDefault();
     }
-    let nextIdx;
-    do {
-      nextIdx = Math.floor(Math.random() * DODGE_OFFSETS.length);
-    } while (nextIdx === currentDodgeIdx && DODGE_OFFSETS.length > 1);
 
-    currentDodgeIdx = nextIdx;
-    const offset = DODGE_OFFSETS[nextIdx];
+    const { x, y } = getSafeNoPosition();
+    btnNo.style.position = 'absolute';
+    btnNo.style.left = `${x}px`;
+    btnNo.style.top = `${y}px`;
+    btnNo.style.transform = 'none';
 
     if (window.gsap){
       gsap.to(btnNo, {
-        x: offset.x,
-        y: offset.y,
-        duration: 0.28,
+        x: 0,
+        y: 0,
+        duration: 0.22,
         ease: 'power2.out',
       });
-    } else {
-      btnNo.style.transform = `translate(${offset.x}px, ${offset.y}px)`;
     }
   }
 
-  // Pointer hover on desktop for NO (playfully dodges cursor)
   btnNo.addEventListener('pointerenter', dodgeNo);
   btnNo.addEventListener('mouseenter', dodgeNo);
-  // Touch / pointer interaction on mobile for NO (playfully dodges finger)
   btnNo.addEventListener('touchstart', dodgeNo, { passive: false });
   btnNo.addEventListener('pointerdown', dodgeNo);
 
@@ -2474,6 +2472,7 @@ const musicLabel   = $('musicLabel');
 const musicSub     = $('musicSub');
 const bgAudio      = $('bgAudio');
 const audioSourceCandidates = [
+  './assets/music/birthday-song-trimmed.mp3',
   './assets/music/birthday-song.mp3',
   './music/song.mp3'
 ];
@@ -2646,8 +2645,13 @@ function tryFallbackAudio(){
     bgAudio.src = preferredSource;
   }
 
-  if (bgAudio.src.endsWith('/birthday-song.mp3') && bgAudio.error){
+  const isTrimmedAudioSource = /birthday-song(-trimmed)?\.mp3$/i.test(bgAudio.src);
+  if ((bgAudio.src.endsWith('/birthday-song-trimmed.mp3') || bgAudio.src.endsWith('/birthday-song.mp3')) && bgAudio.error){
     bgAudio.src = fallbackSource;
+  }
+
+  if (isTrimmedAudioSource && bgAudio.error){
+    bgAudio.src = './assets/music/birthday-song.mp3';
   }
 
   bgAudio.volume = 0.85;
