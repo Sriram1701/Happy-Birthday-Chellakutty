@@ -462,7 +462,8 @@ function treeStart(){
   treeStartT = 0; treeLastT = 0; lastPetal = 0; replayArmed = false; window.bdayDone = false;
   cue('grow');
   buildScene();
-  if (!treeRAF) treeRAF = requestAnimationFrame(treeFrame);
+  if (treeRAF) cancelAnimationFrame(treeRAF);
+  treeRAF = requestAnimationFrame(treeFrame);
 }
 
 function treeStop(){
@@ -539,13 +540,13 @@ let aimRad = 0, pullUX = 0, pullUY = 0, maxDraw = 60, curDraw = 0;
 let arrowBaseX = 0, arrowBaseY = 0, svgScale = 1, gripX = 0, gripY = 0;
 
 function refreshRig(){
-  W = window.innerWidth;
-  H = window.innerHeight;
+  const winW = window.innerWidth;
+  const winH = window.innerHeight;
   if (!target || !archery) return;
 
   const tR = target.getBoundingClientRect();
-  const tcx = (tR && tR.width > 0) ? (tR.left + tR.width / 2) : (W / 2);
-  const tcy = (tR && tR.height > 0) ? (tR.top + tR.height / 2) : (H * 0.33);
+  const tcx = (tR && tR.width > 0) ? (tR.left + tR.width / 2) : (winW / 2);
+  const tcy = (tR && tR.height > 0) ? (tR.top + tR.height / 2) : (winH * 0.33);
 
   // Temporarily reset transform so measurements are never skewed by prior rotation
   gsap.set(archery, { rotation: 0, scale: 1 });
@@ -555,8 +556,8 @@ function refreshRig(){
   const gripLX = wArchery * 0.50;
   const gripLY = 241 * svgScale;
 
-  gripX = clamp(W * 0.20, 70, 240);
-  gripY = clamp(H * 0.80, H - 220, H - 80);
+  gripX = clamp(winW * 0.20, 70, 240);
+  gripY = clamp(winH * 0.80, winH - 220, winH - 80);
 
   const dx = tcx - gripX;
   const dy = tcy - gripY;
@@ -1689,10 +1690,7 @@ if (ch6PrevBtn) ch6PrevBtn.addEventListener('click', () => onBackFrom(6));
 /* ============================================================
    CHAPTER 6: THE GRAND FINALE (Heart Blossom Tree)
    ============================================================ */
-let finaleStarted = false;
 function enterChapter6(){
-  if (finaleStarted) return;
-  finaleStarted = true;
   resize();
   treeStart();
 
@@ -2063,15 +2061,24 @@ initYouTubePlayer();
 function resize(){
   dpr = Math.min(window.devicePixelRatio || 1, 2);
   const stage = $('treeStage');
-  W = stage && stage.clientWidth ? stage.clientWidth : window.innerWidth;
-  H = stage && stage.clientHeight ? stage.clientHeight : Math.min(window.innerHeight * 0.48, 420);
-  canvas.width = Math.round(W * dpr);
-  canvas.height = Math.round(H * dpr);
-  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  let sW = (stage && stage.clientWidth > 40) ? stage.clientWidth : 0;
+  let sH = (stage && stage.clientHeight > 40) ? stage.clientHeight : 0;
+  if (!sW || !sH){
+    sW = Math.round(Math.min(window.innerWidth - 32, 540));
+    sH = Math.round(clamp(window.innerHeight * 0.44, 280, 420));
+  }
+  W = sW;
+  H = sH;
+  if (canvas && ctx){
+    canvas.width = Math.round(W * dpr);
+    canvas.height = Math.round(H * dpr);
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  }
   buildSprites();
   buildScene();
   if (reduceMotion){ drawFinal(); return; }
-  refreshRig(); setDraw(0);
+  refreshRig();
+  setDraw(0);
 }
 
 let resizeRAF = 0;
