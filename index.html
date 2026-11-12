@@ -174,9 +174,9 @@
             </svg>
           </div>
 
-          <!-- Bottom Navigation Action -->
+          <!-- Bottom Navigation Action (Left-aligned compact, gated until arrow pierces heart) -->
           <div class="minimal-homepage__action">
-            <button class="chapter-cta-btn chapter-cta-btn--hero" id="ch1NextBtn" type="button" aria-label="Continue to Story">
+            <button class="nav-btn nav-btn--continue is-gated" id="ch1NextBtn" type="button" aria-label="Continue">
               <span>Continue &rarr;</span>
             </button>
           </div>
@@ -188,7 +188,7 @@
          CHAPTER 2: A BEAUTIFUL BEGINNING
          (Magical animated memory book with sequential reveals)
          ========================================================== -->
-    <section class="chapter chapter--2" id="chapter2" aria-label="Chapter 2: A Beautiful Beginning">
+    <section class="chapter chapter--2 is-locked" id="chapter2" aria-label="Chapter 2: A Beautiful Beginning">
       <div class="chapter-backdrop" aria-hidden="true">
         <div class="glow-orb glow-orb--left"></div>
         <div class="glow-orb glow-orb--right"></div>
@@ -249,9 +249,12 @@
           </div>
         </div>
 
-        <!-- Navigation Action -->
-        <div class="chapter-actions chapter-actions--centered">
-          <button class="chapter-cta-btn" id="ch2NextBtn" type="button" aria-label="Continue">
+        <!-- Navigation Actions (Left-aligned compact) -->
+        <div class="chapter-actions chapter-actions--ch2">
+          <button class="nav-btn nav-btn--back" id="ch2PrevBtn" type="button" aria-label="Back">
+            <span>&larr; Back</span>
+          </button>
+          <button class="nav-btn nav-btn--continue is-gated" id="ch2NextBtn" type="button" aria-label="Continue">
             <span>Continue &rarr;</span>
           </button>
         </div>
@@ -262,7 +265,7 @@
          CHAPTER 3: LITTLE MOMENTS, BIG MEMORIES
          (10 Polaroid Photo Gallery + Fullscreen Lightbox)
          ========================================================== -->
-    <section class="chapter chapter--3" id="chapter3" aria-label="Chapter 3: Little Moments, Big Memories">
+    <section class="chapter chapter--3 is-locked" id="chapter3" aria-label="Chapter 3: Little Moments, Big Memories">
       <div class="fairy-lights" aria-hidden="true">
         <span class="light-bulb b1"></span>
         <span class="light-bulb b2"></span>
@@ -292,9 +295,15 @@
           <!-- Populated dynamically via birthday.config.js -->
         </div>
 
-        <!-- Navigation Action -->
-        <div class="chapter-actions chapter-actions--centered">
-          <button class="chapter-cta-btn" id="ch3NextBtn" type="button" aria-label="Continue">
+        <!-- Progress tag & Navigation Actions (Left-aligned compact) -->
+        <div class="memories-status-wrap">
+          <span class="memories-progress-pill" id="memoriesProgress">Scroll or tap to view all 17 photos (0/17)</span>
+        </div>
+        <div class="chapter-actions chapter-actions--ch3">
+          <button class="nav-btn nav-btn--back" id="ch3PrevBtn" type="button" aria-label="Back">
+            <span>&larr; Back</span>
+          </button>
+          <button class="nav-btn nav-btn--continue is-gated" id="ch3NextBtn" type="button" aria-label="Continue">
             <span>Continue &rarr;</span>
           </button>
         </div>
@@ -305,7 +314,7 @@
          CHAPTER 4: WORDS FROM THE HEART
          (Personal Heartfelt Letter to Ranjeetha Sri)
          ========================================================== -->
-    <section class="chapter chapter--4" id="chapter4" aria-label="Chapter 4: Words From The Heart">
+    <section class="chapter chapter--4 is-locked" id="chapter4" aria-label="Chapter 4: Words From The Heart">
       <div class="chapter-inner chapter-inner--center letter-section-inner">
         <header class="chapter-badge">
           <span class="chapter-name">Words From The Heart</span>
@@ -334,10 +343,12 @@
             </div>
 
             <!-- Heartfelt Closing & Sign-off -->
-            <div class="personal-letter-signoff">
+            <div class="personal-letter-signoff" id="letterSignoff">
               <p class="personal-letter-closing">Happy Birthday,</p>
               <p class="personal-letter-signature">Gundu ❤️</p>
             </div>
+            <!-- Reading Completion Sentinel -->
+            <div id="letterEndSentinel" style="height: 1px; width: 100%;"></div>
           </div>
 
           <!-- Bottom Stationery Accent -->
@@ -348,10 +359,13 @@
           </div>
         </article>
 
-        <!-- Navigation Action: I've Read It – Continue → -->
-        <div class="chapter-actions chapter-actions--centered letter-action-wrap">
-          <button class="chapter-cta-btn chapter-cta-btn--letter" id="ch4NextBtn" type="button" aria-label="I've Read It – Continue">
-            <span>I've Read It &ndash; Continue &rarr;</span>
+        <!-- Navigation Actions (Left-aligned compact) -->
+        <div class="chapter-actions chapter-actions--ch4 letter-action-wrap">
+          <button class="nav-btn nav-btn--back" id="ch4PrevBtn" type="button" aria-label="Back">
+            <span>&larr; Back</span>
+          </button>
+          <button class="nav-btn nav-btn--continue is-gated" id="ch4NextBtn" type="button" aria-label="Continue">
+            <span>Continue &rarr;</span>
           </button>
         </div>
       </div>
@@ -361,7 +375,7 @@
          CHAPTER 5: WISHES BEYOND WORDS
          (Deep Celestial Night Sky + Floating Sequential Wishes)
          ========================================================== -->
-    <section class="chapter chapter--5" id="chapter5" aria-label="Chapter 5: Wishes Beyond Words">
+    <section class="chapter chapter--5 is-locked" id="chapter5" aria-label="Chapter 5: Wishes Beyond Words">
       <div class="celestial-sky" id="celestialSky" aria-hidden="true">
         <div class="stars-cluster stars-cluster--1"></div>
         <div class="stars-cluster stars-cluster--2"></div>
@@ -386,10 +400,15 @@
         <div class="wishes-grid" id="wishesGrid">
           <!-- Populated dynamically via birthday.config.js -->
         </div>
+        <!-- Wishes Completion Sentinel -->
+        <div id="wishesEndSentinel" style="height: 1px; width: 100%;"></div>
 
-        <!-- Navigation Action -->
-        <div class="chapter-actions chapter-actions--centered">
-          <button class="chapter-cta-btn" id="ch5NextBtn" type="button" aria-label="Continue">
+        <!-- Navigation Actions (Left-aligned compact) -->
+        <div class="chapter-actions chapter-actions--ch5">
+          <button class="nav-btn nav-btn--back" id="ch5PrevBtn" type="button" aria-label="Back">
+            <span>&larr; Back</span>
+          </button>
+          <button class="nav-btn nav-btn--continue is-gated" id="ch5NextBtn" type="button" aria-label="Continue">
             <span>Continue &rarr;</span>
           </button>
         </div>
@@ -400,7 +419,14 @@
          CHAPTER 6: THE GRAND FINALE
          (Blossom Tree + Birthday Wish + Playful Love Question)
          ========================================================== -->
-    <section class="chapter chapter--6" id="chapter6" aria-label="Chapter 6: The Grand Finale">
+    <section class="chapter chapter--6 is-locked" id="chapter6" aria-label="Chapter 6: The Grand Finale">
+      <!-- Top-left Back button -->
+      <div class="chapter-actions chapter-actions--ch6">
+        <button class="nav-btn nav-btn--back" id="ch6PrevBtn" type="button" aria-label="Back">
+          <span>&larr; Back</span>
+        </button>
+      </div>
+
       <!-- 1. Blossom Tree Stage Container (Clean centered frame) -->
       <div class="tree-stage" id="treeStage">
         <canvas id="tree" class="tree" aria-label="A blossom tree blooms into a heart of lit petals" role="img"></canvas>

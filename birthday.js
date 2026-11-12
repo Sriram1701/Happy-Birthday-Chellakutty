@@ -871,48 +871,52 @@ function initCupidCenterpiece(){
     isAnimating = true;
 
     const tl = gsap.timeline({
-      onComplete: () => { isAnimating = false; }
+      onComplete: () => {
+        isAnimating = false;
+        // Arrow successfully hit the heart -> complete Chapter 1
+        completeChapter(1);
+      }
     });
 
-    // Retract arrow slightly back along its diagonal flight path
-    gsap.set(arrowCarrier, { x: -80, y: -50, opacity: 0 });
+    // Animate the arrow shooting through and piercing the heart
+    gsap.set(arrowCarrier, { x: -160, y: -100, opacity: 0 });
 
     tl.to(arrowCarrier, {
       opacity: 1,
-      duration: 0.28,
+      duration: 0.25,
       ease: 'power1.out'
-    }, 0.15)
+    }, 0.2)
     .to(arrowCarrier, {
       x: 0,
       y: 0,
-      duration: 1.05,
-      ease: 'power2.out'
-    }, 0.15)
+      duration: 0.85,
+      ease: 'power3.inOut'
+    }, 0.2)
     // Heart expansion and joyful recoil on impact
     .to(heartGroup, {
-      scale: 1.12,
+      scale: 1.15,
       duration: 0.22,
       ease: 'back.out(2)',
       transformOrigin: '170px 140px'
-    }, 0.62)
+    }, 0.75)
     .to(heartGroup, {
       scale: 1,
       duration: 0.55,
       ease: 'elastic.out(1, 0.5)',
       transformOrigin: '170px 140px'
-    }, 0.84);
+    }, 0.97);
 
     if (pulseGlow){
       tl.fromTo(pulseGlow,
         { scale: 0.8, opacity: 0.3 },
-        { scale: 1.35, opacity: 0.95, duration: 0.45, yoyo: true, repeat: 1, ease: 'power2.out' },
-        0.62
+        { scale: 1.4, opacity: 0.95, duration: 0.45, yoyo: true, repeat: 1, ease: 'power2.out' },
+        0.75
       );
     }
   }
 
   // Smooth entrance pierce animation
-  setTimeout(playPierce, 350);
+  setTimeout(playPierce, 500);
 
   if (!cupidInitialized){
     cupidInitialized = true;
@@ -939,28 +943,79 @@ function resetChapter1(){
 }
 
 /* ============================================================
-   CHAPTER NAVIGATION SYSTEM (Chapters 1 to 6)
+   STRICT PAGE PROGRESSION & CHAPTER NAVIGATION SYSTEM
    ============================================================ */
-let activeChapter = 1;
-const CHAPTER_TITLES = [
-  'Chapter I • The Invitation',
-  'Chapter II • A Beautiful Beginning',
-  'Chapter III • Little Moments, Big Memories',
-  'Chapter IV • Words From The Heart',
-  'Chapter V • Wishes Beyond Words',
-  'Chapter VI • The Grand Finale',
-];
+let highestUnlockedChapter = 1;
+const completedChapters = new Set();
+
+function isChapterUnlocked(num){
+  return num <= highestUnlockedChapter;
+}
+
+function unlockChapter(num){
+  if (num > highestUnlockedChapter){
+    highestUnlockedChapter = num;
+  }
+  for (let i = 1; i <= 6; i++){
+    const chap = $(`chapter${i}`);
+    if (chap){
+      if (i <= highestUnlockedChapter){
+        chap.classList.remove('is-locked');
+      } else {
+        chap.classList.add('is-locked');
+      }
+    }
+  }
+
+  // Trigger chapter initialization
+  if (num === 2) enterChapter2();
+  if (num === 3) initChapter3();
+  if (num === 4) initChapter4();
+  if (num === 5) initChapter5();
+  if (num === 6) enterChapter6();
+}
+
+function completeChapter(num){
+  completedChapters.add(num);
+  const nextBtn = $(`ch${num}NextBtn`);
+  if (nextBtn && nextBtn.classList.contains('is-gated')){
+    nextBtn.classList.remove('is-gated');
+    if (window.gsap){
+      gsap.fromTo(nextBtn,
+        { opacity: 0, y: 12, scale: 0.95 },
+        { opacity: 1, y: 0, scale: 1, duration: 0.45, ease: 'back.out(1.5)' }
+      );
+    }
+  }
+  // Ensure next chapter is un-locked in DOM
+  if (num + 1 <= 6){
+    const nextChap = $(`chapter${num + 1}`);
+    if (nextChap) nextChap.classList.remove('is-locked');
+  }
+}
 
 function scrollToChapter(targetNum){
   if (targetNum < 1 || targetNum > 6) return;
+  unlockChapter(targetNum);
   const targetEl = $(`chapter${targetNum}`);
   if (targetEl){
     targetEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
 }
 
-function switchChapter(targetNum){
-  scrollToChapter(targetNum);
+function onContinueFrom(currentNum){
+  const nextNum = currentNum + 1;
+  if (nextNum > 6) return;
+  unlockChapter(nextNum);
+  setTimeout(() => {
+    scrollToChapter(nextNum);
+  }, 40);
+}
+
+function onBackFrom(currentNum){
+  const prevNum = currentNum - 1;
+  if (prevNum < 1) return;
+  scrollToChapter(prevNum);
 }
 
 /* ============================================================
@@ -976,33 +1031,45 @@ function enterChapter2(){
   [l1, l2, l3].forEach((el) => { if (el) el.classList.remove('is-revealed'); });
 
   setTimeout(() => { if (l1) l1.classList.add('is-revealed'); }, 500);
-  setTimeout(() => { if (l2) l2.classList.add('is-revealed'); }, 2000);
-  setTimeout(() => { if (l3) l3.classList.add('is-revealed'); }, 3500);
-}
+  setTimeout(() => { if (l2) l2.classList.add('is-revealed'); }, 1800);
+  setTimeout(() => {
+    if (l3) l3.classList.add('is-revealed');
+    completeChapter(2); // Reveal Continue!
+  }, 3200);
 
-const heroSkipBtn = $('heroSkipBtn');
-if (heroSkipBtn){
-  heroSkipBtn.addEventListener('click', (e) => {
-    e.stopPropagation();
-    scrollToChapter(2);
-  });
+  // Tap memory book to immediately reveal all lines and complete
+  const book = $('memoryBook');
+  if (book){
+    book.addEventListener('click', () => {
+      [l1, l2, l3].forEach((el) => { if (el) el.classList.add('is-revealed'); });
+      completeChapter(2);
+    }, { once: true });
+  }
 }
-
-const ch1NextBtn = $('ch1NextBtn');
-if (ch1NextBtn){
-  ch1NextBtn.addEventListener('click', (e) => {
-    e.stopPropagation();
-    scrollToChapter(2);
-  });
-}
-
-const ch2NextBtn = $('ch2NextBtn');
-if (ch2NextBtn) ch2NextBtn.addEventListener('click', () => scrollToChapter(3));
 
 /* ============================================================
-   CHAPTER 3: LITTLE MOMENTS, BIG MEMORIES (Polaroids + Lightbox)
+   CHAPTER 3: LITTLE MOMENTS, BIG MEMORIES (17 Polaroids)
    ============================================================ */
 let chapter3Initialized = false;
+const viewedMemories = new Set();
+
+function markMemoryViewed(idx){
+  if (idx < 0 || idx >= BIRTHDAY_CONFIG.photos.length) return;
+  viewedMemories.add(idx);
+  const prog = $('memoriesProgress');
+  const total = BIRTHDAY_CONFIG.photos.length;
+  if (prog){
+    if (viewedMemories.size >= total){
+      prog.textContent = `All ${total} memories viewed ♥`;
+      prog.classList.add('is-complete');
+    } else {
+      prog.textContent = `Scroll or tap to view all 17 photos (${viewedMemories.size}/${total})`;
+    }
+  }
+  if (viewedMemories.size >= total){
+    completeChapter(3); // Reveal Continue!
+  }
+}
 
 function initChapter3(){
   if (chapter3Initialized) return;
@@ -1030,29 +1097,32 @@ function initChapter3(){
 
   grid.querySelectorAll('.polaroid-card').forEach((card) => {
     const idx = parseInt(card.getAttribute('data-index'), 10);
-    card.addEventListener('click', () => openLightbox(idx));
+    card.addEventListener('click', () => {
+      markMemoryViewed(idx);
+      openLightbox(idx);
+    });
     card.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter' || e.key === ' '){ e.preventDefault(); openLightbox(idx); }
+      if (e.key === 'Enter' || e.key === ' '){
+        e.preventDefault();
+        markMemoryViewed(idx);
+        openLightbox(idx);
+      }
     });
   });
 
-  // Stage Filter Buttons
-  const stagePills = document.querySelectorAll('#galleryStages .stage-pill');
-  stagePills.forEach(pill => {
-    pill.addEventListener('click', () => {
-      stagePills.forEach(p => p.classList.remove('is-active'));
-      pill.classList.add('is-active');
-      const selected = pill.getAttribute('data-stage');
-      grid.querySelectorAll('.polaroid-card').forEach(card => {
-        const cardStage = card.getAttribute('data-stage');
-        if (selected === 'all' || cardStage === selected){
-          card.style.display = '';
-        } else {
-          card.style.display = 'none';
+  // Observe cards as user scrolls down the gallery
+  if ('IntersectionObserver' in window){
+    const cardObserver = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting){
+          const idx = parseInt(entry.target.getAttribute('data-index'), 10);
+          if (!isNaN(idx)) markMemoryViewed(idx);
         }
       });
-    });
-  });
+    }, { threshold: 0.25 });
+
+    grid.querySelectorAll('.polaroid-card').forEach(card => cardObserver.observe(card));
+  }
 }
 
 function enterChapter3(){
@@ -1076,6 +1146,7 @@ function updateLightboxContent(idx){
   const item = BIRTHDAY_CONFIG.photos[idx];
   if (!item) return;
   currentMemoryIdx = idx;
+  markMemoryViewed(idx);
 
   if (lightboxImg){
     lightboxImg.src = `./images/${item.filename}`;
@@ -1142,17 +1213,11 @@ if (lightbox){
   }, { passive: true });
 }
 
-const ch3NextBtn = $('ch3NextBtn');
-if (ch3NextBtn) ch3NextBtn.addEventListener('click', () => scrollToChapter(4));
-
 /* ============================================================
    CHAPTER 4: WORDS FROM THE HEART (Personal Heartfelt Letter)
    ============================================================ */
 let isLetterRead = false;
 let wasMusicPlayingBeforeLetter = false;
-
-// Lock subsequent chapters on load so she reads the letter first
-document.body.classList.add('chapters-locked-after-letter');
 
 function initChapter4(){
   const salutation = $('letterSalutation');
@@ -1166,6 +1231,20 @@ function initChapter4(){
       .map(p => `<p>${p}</p>`)
       .join('');
   }
+
+  // Observe end of letter sentinel to verify reading
+  const endSentinel = $('letterEndSentinel');
+  if (endSentinel && 'IntersectionObserver' in window){
+    const letterObserver = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting){
+          completeChapter(4);
+          letterObserver.disconnect();
+        }
+      });
+    }, { threshold: 0.1 });
+    letterObserver.observe(endSentinel);
+  }
 }
 
 function enterChapter4(){
@@ -1175,25 +1254,6 @@ function enterChapter4(){
     wasMusicPlayingBeforeLetter = true;
     pauseMusic();
   }
-}
-
-const ch4NextBtn = $('ch4NextBtn');
-if (ch4NextBtn){
-  ch4NextBtn.addEventListener('click', (e) => {
-    e.stopPropagation();
-    isLetterRead = true;
-    document.body.classList.remove('chapters-locked-after-letter');
-    initChapter5();
-    
-    // Resume music if it was playing before entering the silent letter reading
-    if (wasMusicPlayingBeforeLetter){
-      tryPlayMusic();
-    }
-    
-    setTimeout(() => {
-      scrollToChapter(5);
-    }, 60);
-  });
 }
 
 /* ============================================================
@@ -1215,6 +1275,20 @@ function initChapter5(){
       <p class="wish-text">&ldquo;${w.text}&rdquo;</p>
     </article>
   `).join('');
+
+  // Observe end of wishes sentinel to verify reaching the end
+  const endSentinel = $('wishesEndSentinel');
+  if (endSentinel && 'IntersectionObserver' in window){
+    const wishesObserver = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting){
+          completeChapter(5);
+          wishesObserver.disconnect();
+        }
+      });
+    }, { threshold: 0.1 });
+    wishesObserver.observe(endSentinel);
+  }
 }
 
 function enterChapter5(){
@@ -1225,8 +1299,46 @@ function enterChapter5(){
   );
 }
 
+/* ============================================================
+   NAVIGATION BUTTON ATTACHMENTS (All Chapters)
+   ============================================================ */
+const ch1NextBtn = $('ch1NextBtn');
+if (ch1NextBtn) ch1NextBtn.addEventListener('click', () => onContinueFrom(1));
+
+const ch2PrevBtn = $('ch2PrevBtn');
+if (ch2PrevBtn) ch2PrevBtn.addEventListener('click', () => onBackFrom(2));
+
+const ch2NextBtn = $('ch2NextBtn');
+if (ch2NextBtn) ch2NextBtn.addEventListener('click', () => onContinueFrom(2));
+
+const ch3PrevBtn = $('ch3PrevBtn');
+if (ch3PrevBtn) ch3PrevBtn.addEventListener('click', () => onBackFrom(3));
+
+const ch3NextBtn = $('ch3NextBtn');
+if (ch3NextBtn) ch3NextBtn.addEventListener('click', () => onContinueFrom(3));
+
+const ch4PrevBtn = $('ch4PrevBtn');
+if (ch4PrevBtn) ch4PrevBtn.addEventListener('click', () => onBackFrom(4));
+
+const ch4NextBtn = $('ch4NextBtn');
+if (ch4NextBtn){
+  ch4NextBtn.addEventListener('click', () => {
+    isLetterRead = true;
+    if (wasMusicPlayingBeforeLetter){
+      tryPlayMusic();
+    }
+    onContinueFrom(4);
+  });
+}
+
+const ch5PrevBtn = $('ch5PrevBtn');
+if (ch5PrevBtn) ch5PrevBtn.addEventListener('click', () => onBackFrom(5));
+
 const ch5NextBtn = $('ch5NextBtn');
-if (ch5NextBtn) ch5NextBtn.addEventListener('click', () => scrollToChapter(6));
+if (ch5NextBtn) ch5NextBtn.addEventListener('click', () => onContinueFrom(5));
+
+const ch6PrevBtn = $('ch6PrevBtn');
+if (ch6PrevBtn) ch6PrevBtn.addEventListener('click', () => onBackFrom(6));
 
 /* ============================================================
    CHAPTER 6: THE GRAND FINALE (Heart Blossom Tree)
@@ -1628,6 +1740,7 @@ if (reduceMotion){
 } else {
   buildMotes();
   document.fonts && document.fonts.ready.then(() => { refreshRig(); setDraw(0); });
+  unlockChapter(1);
   enterChapter1();
 }
 
