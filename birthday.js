@@ -859,66 +859,58 @@ if (target){
    Target Heart (Top) + Interactive Golden Bow & Arrow (Bottom)
    ============================================================ */
 let cupidInitialized = false;
+let cupidHasHit = false;
+let cupidIsFlying = false;
+let cupidIsPulling = false;
+let cupidCurrentPull = 0;
+let cupidDragStartY = 0;
+let cupidPullStartTime = 0;
 
-function initCupidCenterpiece(){
-  const centerpiece = $('cupidCenterpiece');
-  const arrowCarrier = $('cupidArrowCarrier');
-  const heartGroup = $('cupidHeartGroup');
-  const pulseGlow = $('cupidPulseGlow');
+function updateBowstring(dy){
   const bowString = $('cupidBowString');
-  const instruction = $('cupidInstruction');
-  const ch1NextBtn = $('ch1NextBtn');
-  if (!centerpiece || !arrowCarrier || !heartGroup) return;
+  if (!bowString) return;
+  const nockY = 372 + dy;
+  bowString.setAttribute('d', `M 82 360 L 170 ${nockY} L 258 360`);
+}
 
-  let isPulling = false;
-  let hasHit = false;
-  let isFlying = false;
-  let dragStartY = 0;
-  let currentPull = 0;
+function launchCupidArrow(){
+  if (cupidHasHit || cupidIsFlying) return;
+  cupidIsFlying = true;
+  cupidIsPulling = false;
 
-  // Initial resting state: arrow on bowstring at bottom
-  gsap.set(arrowCarrier, { x: 0, y: 0, opacity: 1 });
-  if (bowString) bowString.setAttribute('d', 'M 82 360 L 170 372 L 258 360');
-  if (instruction && !hasHit) instruction.innerHTML = 'PULL TO RELEASE';
+  const arrowCarrier = $('cupidArrowCarrier');
+  const bowString    = $('cupidBowString');
+  const heartGroup   = $('cupidHeartGroup');
+  const pulseGlow    = $('cupidPulseGlow');
+  const centerpiece  = $('cupidCenterpiece');
+  const instruction  = $('cupidInstruction');
+  if (!arrowCarrier) return;
 
-  if (arrowCarrier.dataset.hasCupidListener === 'true') return;
-  arrowCarrier.dataset.hasCupidListener = 'true';
-
-  function updateBowstring(dy){
-    if (!bowString) return;
-    const nockY = 372 + dy;
-    bowString.setAttribute('d', `M 82 360 L 170 ${nockY} L 258 360`);
+  // 1. Bowstring snap animation
+  if (bowString){
+    gsap.timeline()
+      .to(bowString, {
+        duration: 0.08,
+        onUpdate: () => bowString.setAttribute('d', 'M 82 360 L 170 354 L 258 360')
+      })
+      .to(bowString, {
+        duration: 0.25,
+        ease: 'elastic.out(1, 0.4)',
+        onUpdate: () => bowString.setAttribute('d', 'M 82 360 L 170 372 L 258 360')
+      });
   }
 
-  function launchArrow(){
-    if (hasHit || isFlying) return;
-    isFlying = true;
-    isPulling = false;
+  // 2. Arrow travels swiftly upwards toward the target heart center (y: -165px)
+  gsap.to(arrowCarrier, {
+    y: -165,
+    duration: 0.32,
+    ease: 'power3.in',
+    onComplete: () => {
+      cupidIsFlying = false;
+      cupidHasHit = true;
 
-    // Bowstring snap animation
-    if (bowString){
-      gsap.timeline()
-        .to(bowString, {
-          duration: 0.08,
-          onUpdate: () => bowString.setAttribute('d', 'M 82 360 L 170 354 L 258 360')
-        })
-        .to(bowString, {
-          duration: 0.25,
-          ease: 'elastic.out(1, 0.4)',
-          onUpdate: () => bowString.setAttribute('d', 'M 82 360 L 170 372 L 258 360')
-        });
-    }
-
-    // Arrow travels swiftly upwards toward the target heart center (y: -165px)
-    gsap.to(arrowCarrier, {
-      y: -165,
-      duration: 0.32,
-      ease: 'power3.in',
-      onComplete: () => {
-        isFlying = false;
-        hasHit = true;
-
-        // Heart impact recoil & elastic bounce
+      // Heart impact recoil & elastic bounce
+      if (heartGroup){
         gsap.timeline({
           onComplete: () => {
             // Reveal Continue button and unlock Page 2 ONLY AFTER the full heart impact animation finishes
@@ -937,67 +929,128 @@ function initCupidCenterpiece(){
             ease: 'elastic.out(1, 0.45)',
             transformOrigin: '170px 82px'
           });
+      } else {
+        completeChapter('chapter1');
+      }
 
-        // Glowing shockwave behind heart
-        if (pulseGlow){
-          gsap.fromTo(pulseGlow,
-            { scale: 0.85, opacity: 0.25 },
-            { scale: 1.55, opacity: 0.95, duration: 0.4, yoyo: true, repeat: 1, ease: 'power2.out' }
-          );
-        }
+      // Glowing shockwave behind heart
+      if (pulseGlow){
+        gsap.fromTo(pulseGlow,
+          { scale: 0.85, opacity: 0.25 },
+          { scale: 1.55, opacity: 0.95, duration: 0.4, yoyo: true, repeat: 1, ease: 'power2.out' }
+        );
+      }
 
-        // Sparkles and celebration burst right on the heart impact point
+      // Sparkles and celebration burst right on the heart impact point
+      if (centerpiece){
         const rect = centerpiece.getBoundingClientRect();
         const burstX = rect.left + rect.width * 0.5;
         const burstY = rect.top + rect.height * 0.22;
         spawnCelebrationBurst(burstX, burstY);
+      }
 
-        if (instruction){
-          instruction.innerHTML = '✨ Bullseye! Happy Birthday Ranjeetha Sri! ❤️';
-          gsap.fromTo(instruction, { scale: 0.95 }, { scale: 1, duration: 0.35, ease: 'back.out(2)' });
-        }
+      if (instruction){
+        instruction.innerHTML = '✨ Bullseye! Happy Birthday Ranjeetha Sri! ❤️';
+        gsap.fromTo(instruction, { scale: 0.95 }, { scale: 1, duration: 0.35, ease: 'back.out(2)' });
+      }
 
-        tryPlayMusic();
+      tryPlayMusic();
+    }
+  });
+}
+window.launchCupidArrow = launchCupidArrow;
+
+function triggerArrowShot(){
+  if (cupidHasHit || cupidIsFlying) return;
+  const arrowCarrier = $('cupidArrowCarrier');
+  const bowString    = $('cupidBowString');
+  if (cupidCurrentPull < 12 && arrowCarrier && bowString){
+    // Quick, satisfying pull-back and release animation for clicks/taps
+    cupidIsFlying = true;
+    gsap.to(arrowCarrier, {
+      y: 36,
+      duration: 0.16,
+      ease: 'power1.out',
+      onUpdate: () => updateBowstring(gsap.getProperty(arrowCarrier, 'y') || 36),
+      onComplete: () => {
+        cupidIsFlying = false;
+        launchCupidArrow();
       }
     });
+  } else {
+    launchCupidArrow();
   }
-  window.launchCupidArrow = launchArrow;
+}
 
-  // Pointer interactions on Arrow Carrier
-  arrowCarrier.style.cursor = 'grab';
-  arrowCarrier.style.touchAction = 'none';
+function resetCupidArrow(){
+  cupidHasHit = false;
+  cupidIsFlying = false;
+  cupidIsPulling = false;
+  cupidCurrentPull = 0;
+  const arrowCarrier = $('cupidArrowCarrier');
+  const instruction = $('cupidInstruction');
+  if (arrowCarrier){
+    gsap.killTweensOf(arrowCarrier);
+    gsap.to(arrowCarrier, { y: 0, duration: 0.35, ease: 'power2.out' });
+  }
+  updateBowstring(0);
+  if (instruction){
+    instruction.innerHTML = 'PULL DOWN OR TAP TO SHOOT 🏹';
+  }
+}
+window.resetCupidArrow = resetCupidArrow;
 
-  function onPointerStart(e){
-    if (isFlying) return;
-    if (hasHit){
-      // Allow replaying: reset arrow back to bow
-      hasHit = false;
-      gsap.to(arrowCarrier, { y: 0, duration: 0.35, ease: 'power2.out' });
-      if (instruction) instruction.innerHTML = 'PULL TO RELEASE';
+function initCupidCenterpiece(){
+  const centerpiece = $('cupidCenterpiece');
+  const arrowCarrier = $('cupidArrowCarrier');
+  const heartGroup = $('cupidHeartGroup');
+  const bowFrame = $('cupidBowFrame');
+  const instruction = $('cupidInstruction');
+  if (!centerpiece || !arrowCarrier || !heartGroup) return;
+
+  // Reset resting state
+  if (!cupidHasHit && !cupidIsFlying){
+    gsap.set(arrowCarrier, { x: 0, y: 0, opacity: 1 });
+    updateBowstring(0);
+    if (instruction) instruction.innerHTML = 'PULL DOWN OR TAP TO SHOOT 🏹';
+  }
+
+  if (arrowCarrier.dataset.hasCupidListener === 'true') return;
+  arrowCarrier.dataset.hasCupidListener = 'true';
+
+  function getClientY(e){
+    if (e.clientY != null) return e.clientY;
+    if (e.touches && e.touches[0]) return e.touches[0].clientY;
+    if (e.changedTouches && e.changedTouches[0]) return e.changedTouches[0].clientY;
+    return 0;
+  }
+
+  function handleStart(e){
+    if (cupidIsFlying) return;
+    if (cupidHasHit){
+      resetCupidArrow();
       return;
     }
-    isPulling = true;
-    dragStartY = e.clientY;
-    currentPull = 0;
+    cupidIsPulling = true;
+    cupidDragStartY = getClientY(e);
+    cupidPullStartTime = Date.now();
+    cupidCurrentPull = 0;
     arrowCarrier.style.cursor = 'grabbing';
-    try { arrowCarrier.setPointerCapture(e.pointerId); } catch (_) {}
-    document.body.style.overflow = 'hidden';
+    try {
+      if (e.pointerId && arrowCarrier.setPointerCapture) {
+        arrowCarrier.setPointerCapture(e.pointerId);
+      }
+    } catch (_) {}
   }
 
-  arrowCarrier.addEventListener('pointerdown', onPointerStart);
+  function handleMove(e){
+    if (!cupidIsPulling || cupidHasHit || cupidIsFlying) return;
+    const y = getClientY(e);
+    const deltaY = y - cupidDragStartY;
 
-  const bowFrame = $('cupidBowFrame');
-  if (bowFrame){
-    bowFrame.style.cursor = 'grab';
-    bowFrame.addEventListener('pointerdown', onPointerStart);
-  }
-
-  window.addEventListener('pointermove', (e) => {
-    if (!isPulling || hasHit || isFlying) return;
-    const deltaY = e.clientY - dragStartY;
-    // Allow pulling downward up to 65px
+    // Pulling downward up to 65px
     const pull = Math.max(0, Math.min(65, deltaY));
-    currentPull = pull;
+    cupidCurrentPull = pull;
 
     gsap.set(arrowCarrier, { y: pull });
     updateBowstring(pull);
@@ -1009,46 +1062,91 @@ function initCupidCenterpiece(){
         instruction.innerHTML = 'PULL DOWNWARD 🏹';
       }
     }
-  });
+  }
 
-  function onPointerEnd(e){
-    if (!isPulling) return;
-    isPulling = false;
+  function handleEnd(e){
+    if (!cupidIsPulling) return;
+    cupidIsPulling = false;
     arrowCarrier.style.cursor = 'grab';
-    document.body.style.overflow = '';
+
     try {
-      if (arrowCarrier.hasPointerCapture && arrowCarrier.hasPointerCapture(e.pointerId)){
+      if (e.pointerId && arrowCarrier.hasPointerCapture && arrowCarrier.hasPointerCapture(e.pointerId)){
         arrowCarrier.releasePointerCapture(e.pointerId);
       }
     } catch (_) {}
 
-    if (!hasHit && !isFlying){
-      if (currentPull >= 10){
-        launchArrow();
-      } else {
-        // Return smoothly to resting bowstring
-        gsap.to(arrowCarrier, {
-          y: 0,
-          duration: 0.28,
-          ease: 'elastic.out(1, 0.45)',
-          onUpdate: () => updateBowstring(gsap.getProperty(arrowCarrier, 'y')),
-          onComplete: () => {
-            updateBowstring(0);
-            if (instruction) instruction.innerHTML = 'PULL TO RELEASE';
-          }
-        });
-        currentPull = 0;
-      }
+    if (cupidHasHit || cupidIsFlying) return;
+
+    const pullDuration = Date.now() - cupidPullStartTime;
+    // If dragged downward >= 10px -> launch immediately
+    if (cupidCurrentPull >= 10){
+      launchCupidArrow();
+    }
+    // If user tapped/clicked quickly (< 420ms) without much drag -> trigger animated pullback & shoot!
+    else if (pullDuration < 420 && cupidCurrentPull < 10){
+      triggerArrowShot();
+    }
+    else {
+      // User slowly dragged < 10px and gave up: return smoothly to resting position
+      gsap.to(arrowCarrier, {
+        y: 0,
+        duration: 0.28,
+        ease: 'elastic.out(1, 0.45)',
+        onUpdate: () => updateBowstring(gsap.getProperty(arrowCarrier, 'y') || 0),
+        onComplete: () => {
+          updateBowstring(0);
+          if (instruction) instruction.innerHTML = 'PULL DOWN OR TAP TO SHOOT 🏹';
+        }
+      });
+      cupidCurrentPull = 0;
     }
   }
 
-  window.addEventListener('pointerup', onPointerEnd);
-  window.addEventListener('pointercancel', onPointerEnd);
+  // Pointer Events (Desktop & Modern Mobile)
+  arrowCarrier.addEventListener('pointerdown', handleStart);
+  window.addEventListener('pointermove', handleMove);
+  window.addEventListener('pointerup', handleEnd);
+  window.addEventListener('pointercancel', handleEnd);
+
+  // Native Touch Events (Rock-solid Fallback for Mobile WebKit & Android)
+  arrowCarrier.addEventListener('touchstart', (e) => {
+    e.preventDefault();
+    handleStart(e);
+  }, { passive: false });
+
+  window.addEventListener('touchmove', (e) => {
+    if (cupidIsPulling) {
+      e.preventDefault();
+      handleMove(e);
+    }
+  }, { passive: false });
+
+  window.addEventListener('touchend', (e) => {
+    if (cupidIsPulling) {
+      handleEnd(e);
+    }
+  });
+
+  window.addEventListener('touchcancel', (e) => {
+    if (cupidIsPulling) {
+      handleEnd(e);
+    }
+  });
+
+  // Bow frame tap/click also triggers
+  if (bowFrame){
+    bowFrame.style.cursor = 'grab';
+    bowFrame.addEventListener('pointerdown', handleStart);
+    bowFrame.addEventListener('touchstart', (e) => {
+      e.preventDefault();
+      handleStart(e);
+    }, { passive: false });
+  }
 
   // Heart gentle beat on click if not shot yet
   heartGroup.style.cursor = 'pointer';
   heartGroup.addEventListener('click', () => {
-    if (!hasHit){
+    if (!cupidHasHit){
       gsap.to(heartGroup, {
         scale: 1.08,
         duration: 0.15,
@@ -1057,17 +1155,22 @@ function initCupidCenterpiece(){
         ease: 'power2.out',
         transformOrigin: '170px 82px'
       });
-      if (instruction) instruction.innerHTML = 'PULL THE ARROW DOWN &amp; RELEASE! 🏹';
+      // Also trigger shot when heart is clicked so user can never be stuck
+      triggerArrowShot();
     }
   });
 }
 
 function enterChapter1(){
-  initCupidCenterpiece();
+  if (cupidHasHit){
+    resetCupidArrow();
+  } else {
+    initCupidCenterpiece();
+  }
 }
 
 function resetChapter1(){
-  initCupidCenterpiece();
+  resetCupidArrow();
 }
 
 /* ============================================================
