@@ -855,7 +855,7 @@ if (target){
 
 /* ============================================================
    CHAPTER 1: SIMPLE & ELEGANT BIRTHDAY HOMEPAGE
-   Minimal, clean, centered, glowing heart + Cupid arrow
+   Target Heart (Top) + Interactive Golden Bow & Arrow (Bottom)
    ============================================================ */
 let cupidInitialized = false;
 
@@ -864,144 +864,187 @@ function initCupidCenterpiece(){
   const arrowCarrier = $('cupidArrowCarrier');
   const heartGroup = $('cupidHeartGroup');
   const pulseGlow = $('cupidPulseGlow');
+  const bowString = $('cupidBowString');
+  const instruction = $('cupidInstruction');
   const ch1NextBtn = $('ch1NextBtn');
   if (!centerpiece || !arrowCarrier || !heartGroup) return;
 
-  let isAnimating = false;
+  let isPulling = false;
   let hasHit = false;
-  let isDragging = false;
-  let dragStartX = 0;
+  let isFlying = false;
   let dragStartY = 0;
-  let pullDist = 0;
+  let currentPull = 0;
 
-  function playPierce(forceReplay = false){
-    if (isAnimating) return;
-    if (hasHit && !forceReplay) return;
-    isAnimating = true;
+  // Initial resting state: arrow on bowstring at bottom
+  gsap.set(arrowCarrier, { x: 0, y: 0, opacity: 1 });
+  if (bowString) bowString.setAttribute('d', 'M 82 360 L 170 372 L 258 360');
+  if (instruction && !hasHit) instruction.innerHTML = 'PULL TO RELEASE';
 
-    // Reset arrow back to pre-launch trajectory
-    gsap.killTweensOf(arrowCarrier);
-    gsap.killTweensOf(heartGroup);
-    if (pulseGlow) gsap.killTweensOf(pulseGlow);
+  if (arrowCarrier.dataset.hasCupidListener === 'true') return;
+  arrowCarrier.dataset.hasCupidListener = 'true';
 
-    gsap.set(arrowCarrier, { x: -240, y: -150, opacity: 0 });
+  function updateBowstring(dy){
+    if (!bowString) return;
+    const nockY = 372 + dy;
+    bowString.setAttribute('d', `M 82 360 L 170 ${nockY} L 258 360`);
+  }
 
-    const tl = gsap.timeline({
+  function launchArrow(){
+    if (hasHit || isFlying) return;
+    isFlying = true;
+    isPulling = false;
+
+    // Bowstring snap animation
+    if (bowString){
+      gsap.timeline()
+        .to(bowString, {
+          duration: 0.08,
+          onUpdate: () => bowString.setAttribute('d', 'M 82 360 L 170 354 L 258 360')
+        })
+        .to(bowString, {
+          duration: 0.25,
+          ease: 'elastic.out(1, 0.4)',
+          onUpdate: () => bowString.setAttribute('d', 'M 82 360 L 170 372 L 258 360')
+        });
+    }
+
+    // Arrow travels swiftly upwards toward the target heart center (y: -165px)
+    gsap.to(arrowCarrier, {
+      y: -165,
+      duration: 0.32,
+      ease: 'power3.in',
       onComplete: () => {
-        isAnimating = false;
+        isFlying = false;
         hasHit = true;
+
+        // Heart impact recoil & elastic bounce
+        gsap.timeline()
+          .to(heartGroup, {
+            scale: 1.25,
+            duration: 0.16,
+            ease: 'back.out(2)',
+            transformOrigin: '170px 82px'
+          })
+          .to(heartGroup, {
+            scale: 1,
+            duration: 0.55,
+            ease: 'elastic.out(1, 0.45)',
+            transformOrigin: '170px 82px'
+          });
+
+        // Glowing shockwave behind heart
+        if (pulseGlow){
+          gsap.fromTo(pulseGlow,
+            { scale: 0.85, opacity: 0.25 },
+            { scale: 1.55, opacity: 0.95, duration: 0.4, yoyo: true, repeat: 1, ease: 'power2.out' }
+          );
+        }
+
+        // Sparkles and celebration burst right on the heart impact point
+        const rect = centerpiece.getBoundingClientRect();
+        const burstX = rect.left + rect.width * 0.5;
+        const burstY = rect.top + rect.height * 0.22;
+        spawnCelebrationBurst(burstX, burstY);
+
+        if (instruction){
+          instruction.innerHTML = '✨ Bullseye! Happy Birthday Ranjeetha Sri! ❤️';
+          gsap.fromTo(instruction, { scale: 0.95 }, { scale: 1, duration: 0.35, ease: 'back.out(2)' });
+        }
+
+        // Complete Chapter 1 and reveal Continue button
         completeChapter(1);
         tryPlayMusic();
       }
     });
-
-    // Arrow swooshes in smoothly and pierces through the heart
-    tl.to(arrowCarrier, {
-      opacity: 1,
-      duration: 0.15,
-      ease: 'power1.out'
-    }, 0.1)
-    .to(arrowCarrier, {
-      x: 0,
-      y: 0,
-      duration: 0.65,
-      ease: 'power3.inOut'
-    }, 0.1)
-    // Heart recoil on impact
-    .to(heartGroup, {
-      scale: 1.18,
-      duration: 0.18,
-      ease: 'back.out(2)',
-      transformOrigin: '170px 140px'
-    }, 0.58)
-    .to(heartGroup, {
-      scale: 1,
-      duration: 0.5,
-      ease: 'elastic.out(1, 0.45)',
-      transformOrigin: '170px 140px'
-    }, 0.76);
-
-    // Pulse glow on impact
-    if (pulseGlow){
-      tl.fromTo(pulseGlow,
-        { scale: 0.8, opacity: 0.2 },
-        { scale: 1.45, opacity: 0.95, duration: 0.4, yoyo: true, repeat: 1, ease: 'power2.out' },
-        0.58
-      );
-    }
-
-    // Sparkles & celebration burst at pierce point
-    tl.add(() => {
-      const rect = centerpiece.getBoundingClientRect();
-      const burstX = rect.left + rect.width * 0.5;
-      const burstY = rect.top + rect.height * 0.48;
-      spawnCelebrationBurst(burstX, burstY);
-    }, 0.65);
   }
 
-  // Automatic entrance animation on page load or chapter enter
-  setTimeout(() => {
-    playPierce(false);
-  }, 400);
-
-  // Drag-and-release support on arrow
+  // Pointer interactions on Arrow Carrier
   arrowCarrier.style.cursor = 'grab';
   arrowCarrier.style.touchAction = 'none';
 
   arrowCarrier.addEventListener('pointerdown', (e) => {
-    if (isAnimating) return;
-    isDragging = true;
-    dragStartX = e.clientX;
+    if (isFlying) return;
+    if (hasHit){
+      // Allow replaying: reset arrow back to bow
+      hasHit = false;
+      gsap.to(arrowCarrier, { y: 0, duration: 0.35, ease: 'power2.out' });
+      if (instruction) instruction.innerHTML = 'PULL TO RELEASE';
+      return;
+    }
+    isPulling = true;
     dragStartY = e.clientY;
-    pullDist = 0;
+    currentPull = 0;
     try { arrowCarrier.setPointerCapture(e.pointerId); } catch (_) {}
+    document.body.style.overflow = 'hidden';
   });
 
   window.addEventListener('pointermove', (e) => {
-    if (!isDragging) return;
-    const dx = e.clientX - dragStartX;
-    const dy = e.clientY - dragStartY;
-    // Arrow angle is ~32 deg: vector (-0.85, -0.53)
-    const pull = Math.max(0, Math.min(80, -(dx * 0.85 + dy * 0.53)));
-    pullDist = pull;
-    gsap.set(arrowCarrier, { x: -pull * 0.85, y: -pull * 0.53 });
+    if (!isPulling || hasHit || isFlying) return;
+    const deltaY = e.clientY - dragStartY;
+    // Allow pulling downward up to 60px
+    const pull = Math.max(0, Math.min(60, deltaY));
+    currentPull = pull;
+
+    gsap.set(arrowCarrier, { y: pull });
+    updateBowstring(pull);
+
+    if (instruction){
+      if (pull > 15){
+        instruction.innerHTML = 'RELEASE TO SHOOT! 🎯';
+      } else {
+        instruction.innerHTML = 'PULL DOWNWARD 🏹';
+      }
+    }
   });
 
-  function onPointerUp(e){
-    if (!isDragging) return;
-    isDragging = false;
+  function onPointerEnd(e){
+    if (!isPulling) return;
+    isPulling = false;
+    document.body.style.overflow = '';
     try {
       if (arrowCarrier.hasPointerCapture && arrowCarrier.hasPointerCapture(e.pointerId)){
         arrowCarrier.releasePointerCapture(e.pointerId);
       }
     } catch (_) {}
 
-    if (pullDist > 15){
-      playPierce(true);
-    } else {
-      gsap.to(arrowCarrier, { x: 0, y: 0, duration: 0.25, ease: 'power2.out' });
+    if (!hasHit && !isFlying){
+      if (currentPull >= 15){
+        launchArrow();
+      } else {
+        // Return smoothly to resting bowstring
+        gsap.to(arrowCarrier, {
+          y: 0,
+          duration: 0.28,
+          ease: 'elastic.out(1, 0.45)',
+          onUpdate: () => updateBowstring(gsap.getProperty(arrowCarrier, 'y')),
+          onComplete: () => {
+            updateBowstring(0);
+            if (instruction) instruction.innerHTML = 'PULL TO RELEASE';
+          }
+        });
+        currentPull = 0;
+      }
     }
   }
 
-  window.addEventListener('pointerup', onPointerUp);
-  window.addEventListener('pointercancel', onPointerUp);
+  window.addEventListener('pointerup', onPointerEnd);
+  window.addEventListener('pointercancel', onPointerEnd);
 
-  // Tap / click on centerpiece to trigger or replay
-  if (!centerpiece.dataset.hasCupidListener){
-    centerpiece.dataset.hasCupidListener = 'true';
-    centerpiece.style.cursor = 'pointer';
-    centerpiece.addEventListener('click', (e) => {
-      if (!isDragging && pullDist < 10){
-        playPierce(true);
-      }
-    });
-    centerpiece.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter' || e.key === ' '){
-        e.preventDefault();
-        playPierce(true);
-      }
-    });
-  }
+  // Heart gentle beat on click if not shot yet
+  heartGroup.style.cursor = 'pointer';
+  heartGroup.addEventListener('click', () => {
+    if (!hasHit){
+      gsap.to(heartGroup, {
+        scale: 1.08,
+        duration: 0.15,
+        yoyo: true,
+        repeat: 1,
+        ease: 'power2.out',
+        transformOrigin: '170px 82px'
+      });
+      if (instruction) instruction.innerHTML = 'PULL THE ARROW DOWN &amp; RELEASE! 🏹';
+    }
+  });
 }
 
 function enterChapter1(){
@@ -1961,14 +2004,16 @@ function initYouTubePlayer(){
           enablejsapi: 1,
           playsinline: 1,
           rel: 0,
-          modestbranding: 1,
-          origin: window.location.origin
+          modestbranding: 1
         },
         events: {
           onReady: (event) => {
             ytReady = true;
             const vol = (BIRTHDAY_CONFIG.music && BIRTHDAY_CONFIG.music.defaultVolume) || 85;
-            try { event.target.setVolume(vol); } catch (_) {}
+            try {
+              event.target.unMute();
+              event.target.setVolume(vol);
+            } catch (_) {}
             if (musicLabel) musicLabel.textContent = (BIRTHDAY_CONFIG.music && BIRTHDAY_CONFIG.music.title) || 'Birthday Song';
             if (playRequested && !isMusicPlaying){
               tryPlayMusic();
@@ -1978,8 +2023,13 @@ function initYouTubePlayer(){
             // YT.PlayerState.PLAYING = 1, PAUSED = 2, ENDED = 0
             if (event.data === 1){
               setMusicUIState(true);
+              if (bgAudio && !bgAudio.paused) bgAudio.pause();
             } else if (event.data === 2 || event.data === 0){
-              setMusicUIState(false);
+              if (isMusicPlaying && !bgAudio.paused){
+                // Native audio is playing fallback
+              } else {
+                setMusicUIState(false);
+              }
             }
           },
           onError: () => {
@@ -1997,27 +2047,46 @@ function initYouTubePlayer(){
 
 function tryPlayMusic(){
   playRequested = true;
+  let ytAttempted = false;
+
   if (ytPlayer && ytReady){
     try {
+      if (typeof ytPlayer.unMute === 'function') ytPlayer.unMute();
       if (!ytStartedOnce){
         ytStartedOnce = true;
         const startTime = (BIRTHDAY_CONFIG.music && BIRTHDAY_CONFIG.music.startTime) || 15;
         ytPlayer.seekTo(startTime, true);
       }
       ytPlayer.playVideo();
+      ytAttempted = true;
       setMusicUIState(true);
+
+      // On mobile devices, check if YouTube actually starts playing within 1.2s; if blocked, activate fallback
+      setTimeout(() => {
+        if (!isMusicPlaying){
+          tryFallbackAudio();
+        }
+      }, 1200);
       return;
     } catch (_) {}
   }
-  tryFallbackAudio();
+
+  if (!ytAttempted){
+    tryFallbackAudio();
+  }
 }
 
 function tryFallbackAudio(){
-  if (bgAudio && bgAudio.src){
-    bgAudio.volume = 0.75;
+  if (bgAudio){
+    if (!bgAudio.src) bgAudio.src = './music/song.mp3';
+    bgAudio.volume = 0.85;
     const p = bgAudio.play();
     if (p !== undefined){
-      p.then(() => setMusicUIState(true)).catch(() => setMusicUIState(false));
+      p.then(() => {
+        setMusicUIState(true);
+      }).catch(() => {
+        setMusicUIState(false);
+      });
     }
   }
 }
@@ -2027,7 +2096,7 @@ function pauseMusic(){
   if (ytPlayer && ytReady){
     try { ytPlayer.pauseVideo(); } catch (_) {}
   }
-  if (bgAudio) bgAudio.pause();
+  if (bgAudio && !bgAudio.paused) bgAudio.pause();
   setMusicUIState(false);
 }
 
@@ -2037,20 +2106,26 @@ function toggleMusic(){
 }
 
 if (musicPillBtn){
-  musicPillBtn.addEventListener('click', (e) => {
+  let lastTapTime = 0;
+  const onMusicToggle = (e) => {
+    const now = Date.now();
+    if (now - lastTapTime < 350) return; // Debounce double tap
+    lastTapTime = now;
+    e.preventDefault();
     e.stopPropagation();
     toggleMusic();
-  });
+  };
+  musicPillBtn.addEventListener('click', onMusicToggle);
+  musicPillBtn.addEventListener('touchend', onMusicToggle);
 }
 
 const unlockAudioOnGesture = () => {
   if (!isMusicPlaying && !playRequested){
     tryPlayMusic();
   }
-  window.removeEventListener('pointerdown', unlockAudioOnGesture);
-  window.removeEventListener('keydown', unlockAudioOnGesture);
 };
 window.addEventListener('pointerdown', unlockAudioOnGesture, { passive: true });
+window.addEventListener('touchstart', unlockAudioOnGesture, { passive: true });
 window.addEventListener('keydown', unlockAudioOnGesture, { passive: true });
 
 initYouTubePlayer();

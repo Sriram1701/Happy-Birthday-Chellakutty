@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Romantic Heart QR Code — Happy Birthday Ranjeetha Sri</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Montserrat', sans-serif;
+      min-height: 100vh;
+      background: radial-gradient(circle at 50% 20%, #ffeef3 0%, #ffdce5 50%, #f7cad5 100%);
+      color: #4a1525;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 24px 16px 40px;
+    }
+    .container {
+      width: 100%;
+      max-width: 520px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
+    }
+    .card-preview {
+      width: 100%;
+      background: #ffffff;
+      border-radius: 28px;
+      padding: 16px;
+      box-shadow: 0 16px 40px rgba(186, 18, 67, 0.16), 0 2px 10px rgba(0, 0, 0, 0.04);
+      border: 1px solid rgba(255, 192, 210, 0.8);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .card-preview img, .card-preview svg {
+      width: 100%;
+      height: auto;
+      display: block;
+      border-radius: 20px;
+    }
+    .actions-panel {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      justify-content: center;
+      width: 100%;
+    }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 12px 22px;
+      border-radius: 999px;
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 600;
+      font-size: 14px;
+      text-decoration: none;
+      cursor: pointer;
+      border: none;
+      transition: all 0.25s ease;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+    }
+    .btn--primary {
+      background: linear-gradient(135deg, #e6235b 0%, #b81044 100%);
+      color: #ffffff;
+      box-shadow: 0 6px 20px rgba(230, 35, 91, 0.35);
+    }
+    .btn--primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(230, 35, 91, 0.45);
+    }
+    .btn--secondary {
+      background: #ffffff;
+      color: #a31c44;
+      border: 1px solid rgba(230, 35, 91, 0.25);
+    }
+    .btn--secondary:hover {
+      background: #fff5f8;
+      transform: translateY(-2px);
+    }
+    .btn:active {
+      transform: scale(0.96);
+    }
+    .instructions {
+      font-size: 13px;
+      text-align: center;
+      color: #8c2e47;
+      line-height: 1.5;
+      background: rgba(255, 255, 255, 0.65);
+      padding: 10px 18px;
+      border-radius: 14px;
+      border: 1px dashed rgba(230, 35, 91, 0.3);
+      max-width: 440px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <div class="card-preview" id="qrContainer">
+      <img src="./heart_qr.svg" alt="Heart Shaped Birthday QR Code" id="qrSvgImg" />
+    </div>
+
+    <div class="actions-panel">
+      <button class="btn btn--primary" id="downloadPngBtn" type="button">
+        <span>📥 Download High-Res PNG</span>
+      </button>
+      <a class="btn btn--secondary" href="./heart_qr.svg" download="Birthday_Heart_QR.svg">
+        <span>🎨 Download SVG</span>
+      </a>
+      <button class="btn btn--secondary" onclick="window.print()" type="button">
+        <span>🖨️ Print</span>
+      </button>
+    </div>
+
+    <div class="instructions">
+      ✨ <strong>100% Scannable:</strong> Point your phone camera or Google Lens at this QR code to instantly open the romantic birthday website!
+    </div>
+  </div>
+
+  <canvas id="exportCanvas" style="display:none;"></canvas>
+
+  <script>
+    // PNG Downloader (High Resolution 1800x2160)
+    document.getElementById('downloadPngBtn').addEventListener('click', () => {
+      const img = document.getElementById('qrSvgImg');
+      const canvas = document.getElementById('exportCanvas');
+      const ctx = canvas.getContext('2d');
+
+      const svgImg = new Image();
+      svgImg.crossOrigin = 'anonymous';
+      svgImg.onload = () => {
+        const scale = 3; // 3x resolution for super sharp print quality
+        canvas.width = svgImg.naturalWidth * scale || 2058;
+        canvas.height = svgImg.naturalHeight * scale || 2478;
+
+        ctx.fillStyle = '#ffffff';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.drawImage(svgImg, 0, 0, canvas.width, canvas.height);
+
+        const a = document.createElement('a');
+        a.download = 'Birthday_Heart_QR_Ranjeetha_Sri.png';
+        a.href = canvas.toDataURL('image/png');
+        a.click();
+      };
+      svgImg.src = img.src;
+    });
+  </script>
+</body>
+</html>

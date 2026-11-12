@@ -205,33 +205,33 @@ export const BIRTHDAY_CONFIG = {
   },
 
   // -------------------------------------------------------------
-  // CHAPTER 5: WISHES BEYOND WORDS (Celestial Wishes)
+  // CHAPTER 5: WISHES BEYOND WORDS (Personal Wishes to Ranjeetha Sri)
   // -------------------------------------------------------------
   wishes: [
     {
       icon: "✨",
-      title: "For Dearest Ranjeetha",
-      text: "Happy Birthday, Ranjeetha. May this special year bring you boundless blessings, quiet strength, and endless reasons to smile."
+      title: "Happy Birthday Chellakutty",
+      text: "Happy Birthday to my favorite person. You bring so much light and calm into my life just by being yourself, Chellakutty. Always keep your sweet, kind heart shining."
     },
     {
       icon: "🌟",
-      title: "Courage & Bright Dreams",
-      text: "May you always believe in the brilliance of your dreams, with the courage to reach every milestone your heart desires."
+      title: "Always Keep Smiling, Gundu",
+      text: "No matter how busy or unpredictable life gets, I just want to see that genuine smile on your face every day. You deserve every bit of happiness and peace, Gundu."
     },
     {
-      icon: "🌿",
-      title: "Peace & Gentle Serenity",
-      text: "May peace walk beside you in every chapter of life, and may you always know how deeply cherished and valued you are."
+      icon: "🌸",
+      title: "My Little Pattu",
+      text: "Take gentle care of yourself always. Believe in yourself as much as I believe in you, because you are capable of achieving every single dream in your heart, Pattu."
     },
     {
       icon: "💫",
-      title: "Health & Endless Vitality",
-      text: "May every morning fill your days with vibrant vitality, bright laughter, and renewed optimism for the road ahead."
+      title: "To My C.H.E",
+      text: "Having you in my life is something I truly cherish from the bottom of my heart. Wishing you good health, strength, and the brightest days ahead, my C.H.E."
     },
     {
       icon: "♥",
-      title: "Unconditional Love & Joy",
-      text: "May you be surrounded today and every day with genuine warmth, unconditional love, and moments of pure happiness."
+      title: "Forever Cherished",
+      text: "May this year bring you all the warmth, joy, and peace you so richly deserve. Happy Birthday once again, Ranjeetha Sri ❤️"
     }
   ],
 
