@@ -1804,14 +1804,15 @@ function enterChapter2(){
    ============================================================ */
 let chapter3Initialized = false;
 const viewedMemories = new Set();
+let galleryCompleted = false;
 
 function maybeCompleteGallery(){
-  const galleryDone = viewedMemories.size >= BIRTHDAY_CONFIG.photos.length;
+  if (galleryCompleted) return;
   const endSentinel = $('galleryEndSentinel');
-  const sentinelVisible = !endSentinel || (typeof endSentinel.getBoundingClientRect === 'function' &&
-    endSentinel.getBoundingClientRect().top <= window.innerHeight + 80);
+  const galleryEndReached = !endSentinel || endSentinel.getBoundingClientRect().top <= window.innerHeight;
 
-  if (galleryDone && sentinelVisible) {
+  if (galleryEndReached) {
+    galleryCompleted = true;
     completeChapter('chapter3');
   }
 }
@@ -1891,6 +1892,10 @@ function initChapter3(){
     }, { threshold: 0.1 });
     galleryObserver.observe(galleryEndSentinel);
   }
+
+  // Keep the completion gate reliable when IntersectionObserver skips frames
+  // during a fast scroll or is unavailable in the browser.
+  window.addEventListener('scroll', maybeCompleteGallery, { passive: true });
 
   if ('IntersectionObserver' in window){
     const cardObserver = new IntersectionObserver((entries) => {
